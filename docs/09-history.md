@@ -16,6 +16,16 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-07: Repository Management Files Added
+
+Status: Completed
+
+Summary:
+
+- Added `.gitattributes` to standardize text files on LF and mark binary assets explicitly.
+- Added `.gitignore` for Python build, cache, environment, and IDE artifacts.
+- Left `.agents/` unignored because its role is still ambiguous for repository operations.
+
 ### 2026-07-07: Documentation Index And ADR System Added
 
 Status: Completed

@@ -21,6 +21,7 @@ Create the project context documents that define scope, architecture, testing, l
 - [x] Create `docs/11-roadmap.md`.
 - [x] Create `docs/00-index.md`.
 - [x] Rename initial documents so `00` is reserved for the documentation index.
+- [x] Add `.gitattributes` and `.gitignore` for repository hygiene.
 - [x] Create `docs/adr/README.md`.
 - [x] Create initial ADR documents `ADR-0001` through `ADR-0005`.
 - [x] Update Codex instructions to require reading the documentation index first.
