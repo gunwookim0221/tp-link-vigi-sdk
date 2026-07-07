@@ -132,7 +132,74 @@ Implement the documented OpenAPI authentication flow only.
 - Integration authentication test is skipped unless VIGI environment variables are configured.
 - No device, recording, RTSP, snapshot, CLI, or undocumented endpoint behavior is implemented.
 
-## Phase 5: Replay
+## Phase 4.5: Project Quality and Developer Experience
+
+### Goal
+
+Improve open-source project quality and contributor experience without adding SDK features.
+
+### Tasks
+
+- [x] Add Work In Progress README.
+- [x] Add contributing guide.
+- [x] Add changelog.
+- [x] Add security policy.
+- [x] Add code of conduct.
+- [x] Add GitHub issue and pull request templates.
+- [x] Add GitHub Actions CI.
+- [x] Add project philosophy document.
+- [x] Update documentation index and Codex instructions.
+- [x] Align roadmap and checklist with actual development order.
+- [x] Add optional development quality dependencies.
+
+### Exit Criteria
+
+- Default tests pass.
+- CI runs package install, pytest, and compileall.
+- No Device, Recording, Replay, Snapshot, CLI, or OpenAPI feature behavior is added.
+
+## Phase 5: Device Inventory
+
+### Goal
+
+Implement read-only channel/device inventory after real-device authentication validation.
+
+### Tasks
+
+- [ ] Validate authentication against `VIGI NVR1008H-8P`.
+- [ ] Implement `GET /openapi/added_devices`.
+- [ ] Parse documented device/channel fields.
+- [ ] Add capability flag `device.added_devices`.
+- [ ] Add mock tests.
+- [ ] Add opt-in integration test scaffold.
+
+### Exit Criteria
+
+- Device inventory mock tests pass.
+- Integration tests remain opt-in.
+- Device matrix is updated with verification status.
+
+## Phase 6: Recording
+
+### Goal
+
+Implement documented recording search APIs.
+
+### Tasks
+
+- [ ] Implement `GET /openapi/record/days`.
+- [ ] Implement `GET /openapi/record/search/free_process`.
+- [ ] Implement `GET /openapi/record/search/results`.
+- [ ] Model search process reuse.
+- [ ] Add mock tests.
+
+### Exit Criteria
+
+- Search process reuse behavior is tested.
+- Result pagination/index behavior is tested.
+- Integration tests remain opt-in.
+
+## Phase 7: Replay
 
 ### Goal
 
@@ -140,17 +207,17 @@ Support documented RTSP replay URL construction and integration planning.
 
 ### Tasks
 
-- Build replay RTSP URL helper.
-- Document UTC time conversion.
-- Confirm replay stream limitation that replay only supports stream `1`.
-- Add RTSP Digest authentication integration notes.
+- [ ] Build replay RTSP URL helper.
+- [ ] Document UTC time conversion.
+- [ ] Confirm replay stream limitation that replay only supports stream `1`.
+- [ ] Add RTSP Digest authentication integration notes.
 
 ### Exit Criteria
 
 - URL construction tests pass.
 - No undocumented replay endpoint is introduced.
 
-## Phase 6: Snapshot
+## Phase 8: Snapshot
 
 ### Goal
 
@@ -158,15 +225,15 @@ Determine whether snapshot is supported by official public documentation.
 
 ### Tasks
 
-- Re-check official OpenAPI documentation for snapshot endpoints.
-- If no endpoint exists, keep feature as unsupported.
-- If TP-Link publishes official support, add endpoint scope and tests.
+- [ ] Re-check official OpenAPI documentation for snapshot endpoints.
+- [ ] If no endpoint exists, keep feature as unsupported.
+- [ ] If TP-Link publishes official support, add endpoint scope and tests.
 
 ### Exit Criteria
 
 - Snapshot status is documented as supported, unsupported, or TODO with official reference.
 
-## Phase 7: CLI
+## Phase 9: CLI
 
 ### Goal
 
@@ -174,16 +241,16 @@ Provide a thin command-line interface over SDK features.
 
 ### Tasks
 
-- Add CLI framework after dependency/license review.
-- Add commands for auth check, device list, and recording search.
-- Redact secrets in output.
+- [ ] Add CLI framework after dependency/license review.
+- [ ] Add commands for auth check, device list, and recording search.
+- [ ] Redact secrets in output.
 
 ### Exit Criteria
 
 - CLI uses SDK APIs only.
 - CLI tests use mocks.
 
-## Phase 8: Integration Test
+## Phase 10: Integration Test Harness
 
 ### Goal
 
@@ -191,17 +258,17 @@ Create a real-device test harness for supported NVRs.
 
 ### Tasks
 
-- Add integration config loader.
-- Add read-only device test.
-- Add recording search test.
-- Add device matrix update workflow.
+- [ ] Add integration config loader.
+- [ ] Add read-only device test.
+- [ ] Add recording search test.
+- [ ] Add device matrix update workflow.
 
 ### Exit Criteria
 
 - Integration tests are opt-in.
 - Test output records model, firmware, and OpenAPI document version.
 
-## Phase 9: Release
+## Phase 11: Release
 
 ### Goal
 
@@ -209,11 +276,10 @@ Publish the first usable package release.
 
 ### Tasks
 
-- Finalize license.
-- Add README.
-- Add changelog.
-- Add release workflow.
-- Tag `v0.1.0`.
+- [ ] Finalize license.
+- [ ] Convert README from WIP to release-ready.
+- [ ] Add release workflow.
+- [ ] Tag `v0.1.0`.
 
 ### Exit Criteria
 

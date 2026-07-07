@@ -10,11 +10,14 @@ Every Codex task must start by reading this document before planning, editing, o
 
 Read these documents before every task:
 
+- [../README.md](../README.md)
 - [00-index.md](00-index.md)
+- [project-philosophy.md](project-philosophy.md)
 - [01-project-plan.md](01-project-plan.md)
 - [02-references.md](02-references.md)
 - [07-codex-instructions.md](07-codex-instructions.md)
 - [08-implementation-checklist.md](08-implementation-checklist.md)
+- [docs/adr/README.md](adr/README.md)
 
 ## Task-Specific Documents
 
@@ -29,6 +32,7 @@ Read these documents when the task touches the listed area:
 | Roadmap or release planning | [11-roadmap.md](11-roadmap.md), [08-implementation-checklist.md](08-implementation-checklist.md) |
 | Design decisions | [docs/adr/README.md](adr/README.md), [docs/adr/](adr/) |
 | Project progress or milestones | [09-history.md](09-history.md) |
+| Contributor or project operations | [../CONTRIBUTING.md](../CONTRIBUTING.md), [../CHANGELOG.md](../CHANGELOG.md), [../SECURITY.md](../SECURITY.md) |
 
 ## Workflow
 
@@ -53,6 +57,8 @@ For documentation-only tasks, the `Implement` step means applying the requested 
 - Update [10-limitations.md](10-limitations.md) when a known limitation is added, removed, or validated.
 - Update [08-implementation-checklist.md](08-implementation-checklist.md) when phase tasks are completed or re-scoped.
 - Update [09-history.md](09-history.md) for project milestones and progress notes.
+- Update [../CHANGELOG.md](../CHANGELOG.md) for notable project changes.
+- Keep [../README.md](../README.md) aligned with the current project state.
 - Add a new ADR under [docs/adr/](adr/) when an important design decision changes. Do not overwrite old ADRs to hide history.
 
 ## Source Authority
@@ -65,6 +71,10 @@ For documentation-only tasks, the `Implement` step means applying the requested 
 
 - [01-project-plan.md](01-project-plan.md)
 - [02-references.md](02-references.md)
+- [project-philosophy.md](project-philosophy.md)
 - [07-codex-instructions.md](07-codex-instructions.md)
 - [08-implementation-checklist.md](08-implementation-checklist.md)
 - [09-history.md](09-history.md)
+- [../README.md](../README.md)
+- [../CONTRIBUTING.md](../CONTRIBUTING.md)
+- [../CHANGELOG.md](../CHANGELOG.md)

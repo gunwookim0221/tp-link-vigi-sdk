@@ -9,9 +9,8 @@ Codex should treat the document set as the project SSOT before making code chang
 ## Required Rules
 
 - Use only public TP-Link OpenAPI documentation for API facts.
+- Read [../README.md](../README.md), [project-philosophy.md](project-philosophy.md), [docs/adr/README.md](adr/README.md), and [08-implementation-checklist.md](08-implementation-checklist.md) before implementation work.
 - Do not copy reverse-engineered code or undocumented endpoint behavior.
-- Do not write SDK code during Phase 0.
-- Do not create `README.md` until explicitly requested in a later phase.
 - Before implementation, read the task-specific documents listed in [00-index.md](00-index.md).
 - Update architecture, API scope, test strategy, and limitations documents before implementing changes that affect those areas.
 - Add type hints to every public Python API when implementation starts.
@@ -40,6 +39,7 @@ Codex should treat the document set as the project SSOT before making code chang
 - Prefer explicit timeouts.
 - Do not silently disable TLS verification.
 - Keep CLI behavior thin over SDK behavior.
+- Keep runtime dependencies minimal. Add development-only dependencies only when they improve project quality and remain optional.
 
 ## Workflow
 
@@ -62,14 +62,20 @@ Use the workflow defined by [00-index.md](00-index.md):
 - Update [06-device-matrix.md](06-device-matrix.md) after real-device verification.
 - Update [10-limitations.md](10-limitations.md) when a limitation is added, removed, or validated.
 - Update [08-implementation-checklist.md](08-implementation-checklist.md) and [09-history.md](09-history.md) when work is completed.
+- Update [../README.md](../README.md) when project state or supported scope changes.
+- Update [../CHANGELOG.md](../CHANGELOG.md) for notable project changes.
+- Update [project-philosophy.md](project-philosophy.md) only when the project principles intentionally change.
 - Add a new ADR under [docs/adr/](adr/) when a design decision changes. Do not rewrite old ADRs to replace the decision history.
 
 ## Related Documents
 
 - [00-index.md](00-index.md)
+- [../README.md](../README.md)
+- [project-philosophy.md](project-philosophy.md)
 - [01-project-plan.md](01-project-plan.md)
 - [02-references.md](02-references.md)
 - [03-api-scope.md](03-api-scope.md)
 - [05-test-strategy.md](05-test-strategy.md)
 - [08-implementation-checklist.md](08-implementation-checklist.md)
 - [docs/adr/README.md](adr/README.md)
+- [../CONTRIBUTING.md](../CONTRIBUTING.md)
