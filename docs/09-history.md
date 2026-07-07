@@ -1,0 +1,56 @@
+# History
+
+## Purpose
+
+This document records project progress, documentation milestones, release milestones, and notable implementation progress.
+
+Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not use this file as the primary location for architecture decisions.
+
+## History Rules
+
+- Add entries in reverse chronological order.
+- Keep entries concise and factual.
+- Link related ADRs when a milestone depends on a design decision.
+- Do not delete historical entries to make the project history look cleaner.
+- If a design direction changes, add a new ADR instead of rewriting old ADR history.
+
+## Entries
+
+### 2026-07-07: Documentation Index And ADR System Added
+
+Status: Completed
+
+Summary:
+
+- Added [00-index.md](00-index.md) as the documentation entry point.
+- Renumbered the document set so the index owns `00`.
+- Added ADR management under [docs/adr/](adr/).
+- Moved important design-decision tracking out of history and into ADR files.
+- Updated Codex workflow instructions and documentation checklist.
+
+Related ADRs:
+
+- [ADR-0001 Capability-Based Architecture](adr/ADR-0001-capability-based-architecture.md)
+- [ADR-0002 Authentication Strategy](adr/ADR-0002-authentication-strategy.md)
+- [ADR-0003 Record Search Flow](adr/ADR-0003-record-search-flow.md)
+- [ADR-0004 RTSP Replay Strategy](adr/ADR-0004-rtsp-replay-strategy.md)
+- [ADR-0005 Testing And Integration Strategy](adr/ADR-0005-testing-and-integration-strategy.md)
+
+### 2026-07-07: Initial Project Context Created
+
+Status: Completed
+
+Summary:
+
+- Created the initial project documentation set.
+- Established official TP-Link documentation as the source of API facts.
+- Defined MVP focus on `VIGI NVR1008H-8P`.
+- Deferred SDK code and README creation to later phases.
+
+## Related Documents
+
+- [00-index.md](00-index.md)
+- [01-project-plan.md](01-project-plan.md)
+- [07-codex-instructions.md](07-codex-instructions.md)
+- [08-implementation-checklist.md](08-implementation-checklist.md)
+- [docs/adr/README.md](adr/README.md)
