@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from vigi.auth_provider import AuthProvider
 from vigi.auth import AuthConfig, AuthService
 from vigi.devices import DeviceService
+from vigi.http_transport import HttpTransport
 from vigi.records import RecordService
 from vigi.session import Session, SessionInfo
 from vigi.stream import StreamService
@@ -27,7 +28,7 @@ class VigiClient:
     def __post_init__(self) -> None:
         self.auth = AuthService(self.auth_config)
         if self.transport is None:
-            self.transport = Transport(
+            self.transport = HttpTransport(
                 TransportConfig(
                     base_url=f"https://{self.auth_config.host}:{self.auth_config.port}",
                     verify_ssl=self.auth_config.verify_tls,
@@ -41,6 +42,7 @@ class VigiClient:
         self.stream = StreamService()
 
     def login(self) -> None:
-        """Authenticate the client in a future implementation phase."""
+        """Authenticate the client and update session state."""
 
-        raise NotImplementedError("Client login is not implemented yet.")
+        result = self.auth_provider.authenticate(self.auth._default_context(), self.transport)
+        self.session.info = result.session_info

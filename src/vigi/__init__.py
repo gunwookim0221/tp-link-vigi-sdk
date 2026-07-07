@@ -17,6 +17,8 @@ from vigi.exceptions import (
     ValidationError,
     VigiError,
 )
+from vigi.crypto import calculate_digest_response, sha256_hex
+from vigi.http_transport import HttpTransport
 from vigi.models import (
     ChannelInfo,
     DeviceInfo,
@@ -47,6 +49,7 @@ __all__ = [
     "AuthenticationContext",
     "AuthenticationError",
     "AuthenticationResult",
+    "calculate_digest_response",
     "Capability",
     "CapabilityName",
     "CapabilityError",
@@ -57,6 +60,7 @@ __all__ = [
     "DeviceError",
     "DeviceService",
     "DeviceType",
+    "HttpTransport",
     "NvrInfo",
     "RecordFile",
     "RecordError",
@@ -68,6 +72,7 @@ __all__ = [
     "RtspStreamInfo",
     "Session",
     "SessionInfo",
+    "sha256_hex",
     "StreamError",
     "StreamService",
     "StreamType",

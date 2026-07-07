@@ -59,11 +59,8 @@ def test_client_wires_placeholder_services() -> None:
 def test_placeholder_methods_are_not_implemented() -> None:
     client = VigiClient(AuthConfig(host="nvr.local", username="admin", password="secret"))
 
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(AuthenticationError):
         client.auth.authenticate()
-
-    with pytest.raises(NotImplementedError):
-        client.login()
 
     with pytest.raises(NotImplementedError):
         client.devices.list_added_devices()

@@ -28,8 +28,8 @@ class Request:
 
     method: str
     path: str
-    headers: Mapping[str, str] = field(default_factory=dict)
-    body: bytes | None = None
+    headers: Mapping[str, str] = field(default_factory=dict, repr=False)
+    body: bytes | None = field(default=None, repr=False)
 
 
 @dataclass(frozen=True, slots=True)
@@ -37,8 +37,8 @@ class Response:
     """SDK transport response shape without an HTTP client dependency."""
 
     status_code: int
-    headers: Mapping[str, str] = field(default_factory=dict)
-    body: bytes | None = None
+    headers: Mapping[str, str] = field(default_factory=dict, repr=False)
+    body: bytes | None = field(default=None, repr=False)
 
 
 class Transport:

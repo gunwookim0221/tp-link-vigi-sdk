@@ -47,10 +47,14 @@ def test_session_boundary_can_be_created() -> None:
 
 def test_auth_provider_stub_is_not_implemented() -> None:
     provider = AuthProvider()
-    context = AuthenticationContext(base_url="https://nvr.local:20443", username="admin")
+    context = AuthenticationContext(
+        base_url="https://nvr.local:20443",
+        username="admin",
+        password="secret",
+    )
 
     with pytest.raises(NotImplementedError):
-        provider.authenticate(context)
+        provider.authenticate(context, Transport(TransportConfig(base_url=context.base_url)))
 
 
 def test_client_wires_transport_and_auth_provider() -> None:

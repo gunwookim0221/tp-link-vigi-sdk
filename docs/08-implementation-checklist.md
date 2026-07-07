@@ -107,23 +107,30 @@ Define transport and authentication boundaries without implementing OpenAPI call
 - Client can be constructed with transport and auth provider placeholders.
 - No network, login, token, device, recording, RTSP, or OpenAPI behavior is implemented.
 
-## Phase 4: Recording
+## Phase 4: OpenAPI Authentication Implementation
 
 ### Goal
 
-Implement documented recording search APIs.
+Implement the documented OpenAPI authentication flow only.
 
 ### Tasks
 
-- Implement `GET /openapi/record/days`.
-- Implement `GET /openapi/record/search/free_process`.
-- Implement `GET /openapi/record/search/results`.
-- Model search result time ranges.
+- [x] Implement token endpoint request creation.
+- [x] Implement SHA-256 Digest response calculation.
+- [x] Implement access token response parsing.
+- [x] Store Bearer token state in session info.
+- [x] Apply Bearer token through session authorization headers.
+- [x] Add authentication, response parsing, and client login mock tests.
+- [x] Add skipped integration authentication scaffold.
+- [ ] Implement device APIs.
+- [ ] Implement record search APIs.
+- [ ] Implement RTSP replay.
 
 ### Exit Criteria
 
-- Search process reuse behavior is tested.
-- Result pagination/index behavior is tested.
+- Authentication unit and mock tests pass.
+- Integration authentication test is skipped unless VIGI environment variables are configured.
+- No device, recording, RTSP, snapshot, CLI, or undocumented endpoint behavior is implemented.
 
 ## Phase 5: Replay
 

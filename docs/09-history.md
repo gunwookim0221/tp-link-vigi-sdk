@@ -16,6 +16,16 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-07: Phase 4 OpenAPI Authentication Implemented
+
+Status: Completed
+
+Summary:
+
+- Implemented documented token endpoint request, SHA-256 Digest response, token response parsing, and Bearer session state.
+- Added urllib-based HTTP transport without adding runtime dependencies.
+- Added mock authentication tests and a skipped real-device integration auth scaffold.
+
 ### 2026-07-07: Phase 3 Transport And Authentication Foundation Created
 
 Status: Completed
