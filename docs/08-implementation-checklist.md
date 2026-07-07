@@ -45,11 +45,13 @@ Create a minimal Python package skeleton without implementing endpoint behavior 
 
 ### Tasks
 
-- Add `pyproject.toml`.
-- Add `src/vigi/` package.
-- Add `tests/` layout.
-- Configure formatter, linter, and pytest.
-- Add project metadata and license after license decision.
+- [x] Add `pyproject.toml`.
+- [x] Add `src/vigi/` package.
+- [x] Add `tests/` layout.
+- [x] Configure pytest.
+- [ ] Configure formatter and linter.
+- [x] Add minimal project metadata.
+- [ ] Add license after license decision.
 
 ### Exit Criteria
 

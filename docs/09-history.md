@@ -16,6 +16,16 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-07: Phase 1 Project Skeleton Created
+
+Status: Completed
+
+Summary:
+
+- Added minimal `src` layout Python package skeleton for `vigi`.
+- Added import-only skeleton tests without network, authentication, device, record, or RTSP behavior.
+- Added `pyproject.toml` with Python 3.10+ and pytest configuration.
+
 ### 2026-07-07: Repository Management Files Added
 
 Status: Completed
