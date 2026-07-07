@@ -3,6 +3,8 @@ from datetime import datetime, timezone
 
 from vigi import (
     AuthConfig,
+    AuthProvider,
+    AuthService,
     AuthenticationError,
     Capability,
     CapabilityError,
@@ -16,6 +18,7 @@ from vigi import (
     StreamService,
     StreamType,
     TimeRange,
+    Transport,
     VigiClient,
     VigiError,
 )
@@ -23,6 +26,8 @@ from vigi import (
 
 def test_public_classes_import() -> None:
     assert AuthConfig
+    assert AuthProvider
+    assert AuthService
     assert AuthenticationError
     assert Capability
     assert CapabilityError
@@ -36,6 +41,7 @@ def test_public_classes_import() -> None:
     assert StreamService
     assert StreamType
     assert TimeRange
+    assert Transport
     assert VigiClient
     assert VigiError
 
@@ -46,6 +52,8 @@ def test_client_wires_placeholder_services() -> None:
     assert isinstance(client.devices, DeviceService)
     assert isinstance(client.records, RecordService)
     assert isinstance(client.stream, StreamService)
+    assert isinstance(client.transport, Transport)
+    assert isinstance(client.auth_provider, AuthProvider)
 
 
 def test_placeholder_methods_are_not_implemented() -> None:
@@ -53,6 +61,9 @@ def test_placeholder_methods_are_not_implemented() -> None:
 
     with pytest.raises(NotImplementedError):
         client.auth.authenticate()
+
+    with pytest.raises(NotImplementedError):
+        client.login()
 
     with pytest.raises(NotImplementedError):
         client.devices.list_added_devices()

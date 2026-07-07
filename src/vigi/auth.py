@@ -2,6 +2,8 @@
 
 from dataclasses import dataclass, field
 
+from vigi.auth_provider import AuthProvider, AuthenticationContext, AuthenticationResult
+
 
 @dataclass(frozen=True, slots=True)
 class AuthConfig:
@@ -14,13 +16,15 @@ class AuthConfig:
     verify_tls: bool = True
 
 
-class AuthService:
+class AuthService(AuthProvider):
     """Placeholder for the documented Digest-to-Bearer authentication flow."""
 
     def __init__(self, config: AuthConfig) -> None:
         self.config = config
 
-    def authenticate(self) -> None:
+    def authenticate(
+        self, context: AuthenticationContext | None = None
+    ) -> AuthenticationResult:
         """Authenticate with the NVR in a later implementation phase."""
 
-        raise NotImplementedError("Authentication is planned for Phase 2.")
+        raise NotImplementedError("Authentication is planned for a later phase.")

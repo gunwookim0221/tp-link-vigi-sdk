@@ -16,6 +16,16 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-07: Phase 3 Transport And Authentication Foundation Created
+
+Status: Completed
+
+Summary:
+
+- Added transport, session, and authentication provider boundary objects.
+- Wired the client to transport and auth provider placeholders without HTTP or login behavior.
+- Added construction tests for transport/session/auth stubs with no network access.
+
 ### 2026-07-07: Phase 2 Core Models And Types Created
 
 Status: Completed

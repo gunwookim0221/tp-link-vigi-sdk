@@ -84,23 +84,28 @@ Define the core data models, shared enum types, and minimal validation helpers u
 - Model validation tests pass.
 - No network, authentication, device, recording, or RTSP behavior is implemented.
 
-## Phase 3: Device
+## Phase 3: Transport and Authentication Foundation
 
 ### Goal
 
-Implement read-only channel/device inventory.
+Define transport and authentication boundaries without implementing OpenAPI calls, Digest authentication, token issuance, or real HTTP behavior.
 
 ### Tasks
 
-- Implement `GET /openapi/added_devices`.
-- Define typed device/channel model.
-- Add capability flag `device.added_devices`.
-- Add mock and integration test plan.
+- [x] Add transport boundary types.
+- [x] Add session boundary types.
+- [x] Add authentication provider boundary types.
+- [x] Wire client to transport and authentication provider dependencies.
+- [x] Add import and construction tests for transport/session/auth provider stubs.
+- [ ] Implement actual HTTP transport.
+- [ ] Implement actual Digest authentication.
+- [ ] Implement actual token issuance or refresh.
 
 ### Exit Criteria
 
-- Mock tests cover online/offline devices.
-- Real-device test is documented but not required in default test run.
+- Transport, session, and authentication provider structures import successfully.
+- Client can be constructed with transport and auth provider placeholders.
+- No network, login, token, device, recording, RTSP, or OpenAPI behavior is implemented.
 
 ## Phase 4: Recording
 

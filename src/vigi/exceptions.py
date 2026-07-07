@@ -9,8 +9,16 @@ class VigiConnectionError(VigiError):
     """Raised for future connection failures."""
 
 
+class ConnectionError(VigiConnectionError):
+    """Public shorthand for connection failures."""
+
+
 class VigiTimeoutError(VigiConnectionError):
     """Raised for future timeout failures."""
+
+
+class TimeoutError(VigiTimeoutError):
+    """Public shorthand for timeout failures."""
 
 
 class VigiAuthenticationError(VigiError):
@@ -27,6 +35,14 @@ class VigiAuthorizationError(VigiError):
 
 class VigiApiError(VigiError):
     """Raised for future documented OpenAPI errors."""
+
+
+class VigiTransportError(VigiError):
+    """Raised for future transport failures."""
+
+
+class TransportError(VigiTransportError):
+    """Public shorthand for transport failures."""
 
 
 class VigiCapabilityError(VigiError):

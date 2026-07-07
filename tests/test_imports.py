@@ -6,12 +6,15 @@ def test_public_modules_import() -> None:
         "vigi",
         "vigi.client",
         "vigi.auth",
+        "vigi.auth_provider",
         "vigi.capabilities",
         "vigi.devices",
         "vigi.records",
+        "vigi.session",
         "vigi.stream",
         "vigi.exceptions",
         "vigi.models",
+        "vigi.transport",
         "vigi.types",
     ]
 
