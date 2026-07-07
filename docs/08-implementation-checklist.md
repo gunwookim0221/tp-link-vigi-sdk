@@ -59,25 +59,30 @@ Create a minimal Python package skeleton without implementing endpoint behavior 
 - `pytest` runs.
 - No network calls are required.
 
-## Phase 2: Authentication
+## Phase 2: Core Models and Types
 
 ### Goal
 
-Implement documented token acquisition and refresh.
+Define the core data models, shared enum types, and minimal validation helpers used by later SDK phases.
 
 ### Tasks
 
-- Implement no-auth token challenge request flow.
-- Implement Digest response generation according to official documentation.
-- Implement Bearer token storage and header injection.
-- Implement refresh token request.
-- Add mock tests for token flows.
+- [x] Add core SDK data models.
+- [x] Add shared enum types.
+- [x] Add minimal validation for time ranges and identifiers.
+- [x] Export public model and type symbols.
+- [x] Add model and type tests.
+- [ ] Implement no-auth token challenge request flow.
+- [ ] Implement Digest response generation according to official documentation.
+- [ ] Implement Bearer token storage and header injection.
+- [ ] Implement refresh token request.
+- [ ] Add mock tests for token flows.
 
 ### Exit Criteria
 
-- Authentication tests pass with documented examples or structured fixtures.
-- Tokens are redacted in logs.
-- Authentication errors map to typed exceptions.
+- Core models and shared types import successfully.
+- Model validation tests pass.
+- No network, authentication, device, recording, or RTSP behavior is implemented.
 
 ## Phase 3: Device
 

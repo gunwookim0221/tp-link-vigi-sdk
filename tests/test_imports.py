@@ -11,6 +11,8 @@ def test_public_modules_import() -> None:
         "vigi.records",
         "vigi.stream",
         "vigi.exceptions",
+        "vigi.models",
+        "vigi.types",
     ]
 
     for module_name in modules:

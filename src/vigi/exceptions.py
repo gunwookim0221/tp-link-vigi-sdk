@@ -41,6 +41,14 @@ class VigiResponseError(VigiError):
     """Raised for future response parsing failures."""
 
 
+class VigiValidationError(VigiError, ValueError):
+    """Raised when SDK data models receive invalid values."""
+
+
+class ValidationError(VigiValidationError):
+    """Public shorthand for validation failures."""
+
+
 class DeviceError(VigiError):
     """Raised for future device API failures."""
 

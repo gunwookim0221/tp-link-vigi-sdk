@@ -10,22 +10,54 @@ from vigi.exceptions import (
     DeviceError,
     RecordError,
     StreamError,
+    ValidationError,
     VigiError,
+)
+from vigi.models import (
+    ChannelInfo,
+    DeviceInfo,
+    NvrInfo,
+    RecordFile,
+    RecordSearchQuery,
+    RtspStreamInfo,
+    TimeRange,
 )
 from vigi.records import RecordService
 from vigi.stream import StreamService
+from vigi.types import (
+    AuthMode,
+    CapabilityName,
+    ChannelStatus,
+    DeviceType,
+    RecordType,
+    StreamType,
+)
 
 __all__ = [
     "AuthConfig",
+    "AuthMode",
     "AuthenticationError",
     "Capability",
+    "CapabilityName",
     "CapabilityError",
+    "ChannelInfo",
+    "ChannelStatus",
+    "DeviceInfo",
     "DeviceError",
     "DeviceService",
+    "DeviceType",
+    "NvrInfo",
+    "RecordFile",
     "RecordError",
+    "RecordSearchQuery",
     "RecordService",
+    "RecordType",
+    "RtspStreamInfo",
     "StreamError",
     "StreamService",
+    "StreamType",
+    "TimeRange",
+    "ValidationError",
     "VigiClient",
     "VigiError",
 ]

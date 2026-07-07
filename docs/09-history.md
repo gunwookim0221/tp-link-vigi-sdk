@@ -16,6 +16,16 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-07: Phase 2 Core Models And Types Created
+
+Status: Completed
+
+Summary:
+
+- Added core SDK data models for NVR, devices, channels, recording metadata, time ranges, and RTSP stream metadata.
+- Added shared enum types for auth mode, capabilities, device/channel state, recording type, and stream type.
+- Added validation-focused tests without HTTP, authentication, device, record search, or RTSP behavior.
+
 ### 2026-07-07: Phase 1 Project Skeleton Created
 
 Status: Completed
