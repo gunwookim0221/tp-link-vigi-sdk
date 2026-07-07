@@ -7,6 +7,7 @@
 - Firmware version for the MVP device is TODO.
 - Snapshot support is TODO because no snapshot endpoint was identified in the official OpenAPI reference PDF during Phase 0.
 - The project has not selected a license yet.
+- Standalone VIGI Camera APIs are not verified.
 
 ## OpenAPI Limitations From Official References
 
@@ -40,6 +41,25 @@ Currently unsupported:
 - Mutating device settings in MVP.
 - Event receiver service implementation.
 - Full RTSP client implementation.
+- Direct standalone camera login.
+- Direct standalone camera snapshot.
+- Direct standalone camera stream handling.
+- Direct standalone camera settings APIs.
+
+## Standalone Camera Limitations
+
+Standalone VIGI Camera support is outside the current MVP.
+
+Fact:
+
+- The current MVP is NVR-first and targets VIGI NVR OpenAPI plus NVR-managed channels/cameras.
+
+Current limits:
+
+- Standalone camera APIs have not been verified by this project.
+- Direct camera login, snapshot, stream, and settings workflows are out of scope for the current MVP.
+- Public camera SDK APIs must not be added until a physical standalone VIGI camera is available for integration testing.
+- Adding camera support requires a new ADR, such as `ADR-0006 Split NVR and Camera Clients`.
 
 ## Assumptions To Validate
 

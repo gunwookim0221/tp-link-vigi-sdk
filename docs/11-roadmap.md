@@ -114,12 +114,33 @@ Exit criteria:
 - Integration tests have been run against the MVP device.
 - Release package builds reproducibly.
 
+## Optional Future Phase: Standalone Camera Support
+
+Goal:
+
+- Evaluate direct standalone VIGI Camera support after hardware is available.
+
+Blocked by:
+
+- Physical standalone VIGI camera availability for integration testing.
+- Official public documentation review for direct camera behavior.
+- A new architecture ADR before public client changes. Suggested title: `ADR-0006 Split NVR and Camera Clients`.
+
+Candidate scope:
+
+- Public client split evaluation: `VigiNvrClient` and `VigiCameraClient`.
+- Shared common layer reuse: transport, authentication, models, exceptions, and capabilities.
+- Direct camera login, snapshot, stream, and settings behavior only if officially documented and verified.
+
+This phase is not part of the current MVP and does not imply current standalone camera support.
+
 ## Long-Term Plan
 
 - CLI as a thin layer over the SDK.
 - More documented OpenAPI endpoint groups.
 - Mutating operations only behind explicit capability checks.
 - Expanded model and firmware verification matrix.
+- Optional standalone VIGI Camera support after physical device verification and ADR approval.
 - Event receiver support if officially documented behavior is sufficient.
 - AI pipeline integration using structured SDK outputs.
 - Automation platform features after SDK and CLI are stable.

@@ -17,6 +17,13 @@ This matrix tracks project verification status. Official TP-Link support status 
 | --- | --- | --- | --- | --- | --- |
 | VIGI NVR1008H-8P | `V1.20` from official guide applicability list | TODO | Official guide applicability list includes this model/version | Not verified yet | TODO |
 
+## Support Modes
+
+| Mode | Scope | Verification status | Notes |
+| --- | --- | --- | --- |
+| NVR Mode | VIGI NVR OpenAPI and NVR-managed channels/cameras. | Current target and verification path. Hardware verification is not recorded yet. | MVP starts with `VIGI NVR1008H-8P`. |
+| Standalone Camera Mode | Direct standalone VIGI Camera OpenAPI behavior. | Not verified. | Future expansion only; blocked until a physical standalone camera is available for integration testing. |
+
 ## Candidate Devices From Official OpenAPI Guide Applicability List
 
 These models appear in the official OpenAPI guide applicability list. Project support is not implied until tested.

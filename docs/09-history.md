@@ -16,6 +16,16 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-08: Standalone Camera Future Architecture Documented
+
+Status: Completed
+
+Summary:
+
+- Clarified that the current MVP remains NVR-first and targets VIGI NVR OpenAPI with NVR-managed channels/cameras.
+- Documented standalone VIGI Camera support as a future expansion candidate only.
+- Recorded that standalone camera public APIs require physical camera verification and a new ADR before implementation.
+
 ### 2026-07-07: Phase 4.5 Project Quality And Developer Experience Added
 
 Status: Completed

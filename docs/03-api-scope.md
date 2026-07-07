@@ -32,6 +32,17 @@ The MVP should support:
 - `GET /openapi/added_devices`
 - Capability discovery from static project metadata and optional device probes.
 
+## Device Mode Scope
+
+| Mode | Current scope | Project status |
+| --- | --- | --- |
+| NVR Mode | VIGI NVR OpenAPI and NVR-managed channels/cameras. | Current MVP target path. |
+| Standalone Camera Mode | Direct standalone VIGI Camera OpenAPI behavior. | Future expansion only; not verified. |
+
+The current public API scope is NVR-first. Connected cameras are in scope only when represented by documented NVR OpenAPI responses, such as NVR-managed channels or added devices.
+
+Standalone camera direct login, snapshot, stream, settings, and other direct camera APIs are out of current MVP scope. They require official public documentation review, physical standalone camera integration testing, and a new architecture ADR before public SDK support is added.
+
 ## Supported Soon
 
 Phase 4:
@@ -60,6 +71,7 @@ Phase 6:
 - Disk SMART test start operations.
 - GUI automation.
 - Undocumented web UI APIs.
+- Direct standalone VIGI Camera APIs.
 
 ## API Stability
 

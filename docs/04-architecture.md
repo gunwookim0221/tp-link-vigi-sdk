@@ -7,6 +7,16 @@
 - Make every network behavior mockable.
 - Keep the CLI, integration harness, and AI pipeline as consumers of the SDK.
 
+## Current MVP Architecture
+
+The current MVP is NVR-first.
+
+- `VigiClient` targets the VIGI NVR OpenAPI first.
+- Connected VIGI cameras are represented through NVR-managed channels and device records.
+- The current target path is VIGI NVR OpenAPI plus NVR-managed channels/cameras.
+- Standalone VIGI Camera OpenAPI behavior is not verified by this project yet.
+- No standalone camera public client is part of the current SDK architecture.
+
 ## Proposed Package Structure
 
 ```text
@@ -58,6 +68,29 @@ Example capability names:
 - `stream.live_rtsp`
 - `stream.replay_rtsp`
 - `snapshot.todo`
+
+## Future Camera Architecture
+
+Standalone VIGI Camera support is a future expansion candidate only. It must not be exposed as public SDK support until a physical standalone VIGI camera is available and integration testing records model, hardware version, firmware version, and test date.
+
+Candidate future public split:
+
+- `VigiNvrClient` for NVR OpenAPI workflows.
+- `VigiCameraClient` for direct standalone camera workflows.
+
+Candidate shared common layer:
+
+- Transport.
+- Authentication.
+- Models.
+- Exceptions.
+- Capabilities.
+
+Rules for adding standalone camera support:
+
+- Do not infer direct camera endpoints from NVR behavior.
+- Do not add direct camera login, snapshot, stream, or settings support without official public documentation and real-device verification.
+- Add a new ADR before changing the public client architecture. Suggested title: `ADR-0006 Split NVR and Camera Clients`.
 
 ## Fact
 
