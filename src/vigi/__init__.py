@@ -20,6 +20,8 @@ from vigi.exceptions import (
 from vigi.crypto import calculate_digest_response, sha256_hex
 from vigi.http_transport import HttpTransport
 from vigi.models import (
+    AddedDevice,
+    AddedDevicesResponse,
     ChannelInfo,
     DeviceInfo,
     NvrInfo,
@@ -49,6 +51,8 @@ __all__ = [
     "AuthenticationContext",
     "AuthenticationError",
     "AuthenticationResult",
+    "AddedDevice",
+    "AddedDevicesResponse",
     "calculate_digest_response",
     "Capability",
     "CapabilityName",

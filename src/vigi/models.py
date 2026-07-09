@@ -69,6 +69,33 @@ class ChannelInfo:
 
 
 @dataclass(frozen=True, slots=True)
+class AddedDevice:
+    """Device entry returned by NVR ``GET /openapi/added_devices``."""
+
+    channel_id: int
+    name: str
+    alias: str
+    online: ChannelStatus
+    ip_address: str
+    mac_address: str
+
+    def __post_init__(self) -> None:
+        _require_positive(self.channel_id, "channel_id")
+        _require_non_empty(self.name, "name")
+        _require_non_empty(self.alias, "alias")
+        _require_non_empty(self.ip_address, "ip_address")
+        _require_non_empty(self.mac_address, "mac_address")
+
+
+@dataclass(frozen=True, slots=True)
+class AddedDevicesResponse:
+    """Parsed response for NVR ``GET /openapi/added_devices``."""
+
+    devices: tuple[AddedDevice, ...]
+    error_code: int
+
+
+@dataclass(frozen=True, slots=True)
 class RecordSearchQuery:
     """Input shape for a future documented recording search flow."""
 

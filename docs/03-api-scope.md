@@ -45,6 +45,20 @@ The current public API scope is NVR-first. Connected cameras are in scope only w
 
 Standalone camera direct login, snapshot, stream, settings, and other direct camera APIs are out of current MVP scope. C340I OpenAPI support is indicated by official firmware release notes, but endpoint behavior still requires physical standalone camera integration testing against the IPC OpenAPI document. Public camera SDK support requires official documentation or release-note coverage, verification records, and a new architecture ADR.
 
+## Phase 6 NVR Device Inventory Scope
+
+Phase 6 implements the documented NVR channel-management endpoint only:
+
+- Method: `GET`
+- Path: `/openapi/added_devices`
+- Authentication: Bearer token header required after the documented NVR token flow.
+- Response top-level fields: `devices` and `error_code`.
+- Device fields: `id`, `name`, `alias`, `online`, `ip`, and `mac`.
+
+The official `id` field is the device channel number and is represented by the SDK as `channel_id`; it is not an invented stable device identifier. The official `online` values are string values: `"0"` means offline and `"1"` means online.
+
+Phase 6 does not include recording search, replay, export, snapshot, RTSP, IPC public APIs, `VigiCameraClient`, `VigiNvrClient`, or undocumented endpoints.
+
 ## Standalone IPC Scope Notes
 
 `VIGI IPC OpenAPI Document_V1.1` does not describe IPC control authentication as the NVR `GET /openapi/token` Bearer-token flow. It describes IPC control authentication through `Method: doAuth`:

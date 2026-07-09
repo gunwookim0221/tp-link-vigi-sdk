@@ -33,8 +33,8 @@ class DeviceType(str, Enum):
 class ChannelStatus(str, Enum):
     """Channel online status values from documented device inventory behavior."""
 
-    ONLINE = "online"
-    OFFLINE = "offline"
+    OFFLINE = "0"
+    ONLINE = "1"
     UNKNOWN = "unknown"
 
 

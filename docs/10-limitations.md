@@ -2,8 +2,8 @@
 
 ## Current Known Limitations
 
-- Device inventory, recording search, replay, snapshot, CLI, and camera-specific public SDK behavior are not implemented yet.
-- No real `VIGI NVR1008H-8P` verification has been recorded yet.
+- Recording search, replay, snapshot, CLI, and camera-specific public SDK behavior are not implemented yet.
+- NVR device inventory is implemented and verified for the documented `GET /openapi/added_devices` schema, but recording search and later phases remain unimplemented.
 - Firmware version for the MVP device is TODO.
 - Snapshot support is TODO because no snapshot endpoint was identified in the official OpenAPI reference PDF during Phase 0.
 - The project has not selected a license yet.

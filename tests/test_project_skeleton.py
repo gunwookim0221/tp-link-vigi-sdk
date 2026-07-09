@@ -62,7 +62,7 @@ def test_placeholder_methods_are_not_implemented() -> None:
     with pytest.raises(AuthenticationError):
         client.auth.authenticate()
 
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(AuthenticationError):
         client.devices.list_added_devices()
 
     with pytest.raises(NotImplementedError):

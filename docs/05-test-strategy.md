@@ -30,6 +30,17 @@ Mock tests should simulate:
 - Documented `error_code` responses.
 - Timeout, TLS, and connection failures.
 
+Device inventory mock and unit tests should cover:
+
+- Bearer-authenticated `GET /openapi/added_devices` request construction.
+- Official response parsing for `devices` and `error_code`.
+- Mapping official `id` to SDK `channel_id`.
+- Mapping official `online` values `"0"` and `"1"`.
+- Empty `devices` responses.
+- Invalid JSON, non-object top-level JSON, missing required fields, invalid field types, invalid `online` values, and non-zero `error_code`.
+- Authentication guard behavior before any network call when no Bearer token is available.
+- Secret redaction so Bearer tokens, passwords, nonce values, and Digest responses are not emitted in assertion messages or errors.
+
 ## Integration Tests
 
 Integration tests require a real VIGI device. NVR-specific tests require a real VIGI NVR; Phase 5 camera verification requires a real C340I with hardware version, firmware version, and test date recorded.
@@ -38,10 +49,10 @@ Required configuration should be provided through environment variables or a loc
 
 ```text
 VIGI_HOST
-VIGI_OPENAPI_PORT
+VIGI_PORT
 VIGI_USERNAME
 VIGI_PASSWORD
-VIGI_VERIFY_TLS
+VIGI_VERIFY_SSL
 VIGI_DEVICE_MODEL
 VIGI_FIRMWARE_VERSION
 ```
@@ -77,6 +88,7 @@ Integration tests must:
 - Require an explicit marker such as `pytest -m integration`.
 - Avoid mutating NVR settings unless the marker is more specific, such as `device_mutating`.
 - Redact credentials and tokens from logs.
+- Keep NVR device inventory tests read-only, opt-in, and avoid fixed assertions about the actual number of connected cameras.
 - Keep IPC real-device tests opt-in, skipped by default, and limited to documented read-only verification such as `doAuth` plus internal `getStreamPort`.
 
 ## Device Tests

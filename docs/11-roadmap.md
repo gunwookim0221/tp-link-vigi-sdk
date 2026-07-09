@@ -14,7 +14,7 @@ Completed:
 Next:
 
 - IPC auth/transport architecture work according to [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md), if standalone IPC SDK support is planned.
-- NVR Device Inventory, now that remote MVP NVR auth validation is recorded.
+- NVR Recording Search, now that remote MVP NVR device inventory validation is recorded.
 
 ## v0.1
 
@@ -88,7 +88,8 @@ Exit criteria:
 Current status:
 
 - Remote NVR OpenAPI authentication is verified through the SDK integration scaffold.
-- Phase 6 can proceed to read-only inventory implementation and verification.
+- Remote NVR OpenAPI `GET /openapi/added_devices` inventory is verified through the SDK integration scaffold.
+- Phase 6 is complete and Phase 7 recording search can proceed.
 
 ## v0.4
 
@@ -170,7 +171,7 @@ This phase is not part of the current MVP and does not imply current standalone 
 ## Phase Order
 
 1. Phase 5: C340I Camera Integration Verification. Status: IPC auth and post-auth read-only control integration verified; SDK implementation pending ADR-0006 architecture work.
-2. Phase 6: NVR Device Inventory. Status: auth prerequisite verified; inventory implementation not started.
+2. Phase 6: NVR Device Inventory. Status: implemented and real-device integration verified.
 3. Phase 7: NVR Recording Search.
 4. Phase 8: Replay / Export.
 5. Phase 9: Snapshot Support Decision.

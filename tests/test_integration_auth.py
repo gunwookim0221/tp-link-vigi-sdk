@@ -18,10 +18,12 @@ def _integration_config_available() -> bool:
 )
 def test_integration_openapi_authentication() -> None:
     verify_ssl = os.getenv("VIGI_VERIFY_SSL", "true").lower() not in {"0", "false", "no"}
+    port = int(os.getenv("VIGI_PORT", "20443"))
     config = AuthConfig(
         host=os.environ["VIGI_HOST"],
         username=os.environ["VIGI_USERNAME"],
         password=os.environ["VIGI_PASSWORD"],
+        port=port,
         verify_tls=verify_ssl,
     )
     transport = HttpTransport(

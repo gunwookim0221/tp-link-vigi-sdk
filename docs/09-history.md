@@ -16,6 +16,35 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-10: NVR Device Inventory Integration Passed
+
+Status: Completed
+
+Summary:
+
+- Recorded successful remote NVR OpenAPI read-only inventory verification against the Chuncheon VIGI NVR.
+- Confirmed Bearer-authenticated `GET /openapi/added_devices` succeeds after documented NVR auth.
+- Recorded successful SDK integration test command `python -m pytest tests/test_integration_devices.py -v`.
+- Recorded test result `tests/test_integration_devices.py::test_integration_added_devices_inventory PASSED`; `1 passed`.
+- Verified `client.devices.list_added_devices()` and `AddedDevicesResponse` against the real NVR for Phase 6 scope.
+- Noted pytest cache warning from `.pytest_cache` permissions while preserving the test pass result.
+- Did not record password, nonce, Digest response, access token, or Authorization header values.
+
+### 2026-07-10: Phase 6 NVR Device Inventory Implemented
+
+Status: Completed
+
+Summary:
+
+- Implemented documented NVR `GET /openapi/added_devices` support using Bearer authentication.
+- Added typed `AddedDevice` and `AddedDevicesResponse` models using official fields only.
+- Added response parsing for `devices`, `error_code`, official channel `id`, and `online` values `"0"` and `"1"`.
+- Wired `VigiClient.devices.list_added_devices()` through the existing authenticated session and transport.
+- Added mock/unit coverage for request construction, success parsing, empty responses, malformed responses, API errors, auth guard behavior, and redaction.
+- Added opt-in NVR device inventory integration test scaffold using `VIGI_HOST`, `VIGI_PORT`, `VIGI_USERNAME`, `VIGI_PASSWORD`, and `VIGI_VERIFY_SSL`.
+- Did not add recording search, replay, export, snapshot, RTSP, IPC public APIs, `VigiCameraClient`, or `VigiNvrClient`.
+- Phase 6 real-device verification is recorded separately in the integration-pass history entry.
+
 ### 2026-07-10: NVR Remote Auth Integration Passed
 
 Status: Completed

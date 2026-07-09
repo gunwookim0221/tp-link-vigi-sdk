@@ -37,7 +37,7 @@ class VigiClient:
         if self.auth_provider is None:
             self.auth_provider = self.auth
         self.session = Session(transport=self.transport, info=SessionInfo())
-        self.devices = DeviceService()
+        self.devices = DeviceService(self.session)
         self.records = RecordService()
         self.stream = StreamService()
 

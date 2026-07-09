@@ -220,17 +220,23 @@ Implement read-only channel/device inventory after real-device authentication va
 ### Tasks
 
 - [x] Validate authentication against `VIGI NVR1008H-8P`.
-- [ ] Implement `GET /openapi/added_devices`.
-- [ ] Parse documented device/channel fields.
-- [ ] Add capability flag `device.added_devices`.
-- [ ] Add mock tests.
-- [ ] Add opt-in integration test scaffold.
+- [x] Document official `/openapi/added_devices` schema.
+- [x] Add typed `AddedDevice` and `AddedDevicesResponse` models.
+- [x] Add response parser for `devices` and `error_code`.
+- [x] Add Bearer-authenticated request builder.
+- [x] Implement `DeviceService.list_added_devices()`.
+- [x] Wire `VigiClient.devices`.
+- [x] Add mock/unit tests.
+- [x] Add opt-in NVR integration test.
+- [x] Keep recording/replay/export/snapshot/RTSP out of scope.
+- [x] Keep IPC public APIs, `VigiCameraClient`, and `VigiNvrClient` out of scope.
 
 ### Exit Criteria
 
 - Device inventory mock tests pass.
 - Integration tests remain opt-in.
 - Device matrix is updated with verification status.
+- Real-device `GET /openapi/added_devices` integration is verified.
 
 ## Phase 7: NVR Recording Search
 

@@ -4,9 +4,9 @@ Work in progress Python SDK for TP-Link VIGI NVR OpenAPI.
 
 ## Current Status
 
-This project is in early development. It has project documentation, package skeleton, core models/types, transport/authentication foundations, and documented OpenAPI authentication support.
+This project is in early development. It has project documentation, package skeleton, core models/types, transport/authentication foundations, documented OpenAPI authentication support, and read-only NVR device inventory support for `GET /openapi/added_devices`.
 
-No real VIGI NVR device has been verified yet. Device APIs, recording search, replay, snapshot, CLI, and release documentation are not ready.
+Remote VIGI NVR authentication and device inventory integration have been verified. Recording search, replay, snapshot, CLI, and release documentation are not ready.
 
 ## Project Goals
 
@@ -23,11 +23,11 @@ Implemented:
 - Core SDK data models and enum types.
 - Transport and session boundaries.
 - OpenAPI authentication flow based on official token endpoint documentation.
+- Read-only NVR device inventory through documented `GET /openapi/added_devices`.
 - Mock/unit tests and skipped integration auth scaffold.
 
 Not implemented:
 
-- Device inventory API.
 - Recording search API.
 - RTSP replay support.
 - Snapshot support.
@@ -42,7 +42,8 @@ MVP target:
 
 Verification status:
 
-- TODO: real-device validation is not recorded yet.
+- Remote OpenAPI authentication validation is recorded.
+- Remote read-only device inventory validation is recorded.
 
 ## Project Structure
 
@@ -70,7 +71,7 @@ Start with:
 - Phase 3: Transport and Authentication Foundation - complete
 - Phase 4: OpenAPI Authentication Implementation - complete
 - Phase 4.5: Project Quality and Developer Experience - complete
-- Next feature phase: Device Inventory after real-device authentication validation
+- Phase 6: NVR Device Inventory - implemented with opt-in integration scaffold
 
 ## License
 
