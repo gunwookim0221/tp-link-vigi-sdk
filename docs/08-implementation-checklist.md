@@ -219,7 +219,7 @@ Implement read-only channel/device inventory after real-device authentication va
 
 ### Tasks
 
-- [ ] Validate authentication against `VIGI NVR1008H-8P`.
+- [x] Validate authentication against `VIGI NVR1008H-8P`.
 - [ ] Implement `GET /openapi/added_devices`.
 - [ ] Parse documented device/channel fields.
 - [ ] Add capability flag `device.added_devices`.

@@ -16,6 +16,19 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-10: NVR Remote Auth Integration Passed
+
+Status: Completed
+
+Summary:
+
+- Recorded successful remote NVR OpenAPI authentication verification against the Chuncheon VIGI NVR through DDNS plus ipTIME port forwarding.
+- Confirmed the documented NVR `GET /openapi/token` Digest challenge over external port `20443`.
+- Recorded successful SDK integration test command `python -m pytest tests/test_integration_auth.py -v`.
+- Recorded test result `tests/test_integration_auth.py::test_integration_openapi_authentication PASSED`; `1 passed`.
+- Noted pytest cache warning from `.pytest_cache` permissions while preserving the test pass result.
+- Did not record password, nonce, Digest response, or issued token values.
+
 ### 2026-07-10: IPC Internal Hardening Completed
 
 Status: Completed
