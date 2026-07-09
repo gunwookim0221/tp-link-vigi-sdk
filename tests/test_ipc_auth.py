@@ -5,6 +5,11 @@ import pytest
 from vigi.crypto import calculate_digest_response
 from vigi.exceptions import AuthenticationError, VigiApiError, VigiResponseError
 from vigi.ipc_auth import (
+    IPC_AUTH_ALGORITHM,
+    IPC_AUTH_HTTP_METHOD,
+    IPC_AUTH_METHOD,
+    IPC_ERR_AUTH_REQUIRED,
+    IPC_ERR_SUCCESS,
     IpcAuthChallenge,
     IpcAuthConfig,
     IpcAuthService,
@@ -33,7 +38,15 @@ def test_do_auth_step1_request_creation() -> None:
     assert request.method == "POST"
     assert request.path == "/"
     assert request.headers == {"Content-Type": "application/json"}
-    assert json.loads(request.body or b"{}") == {"method": "doAuth", "params": None}
+    assert json.loads(request.body or b"{}") == {
+        "method": IPC_AUTH_METHOD,
+        "params": None,
+    }
+
+
+def test_ipc_auth_err_code_constants_match_documented_flow() -> None:
+    assert IPC_ERR_SUCCESS == 0
+    assert IPC_ERR_AUTH_REQUIRED == -10020
 
 
 def test_do_auth_challenge_parse_allows_documented_err_code() -> None:
@@ -42,15 +55,15 @@ def test_do_auth_challenge_parse_allows_documented_err_code() -> None:
             status_code=401,
             body=json.dumps(
                 {
-                    "method": "doAuth",
+                    "method": IPC_AUTH_METHOD,
                     "authenticate": {
                         "realm": "TP-LINK IP-Camera",
                         "nonce": "abc123",
-                        "algorithm": "SHA-256",
-                        "uri": "doAuth",
-                        "method": "POST",
+                        "algorithm": IPC_AUTH_ALGORITHM,
+                        "uri": IPC_AUTH_METHOD,
+                        "method": IPC_AUTH_HTTP_METHOD,
                     },
-                    "errCode": -10020,
+                    "errCode": IPC_ERR_AUTH_REQUIRED,
                 }
             ).encode("utf-8"),
         )
@@ -58,10 +71,10 @@ def test_do_auth_challenge_parse_allows_documented_err_code() -> None:
 
     assert challenge.realm == "TP-LINK IP-Camera"
     assert challenge.nonce == "abc123"
-    assert challenge.algorithm == "SHA-256"
-    assert challenge.uri == "doAuth"
-    assert challenge.method == "POST"
-    assert challenge.err_code == -10020
+    assert challenge.algorithm == IPC_AUTH_ALGORITHM
+    assert challenge.uri == IPC_AUTH_METHOD
+    assert challenge.method == IPC_AUTH_HTTP_METHOD
+    assert challenge.err_code == IPC_ERR_AUTH_REQUIRED
     assert "abc123" not in repr(challenge)
 
 
@@ -69,10 +82,10 @@ def test_do_auth_step2_request_uses_nonce_and_response_only() -> None:
     challenge = IpcAuthChallenge(
         realm="TP-LINK IP-Camera",
         nonce="abc123",
-        algorithm="SHA-256",
-        uri="doAuth",
-        method="POST",
-        err_code=-10020,
+        algorithm=IPC_AUTH_ALGORITHM,
+        uri=IPC_AUTH_METHOD,
+        method=IPC_AUTH_HTTP_METHOD,
+        err_code=IPC_ERR_AUTH_REQUIRED,
     )
 
     request = build_do_auth_response_request(
@@ -84,7 +97,7 @@ def test_do_auth_step2_request_uses_nonce_and_response_only() -> None:
 
     assert request.method == "POST"
     assert request.path == "/"
-    assert body["method"] == "doAuth"
+    assert body["method"] == IPC_AUTH_METHOD
     assert body["params"]["nonce"] == "abc123"
     assert body["params"]["response"] == (
         "ac17ca2fb8735a42a1d2ce03671708ad1d4b9de5a181320342e5ae7683a30243"
@@ -114,9 +127,9 @@ def test_do_auth_success_parse_masks_stok() -> None:
             status_code=200,
             body=json.dumps(
                 {
-                    "method": "doAuth",
+                    "method": IPC_AUTH_METHOD,
                     "stok": "secret-stok",
-                    "errCode": 0,
+                    "errCode": IPC_ERR_SUCCESS,
                 }
             ).encode("utf-8"),
         ),
@@ -145,11 +158,11 @@ def test_ipc_auth_service_runs_do_auth_flow() -> None:
                         "authenticate": {
                             "realm": "TP-LINK IP-Camera",
                             "nonce": "abc123",
-                            "algorithm": "SHA-256",
-                            "uri": "doAuth",
-                            "method": "POST",
+                            "algorithm": IPC_AUTH_ALGORITHM,
+                            "uri": IPC_AUTH_METHOD,
+                            "method": IPC_AUTH_HTTP_METHOD,
                         },
-                        "errCode": -10020,
+                        "errCode": IPC_ERR_AUTH_REQUIRED,
                     }
                 ).encode("utf-8"),
             ),
@@ -157,9 +170,9 @@ def test_ipc_auth_service_runs_do_auth_flow() -> None:
                 status_code=200,
                 body=json.dumps(
                     {
-                        "method": "doAuth",
+                        "method": IPC_AUTH_METHOD,
                         "stok": "secret-stok",
-                        "errCode": 0,
+                        "errCode": IPC_ERR_SUCCESS,
                     }
                 ).encode("utf-8"),
             ),
@@ -174,7 +187,7 @@ def test_ipc_auth_service_runs_do_auth_flow() -> None:
     assert session.stok == "secret-stok"
     assert len(transport.requests) == 2
     assert json.loads(transport.requests[0].body or b"{}") == {
-        "method": "doAuth",
+        "method": IPC_AUTH_METHOD,
         "params": None,
     }
     second_body = json.loads(transport.requests[1].body or b"{}")
@@ -184,22 +197,106 @@ def test_ipc_auth_service_runs_do_auth_flow() -> None:
 
 def test_do_auth_error_paths_are_sanitized() -> None:
     with pytest.raises(VigiResponseError, match="missing authenticate"):
-        parse_do_auth_challenge(Response(status_code=200, body=b'{"errCode":-10020}'))
+        parse_do_auth_challenge(
+            Response(status_code=200, body=b'{"method":"doAuth","errCode":-10020}')
+        )
 
-    with pytest.raises(AuthenticationError, match="Unsupported IPC doAuth algorithm"):
+    with pytest.raises(VigiResponseError, match="unexpected method"):
         parse_do_auth_challenge(
             Response(
                 status_code=200,
                 body=json.dumps(
                     {
+                        "method": "notDoAuth",
+                        "authenticate": {
+                            "realm": "TP-LINK IP-Camera",
+                            "nonce": "secret-nonce",
+                            "algorithm": IPC_AUTH_ALGORITHM,
+                            "uri": IPC_AUTH_METHOD,
+                            "method": IPC_AUTH_HTTP_METHOD,
+                        },
+                        "errCode": IPC_ERR_AUTH_REQUIRED,
+                    }
+                ).encode("utf-8"),
+            )
+        )
+
+    with pytest.raises(AuthenticationError, match="Unsupported IPC doAuth algorithm") as exc:
+        parse_do_auth_challenge(
+            Response(
+                status_code=200,
+                body=json.dumps(
+                    {
+                        "method": IPC_AUTH_METHOD,
                         "authenticate": {
                             "realm": "TP-LINK IP-Camera",
                             "nonce": "secret-nonce",
                             "algorithm": "MD5",
-                            "uri": "doAuth",
-                            "method": "POST",
+                            "uri": IPC_AUTH_METHOD,
+                            "method": IPC_AUTH_HTTP_METHOD,
                         },
-                        "errCode": -10020,
+                        "errCode": IPC_ERR_AUTH_REQUIRED,
+                    }
+                ).encode("utf-8"),
+            )
+        )
+    assert "secret-nonce" not in str(exc.value)
+
+    with pytest.raises(VigiResponseError, match="unexpected uri"):
+        parse_do_auth_challenge(
+            Response(
+                status_code=200,
+                body=json.dumps(
+                    {
+                        "method": IPC_AUTH_METHOD,
+                        "authenticate": {
+                            "realm": "TP-LINK IP-Camera",
+                            "nonce": "secret-nonce",
+                            "algorithm": IPC_AUTH_ALGORITHM,
+                            "uri": "notDoAuth",
+                            "method": IPC_AUTH_HTTP_METHOD,
+                        },
+                        "errCode": IPC_ERR_AUTH_REQUIRED,
+                    }
+                ).encode("utf-8"),
+            )
+        )
+
+    with pytest.raises(VigiResponseError, match="unexpected method"):
+        parse_do_auth_challenge(
+            Response(
+                status_code=200,
+                body=json.dumps(
+                    {
+                        "method": IPC_AUTH_METHOD,
+                        "authenticate": {
+                            "realm": "TP-LINK IP-Camera",
+                            "nonce": "secret-nonce",
+                            "algorithm": IPC_AUTH_ALGORITHM,
+                            "uri": IPC_AUTH_METHOD,
+                            "method": "GET",
+                        },
+                        "errCode": IPC_ERR_AUTH_REQUIRED,
+                    }
+                ).encode("utf-8"),
+            )
+        )
+
+    with pytest.raises(VigiResponseError, match="invalid errCode"):
+        parse_do_auth_challenge(
+            Response(
+                status_code=200,
+                body=json.dumps(
+                    {
+                        "method": IPC_AUTH_METHOD,
+                        "authenticate": {
+                            "realm": "TP-LINK IP-Camera",
+                            "nonce": "secret-nonce",
+                            "algorithm": IPC_AUTH_ALGORITHM,
+                            "uri": IPC_AUTH_METHOD,
+                            "method": IPC_AUTH_HTTP_METHOD,
+                        },
+                        "errCode": "-10020",
                     }
                 ).encode("utf-8"),
             )
@@ -211,21 +308,25 @@ def test_do_auth_error_paths_are_sanitized() -> None:
                 status_code=200,
                 body=json.dumps(
                     {
+                        "method": IPC_AUTH_METHOD,
                         "authenticate": {
                             "realm": "TP-LINK IP-Camera",
-                            "algorithm": "SHA-256",
-                            "uri": "doAuth",
-                            "method": "POST",
+                            "algorithm": IPC_AUTH_ALGORITHM,
+                            "uri": IPC_AUTH_METHOD,
+                            "method": IPC_AUTH_HTTP_METHOD,
                         },
-                        "errCode": -10020,
+                        "errCode": IPC_ERR_AUTH_REQUIRED,
                     }
                 ).encode("utf-8"),
             )
         )
 
+    with pytest.raises(VigiResponseError, match="not valid JSON"):
+        parse_do_auth_challenge(Response(status_code=200, body=b""))
+
     with pytest.raises(AuthenticationError, match="IPC authentication failed"):
         parse_do_auth_success(
-            Response(status_code=401, body=b'{"errCode":-10020}'),
+            Response(status_code=401, body=b'{"errCode":-10020,"stok":"secret-stok"}'),
             host="camera.local",
             port=20443,
         )
@@ -233,6 +334,26 @@ def test_do_auth_error_paths_are_sanitized() -> None:
     with pytest.raises(VigiResponseError, match="missing stok"):
         parse_do_auth_success(
             Response(status_code=200, body=b'{"method":"doAuth","errCode":0}'),
+            host="camera.local",
+            port=20443,
+        )
+
+    with pytest.raises(VigiResponseError, match="unexpected method"):
+        parse_do_auth_success(
+            Response(
+                status_code=200,
+                body=b'{"method":"notDoAuth","errCode":0,"stok":"secret-stok"}',
+            ),
+            host="camera.local",
+            port=20443,
+        )
+
+    with pytest.raises(VigiResponseError, match="invalid errCode"):
+        parse_do_auth_success(
+            Response(
+                status_code=200,
+                body=b'{"method":"doAuth","errCode":"0","stok":"secret-stok"}',
+            ),
             host="camera.local",
             port=20443,
         )
@@ -253,3 +374,74 @@ def test_do_auth_error_paths_are_sanitized() -> None:
 
     with pytest.raises(VigiApiError, match="HTTP 500"):
         parse_do_auth_challenge(Response(status_code=500, body=b"{}"))
+
+
+def test_do_auth_error_messages_do_not_expose_secrets() -> None:
+    secrets = ("secret-password", "secret-nonce", "secret-response", "secret-stok")
+    errors: list[BaseException] = []
+
+    with pytest.raises(AuthenticationError) as auth_exc:
+        parse_do_auth_challenge(
+            Response(
+                status_code=200,
+                body=json.dumps(
+                    {
+                        "method": IPC_AUTH_METHOD,
+                        "authenticate": {
+                            "realm": "TP-LINK IP-Camera",
+                            "nonce": "secret-nonce",
+                            "algorithm": "MD5",
+                            "uri": IPC_AUTH_METHOD,
+                            "method": IPC_AUTH_HTTP_METHOD,
+                        },
+                        "errCode": IPC_ERR_AUTH_REQUIRED,
+                    }
+                ).encode("utf-8"),
+            )
+        )
+    errors.append(auth_exc.value)
+
+    with pytest.raises(AuthenticationError) as success_exc:
+        parse_do_auth_success(
+            Response(
+                status_code=200,
+                body=b'{"method":"doAuth","errCode":-10020,"stok":"secret-stok"}',
+            ),
+            host="camera.local",
+            port=20443,
+            username="admin",
+        )
+    errors.append(success_exc.value)
+
+    config = IpcAuthConfig(
+        host="camera.local",
+        username="admin",
+        password="secret-password",
+    )
+    challenge = IpcAuthChallenge(
+        realm="TP-LINK IP-Camera",
+        nonce="secret-nonce",
+        algorithm=IPC_AUTH_ALGORITHM,
+        uri=IPC_AUTH_METHOD,
+        method=IPC_AUTH_HTTP_METHOD,
+        err_code=IPC_ERR_AUTH_REQUIRED,
+    )
+    request = build_do_auth_response_request(
+        username="admin",
+        password="secret-password",
+        challenge=challenge,
+    )
+    body = json.loads(request.body or b"{}")
+    errors.extend(
+        [
+            Exception(repr(config)),
+            Exception(repr(challenge)),
+            Exception(repr(request)),
+        ]
+    )
+
+    for error in errors:
+        message = str(error)
+        for secret in secrets:
+            assert secret not in message
+        assert body["params"]["response"] not in message

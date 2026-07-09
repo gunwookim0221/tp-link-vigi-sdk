@@ -56,6 +56,21 @@ VIGI_IPC_PASSWORD
 VIGI_IPC_VERIFY_TLS
 ```
 
+`.env.example` documents local placeholder values for these variables, but the
+test suite does not auto-load `.env`. Local runs should export variables through
+the shell, test runner, or CI secret configuration before invoking pytest.
+
+Example PowerShell IPC verification setup:
+
+```powershell
+$env:VIGI_IPC_HOST = "192.168.1.213"
+$env:VIGI_IPC_PORT = "20443"
+$env:VIGI_IPC_USERNAME = "admin"
+$env:VIGI_IPC_PASSWORD = "<local-camera-password>"
+$env:VIGI_IPC_VERIFY_TLS = "false"
+python -m pytest tests/test_integration_ipc_auth.py -v
+```
+
 Integration tests must:
 
 - Never run by default in normal `pytest`.

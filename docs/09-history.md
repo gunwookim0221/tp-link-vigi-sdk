@@ -16,6 +16,19 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-10: IPC Internal Hardening Completed
+
+Status: Completed
+
+Summary:
+
+- Added documented IPC auth errCode constants for success and authentication-required challenge responses.
+- Hardened internal IPC `doAuth` challenge and success parsing for method, URI, HTTP method, errCode type, and malformed or empty responses.
+- Expanded redaction tests so password, nonce, digest response, and `stok` stay out of repr and sanitized exception messages.
+- Hardened the opt-in C340I IPC integration scaffold to parse `getStreamPort` JSON and verify method, `errCode: 0`, and `result.streamPort` presence without pinning the stream port value.
+- Documented that `.env.example` is a placeholder reference and tests do not auto-load `.env`.
+- Kept public SDK exports, public camera clients, snapshot, device-info, and RTSP behavior unchanged.
+
 ### 2026-07-10: C340I IPC Integration Test Passed
 
 Status: Completed

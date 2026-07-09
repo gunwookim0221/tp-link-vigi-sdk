@@ -1,3 +1,4 @@
+import json
 import os
 
 import pytest
@@ -45,3 +46,8 @@ def test_integration_ipc_do_auth_and_get_stream_port() -> None:
 
     assert response.status_code == 200
     assert response.body
+    payload = json.loads(response.body.decode("utf-8"))
+    assert payload["method"] == "getStreamPort"
+    assert payload["errCode"] == 0
+    assert isinstance(payload["result"]["streamPort"], str)
+    assert payload["result"]["streamPort"]

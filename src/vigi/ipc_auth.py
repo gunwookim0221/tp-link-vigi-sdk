@@ -14,6 +14,11 @@ from vigi.transport import Request, Response, Transport
 
 
 CONTENT_TYPE_JSON = {"Content-Type": "application/json"}
+IPC_AUTH_METHOD = "doAuth"
+IPC_AUTH_HTTP_METHOD = "POST"
+IPC_AUTH_ALGORITHM = "SHA-256"
+IPC_ERR_SUCCESS = 0
+IPC_ERR_AUTH_REQUIRED = -10020
 
 
 @dataclass(frozen=True, slots=True)
@@ -72,7 +77,7 @@ class IpcAuthService:
 def build_do_auth_challenge_request() -> Request:
     """Build IPC doAuth Step 1 challenge request."""
 
-    return _json_request({"method": "doAuth", "params": None})
+    return _json_request({"method": IPC_AUTH_METHOD, "params": None})
 
 
 def build_do_auth_response_request(
@@ -91,7 +96,7 @@ def build_do_auth_response_request(
     )
     return _json_request(
         {
-            "method": "doAuth",
+            "method": IPC_AUTH_METHOD,
             "params": {
                 "nonce": challenge.nonce,
                 "response": response,
@@ -107,6 +112,11 @@ def parse_do_auth_challenge(response: Response) -> IpcAuthChallenge:
         raise VigiApiError(f"IPC doAuth challenge returned HTTP {response.status_code}.")
 
     payload = _json_payload(response, "IPC doAuth challenge response is not valid JSON.")
+    _require_payload_method(
+        payload,
+        expected=IPC_AUTH_METHOD,
+        context="IPC doAuth challenge",
+    )
     authenticate = payload.get("authenticate")
     if not isinstance(authenticate, dict):
         raise VigiResponseError("IPC doAuth challenge is missing authenticate.")
@@ -123,11 +133,17 @@ def parse_do_auth_challenge(response: Response) -> IpcAuthChallenge:
             raise VigiResponseError(f"IPC doAuth challenge is missing {name}.")
 
     algorithm = fields["algorithm"]
-    if algorithm.upper() != "SHA-256":
+    if algorithm.upper() != IPC_AUTH_ALGORITHM:
         raise AuthenticationError("Unsupported IPC doAuth algorithm.")
+    if fields["uri"] != IPC_AUTH_METHOD:
+        raise VigiResponseError("IPC doAuth challenge has unexpected uri.")
+    if fields["method"] != IPC_AUTH_HTTP_METHOD:
+        raise VigiResponseError("IPC doAuth challenge has unexpected method.")
 
     err_code = payload.get("errCode")
-    if err_code != -10020:
+    if not isinstance(err_code, int):
+        raise VigiResponseError("IPC doAuth challenge has invalid errCode.")
+    if err_code != IPC_ERR_AUTH_REQUIRED:
         raise AuthenticationError("IPC doAuth challenge did not request authentication.")
 
     return IpcAuthChallenge(
@@ -156,7 +172,15 @@ def parse_do_auth_success(
         raise VigiApiError(f"IPC doAuth returned HTTP {response.status_code}.")
 
     payload = _json_payload(response, "IPC doAuth response is not valid JSON.")
-    if payload.get("errCode") != 0:
+    _require_payload_method(
+        payload,
+        expected=IPC_AUTH_METHOD,
+        context="IPC doAuth response",
+    )
+    err_code = payload.get("errCode")
+    if not isinstance(err_code, int):
+        raise VigiResponseError("IPC doAuth response has invalid errCode.")
+    if err_code != IPC_ERR_SUCCESS:
         raise AuthenticationError("IPC authentication failed.")
 
     stok = payload.get("stok")
@@ -178,10 +202,20 @@ def _json_request(payload: dict[str, Any]) -> Request:
 
 
 def _json_payload(response: Response, error_message: str) -> dict[str, Any]:
+    if not response.body:
+        raise VigiResponseError(error_message)
     try:
-        payload = json.loads((response.body or b"{}").decode("utf-8"))
+        payload = json.loads(response.body.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise VigiResponseError(error_message) from exc
     if not isinstance(payload, dict):
         raise VigiResponseError(error_message)
     return payload
+
+
+def _require_payload_method(
+    payload: dict[str, Any], *, expected: str, context: str
+) -> None:
+    method = payload.get("method")
+    if method != expected:
+        raise VigiResponseError(f"{context} has unexpected method.")

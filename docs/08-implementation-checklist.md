@@ -190,6 +190,10 @@ Verify shared SDK layers against `VIGI C340I` before expanding NVR-specific APIs
 - [x] Add mock/unit coverage for IPC `doAuth`, `stok` redaction, and internal `getStreamPort` request building.
 - [x] Add opt-in skipped IPC integration scaffold using `VIGI_IPC_*` environment variables.
 - [x] Run opt-in C340I IPC integration test and verify `doAuth` plus internal `getStreamPort` succeeds.
+- [x] Harden internal IPC `doAuth` parsing with documented errCode constants and strict method, URI, HTTP method, and errCode validation.
+- [x] Harden IPC redaction tests so password, nonce, digest response, and `stok` do not appear in repr or sanitized error messages.
+- [x] Harden opt-in IPC integration verification to parse `getStreamPort` JSON and confirm method, `errCode: 0`, and `result.streamPort` presence.
+- [x] Document that `.env.example` is a placeholder reference and `.env` is not auto-loaded by tests.
 - [ ] Keep public camera SDK APIs blocked until a separate public API decision is made.
 - [x] Add or confirm camera-specific integration environment variables before running real-device tests.
 - [x] Keep all real-device integration tests skipped by default.
