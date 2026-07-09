@@ -14,7 +14,8 @@ The current MVP is NVR-first.
 - `VigiClient` targets the VIGI NVR OpenAPI first.
 - Connected VIGI cameras are represented through NVR-managed channels and device records.
 - The current target path is VIGI NVR OpenAPI plus NVR-managed channels/cameras.
-- Standalone VIGI Camera OpenAPI behavior is not verified by this project yet.
+- `VIGI C340I` is used in Phase 5 for shared-layer verification based on official firmware release notes indicating OpenAPI support.
+- C340I IPC `doAuth` and post-auth read-only `getStreamPort` behavior are manually verified, but not implemented in the SDK.
 - No standalone camera public client is part of the current SDK architecture.
 
 ## Proposed Package Structure
@@ -51,6 +52,19 @@ This structure is proposed for Phase 1. It is not implemented in Phase 0.
 | Models | Typed request/response structures. |
 | Capabilities | Model/firmware support declarations and runtime feature gating. |
 
+## Confirmed Auth Split
+
+NVR OpenAPI and IPC OpenAPI use different documented authentication and request shapes.
+
+| Device class | Auth flow | Post-auth control shape | SDK status |
+| --- | --- | --- | --- |
+| NVR | `GET /openapi/token` Digest challenge followed by Bearer token. | REST-style `/openapi/...` HTTPS requests with Bearer authorization. | Implemented for the NVR auth layer. |
+| IPC standalone camera | `doAuth` HTTPS JSON challenge followed by `stok`. | HTTPS `POST https://device_addr:port/stok=<stok>` with JSON method payloads. | Manually verified on C340I; SDK implementation pending ADR-guided architecture work. |
+
+The existing NVR `AuthService` must not be reused directly for IPC auth. Reusable pieces may include SHA-256 digest helpers, TLS configuration, redaction policy, low-level transport concepts, exceptions, and integration-test harness patterns.
+
+[ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md) records this split before any IPC SDK implementation.
+
 ## Capability-Based Design
 
 Capabilities should answer:
@@ -71,7 +85,9 @@ Example capability names:
 
 ## Future Camera Architecture
 
-Standalone VIGI Camera support is a future expansion candidate only. It must not be exposed as public SDK support until a physical standalone VIGI camera is available and integration testing records model, hardware version, firmware version, and test date.
+Standalone VIGI Camera support is a future expansion candidate only. `VigiClient` remains the only public client while C340I is used for shared-layer verification.
+
+C340I OpenAPI support is officially indicated in TP-Link firmware release notes for `VIGI C340I(UN) V1.20` firmware `2.2.0 Build 250926`. Real-device camera observations must not create public camera APIs until official documentation, verification records, and an ADR justify the split.
 
 Candidate future public split:
 
@@ -90,15 +106,16 @@ Rules for adding standalone camera support:
 
 - Do not infer direct camera endpoints from NVR behavior.
 - Do not add direct camera login, snapshot, stream, or settings support without official public documentation and real-device verification.
-- Add a new ADR before changing the public client architecture. Suggested title: `ADR-0006 Split NVR and Camera Clients`.
+- Follow [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md) before implementing IPC authentication or transport behavior.
+- Add another ADR before changing the public client architecture, introducing an RTSP client dependency, adding a documented snapshot endpoint to the public API, or changing the NVR-first MVP scope.
 
 ## Fact
 
-- The official reference separates control protocol, event protocol, and stream protocol.
-- The control protocol uses HTTPS and JSON payloads.
-- Stream access is RTSP.
-- Control requests require Bearer authentication after token acquisition.
-- RTSP stream authentication is Digest authentication according to the official reference.
+- The official NVR reference separates control protocol, event protocol, and stream protocol.
+- NVR control requests require Bearer authentication after token acquisition.
+- NVR stream access is RTSP.
+- IPC control requests use HTTPS POST JSON method payloads with `stok` after `doAuth`.
+- IPC stream access is RTSP-style `MULTITRANS` and stream data uses RTP over TCP according to the IPC document.
 
 ## Exception Design
 
@@ -147,3 +164,4 @@ Assumption:
 - [docs/adr/README.md](adr/README.md)
 - [ADR-0001 Capability-Based Architecture](adr/ADR-0001-capability-based-architecture.md)
 - [ADR-0002 Authentication Strategy](adr/ADR-0002-authentication-strategy.md)
+- [ADR-0006 Separate NVR And IPC Auth Transports](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md)

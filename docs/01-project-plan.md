@@ -16,6 +16,7 @@ If another project document conflicts with this file, update the conflicting doc
 - The official OpenAPI reference PDF identifies the OpenAPI document version as `V1.0` with `Initial release`.
 - The official OpenAPI reference PDF defines three OpenAPI areas: control protocol, event protocol, and stream protocol.
 - The official OpenAPI reference PDF says VIGI NVR uses RTSP as the stream protocol.
+- TP-Link firmware release notes for `VIGI C340I(UN) V1.20 2.2.0 Build 250926` indicate added support for `VIGI OpenAPI`.
 
 ## Vision
 
@@ -40,9 +41,16 @@ The first implementation milestone should provide:
 - Capability metadata describing which API groups are supported by the target NVR and firmware.
 - A testable transport layer that can run against mocks before it runs against hardware.
 
+The project remains NVR-first for MVP scope. However, standalone camera hardware is now used as the next verification target to validate shared authentication, transport, model, and integration-test layers before expanding NVR-specific APIs.
+
+VIGI C340I availability does not imply public standalone camera SDK support. Camera-specific public APIs remain deferred until official documentation, real-device verification records, and an ADR justify the scope expansion.
+
+Phase 5 remains `Camera Integration Verification`. C340I is now confirmed as a real lab verification target with OpenAPI UI support, but implementation remains blocked until the documented token flow is confirmed against the real camera.
+
 ## Assumption
 
 - `VIGI NVR1008H-8P` support will be validated against a real device during integration testing.
+- `VIGI C340I` will be used in Phase 5 as a shared-layer verification target after hardware version, firmware version, and test date are recorded.
 - Other VIGI NVR models will be added through capability declarations instead of model-specific branching.
 - The public OpenAPI surface may change after document version `V1.0`; the project must keep endpoint metadata easy to update.
 
@@ -96,6 +104,7 @@ vigi-python/
 
 - CLI should be a thin layer over the SDK, not a separate implementation.
 - Integration tests should use explicit device configuration and never assume a public network.
+- Phase 5 is realigned as `Camera Integration Verification`; NVR Device Inventory moves to the following phase.
 - AI Pipeline work should consume SDK outputs through structured types, not by scraping CLI text.
 - Automation Platform work should be deferred until the SDK, CLI, and integration tests are stable.
 

@@ -10,6 +10,7 @@ This matrix tracks project verification status. Official TP-Link support status 
 - The supported products page says listed and higher hardware versions of listed models are supported by VIGI Open API.
 - The supported products page says latest firmware should be installed.
 - TP-Link states that product availability varies by region and that the compatible device list may be updated.
+- TP-Link firmware release notes for `VIGI C340I(UN) V1.20 2.2.0 Build 250926` indicate added support for `VIGI OpenAPI`.
 
 ## MVP Device
 
@@ -17,12 +18,53 @@ This matrix tracks project verification status. Official TP-Link support status 
 | --- | --- | --- | --- | --- | --- |
 | VIGI NVR1008H-8P | `V1.20` from official guide applicability list | TODO | Official guide applicability list includes this model/version | Not verified yet | TODO |
 
+## Verification Devices
+
+| Model | Type | Role | Hardware | Firmware | OpenAPI status | Verification status | Purpose |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| VIGI C340I | Standalone Camera | Verification Target | `VIGI C340I 1.20` | `2.2.0 Build 250926 Rel.53599n` | Firmware release note indicates OpenAPI support; Web UI exposes OpenAPI setting; IPC OpenAPI document applies | IPC `doAuth` Step 1/2 and post-auth read-only `getStreamPort` verified by real-device integration test | Validate IPC auth/transport assumptions separately before any camera SDK expansion |
+| VIGI NVR1008H-8P | NVR | MVP Target | `V1.20` from official guide applicability list / TODO confirm actual hardware | TODO confirm | Official NVR OpenAPI target | Not verified yet | Validate inventory, recording, replay, export |
+
+## C340I Real-Device Observation
+
+Observation date: `2026-07-10`.
+
+| Item | Observation |
+| --- | --- |
+| Device | `VIGI C340I` |
+| Hardware version | `VIGI C340I 1.20` |
+| Firmware version | `2.2.0 Build 250926 Rel.53599n` |
+| IP address | Local lab device, `192.168.1.213` |
+| OpenAPI UI setting | Exists under `Network Settings > Openapi` |
+| OpenAPI state | Enabled, applied, and device rebooted |
+| TCP `20443` | Open after enabling OpenAPI |
+| `GET https://192.168.1.213:20443/openapi/token` | `curl` reported `Received HTTP/0.9 when not allowed`; Postman reported malformed response parse error |
+| `GET https://192.168.1.213/openapi/token` | `HTTP/1.1 404 Not Found` |
+| `GET http://192.168.1.213/openapi/token` | `HTTP/1.1 302` redirect to `https://192.168.1.213:443` |
+| IPC `doAuth` Step 1 | `POST https://192.168.1.213:20443` with `{"method":"doAuth","params":null}` returned `authenticate` fields and `errCode: -10020` challenge |
+| IPC `doAuth` Step 2 | `POST https://192.168.1.213:20443` with `params.nonce` and `params.response` returned `stok` and `errCode: 0`; `stok` redacted |
+| IPC post-auth read-only method | Official IPC `getStreamPort`, request body `{"method":"getStreamPort"}`, URL `POST https://192.168.1.213:20443/stok=<redacted>`, returned `result.streamPort: "554"` and `errCode: 0` |
+| IPC integration test | `python -m pytest tests/test_integration_ipc_auth.py -v` passed `tests/test_integration_ipc_auth.py::test_integration_ipc_do_auth_and_get_stream_port`; `1 passed` |
+| IPC integration test note | Pytest cache warning occurred due to `.pytest_cache` permission, but the real-device test passed |
+
+Current conclusion:
+
+- C340I OpenAPI support is indicated by official firmware release notes and the Web UI exposes an OpenAPI setting.
+- `VIGI IPC OpenAPI Document_V1.1` does not document IPC control authentication as `GET /openapi/token`.
+- The malformed/HTTP0.9-like response from `GET /openapi/token` on port `20443` is consistent with applying the wrong NVR REST endpoint shape to an IPC control port that expects IPC HTTPS POST JSON requests.
+- The malformed response must not be interpreted as a successful authentication response.
+- IPC `doAuth` has now been manually verified through Step 2 `stok` issuance.
+- IPC post-auth read-only control has now been manually verified through official `getStreamPort`.
+- IPC `doAuth` and post-auth `getStreamPort` are now verified by the opt-in real-device integration test.
+- C340I IPC OpenAPI works, but it is not compatible with the NVR `/openapi/token` plus Bearer-token flow.
+- SDK implementation remains pending architecture work documented in [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md).
+
 ## Support Modes
 
 | Mode | Scope | Verification status | Notes |
 | --- | --- | --- | --- |
 | NVR Mode | VIGI NVR OpenAPI and NVR-managed channels/cameras. | Current target and verification path. Hardware verification is not recorded yet. | MVP starts with `VIGI NVR1008H-8P`. |
-| Standalone Camera Mode | Direct standalone VIGI Camera OpenAPI behavior. | Not verified. | Future expansion only; blocked until a physical standalone camera is available for integration testing. |
+| Standalone Camera Mode | Direct standalone VIGI IPC OpenAPI behavior. | C340I lab verification and opt-in integration test confirmed IPC `doAuth`, `stok`, and post-auth `getStreamPort`; NVR `/openapi/token` is not the IPC control auth flow. | Verified for IPC-specific auth/transport analysis only; not a supported public SDK device. |
 
 ## Candidate Devices From Official OpenAPI Guide Applicability List
 

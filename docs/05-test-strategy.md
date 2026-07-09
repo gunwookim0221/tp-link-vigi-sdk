@@ -32,7 +32,7 @@ Mock tests should simulate:
 
 ## Integration Tests
 
-Integration tests require a real VIGI NVR.
+Integration tests require a real VIGI device. NVR-specific tests require a real VIGI NVR; Phase 5 camera verification requires a real C340I with hardware version, firmware version, and test date recorded.
 
 Required configuration should be provided through environment variables or a local ignored config file:
 
@@ -46,12 +46,23 @@ VIGI_DEVICE_MODEL
 VIGI_FIRMWARE_VERSION
 ```
 
+Standalone IPC verification must use a separate environment variable namespace:
+
+```text
+VIGI_IPC_HOST
+VIGI_IPC_PORT
+VIGI_IPC_USERNAME
+VIGI_IPC_PASSWORD
+VIGI_IPC_VERIFY_TLS
+```
+
 Integration tests must:
 
 - Never run by default in normal `pytest`.
 - Require an explicit marker such as `pytest -m integration`.
 - Avoid mutating NVR settings unless the marker is more specific, such as `device_mutating`.
 - Redact credentials and tokens from logs.
+- Keep IPC real-device tests opt-in, skipped by default, and limited to documented read-only verification such as `doAuth` plus internal `getStreamPort`.
 
 ## Device Tests
 
@@ -65,6 +76,8 @@ Device tests should record:
 - Known issue references.
 
 The first device target is `VIGI NVR1008H-8P`.
+
+The Phase 5 shared-layer verification target is `VIGI C340I`. Camera verification must remain opt-in, skipped by default, and separate from NVR-specific integration tests. RTSP/ONVIF verification must be treated separately from HTTPS OpenAPI control API verification.
 
 ## Regression Tests
 

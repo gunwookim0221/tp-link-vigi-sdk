@@ -158,7 +158,56 @@ Improve open-source project quality and contributor experience without adding SD
 - CI runs package install, pytest, and compileall.
 - No Device, Recording, Replay, Snapshot, CLI, or OpenAPI feature behavior is added.
 
-## Phase 5: Device Inventory
+## Phase 5: Camera Integration Verification
+
+### Goal
+
+Verify shared SDK layers against `VIGI C340I` before expanding NVR-specific APIs, without adding public camera SDK support.
+
+### Tasks
+
+- [ ] Confirm C340I hardware version.
+- [ ] Confirm current C340I firmware version.
+- [ ] Upgrade to `VIGI C340I(UN) V1.20 2.2.0 Build 250926` or later if applicable.
+- [ ] Record test date, hardware version, firmware version, and network mode.
+- [ ] Confirm whether C340I appears in the official VIGI OpenAPI supported product list.
+- [x] Confirm whether standalone camera OpenAPI uses the same `/openapi/token` Digest flow as NVR OpenAPI.
+- [ ] Confirm OpenAPI setting and port on the camera if exposed by firmware/UI.
+- [x] Record real-device token challenge behavior.
+- [x] Review `VIGI IPC OpenAPI Document_V1.1` for standalone IPC authentication and request format.
+- [x] Confirm IPC control authentication uses `doAuth` and not the NVR `/openapi/token` endpoint.
+- [x] Confirm IPC control port is obtained through ODP and defaults to `20443`.
+- [x] Confirm IPC discovery uses ODP local service port `23001` and Ethernet protocol type `0x7210`.
+- [x] Confirm IPC stream protocol is RTSP-style `MULTITRANS` with RTP over TCP and default stream port `554`.
+- [x] Manually verify IPC `doAuth` challenge and `stok` response against the real camera.
+- [x] Verify IPC SHA-256 `doAuth` response against the real camera.
+- [x] Identify a low-risk official IPC post-auth read-only method for manual verification.
+- [x] Manually verify official IPC `getStreamPort` after authentication using redacted `stok`.
+- [x] Verify IPC `stok` usage against the real camera with an officially documented IPC control method.
+- [x] Document IPC-specific auth/transport separation in [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md).
+- [x] Add internal IPC auth/session/control request builders according to ADR-0006.
+- [x] Keep IPC `getStreamPort` as an internal verification method, not a public SDK API.
+- [x] Add mock/unit coverage for IPC `doAuth`, `stok` redaction, and internal `getStreamPort` request building.
+- [x] Add opt-in skipped IPC integration scaffold using `VIGI_IPC_*` environment variables.
+- [x] Run opt-in C340I IPC integration test and verify `doAuth` plus internal `getStreamPort` succeeds.
+- [ ] Keep public camera SDK APIs blocked until a separate public API decision is made.
+- [x] Add or confirm camera-specific integration environment variables before running real-device tests.
+- [x] Keep all real-device integration tests skipped by default.
+- [ ] Verify RTSP/ONVIF separately from HTTPS OpenAPI control APIs.
+- [ ] Do not implement undocumented snapshot, device-info, or camera-control endpoints.
+- [ ] Do not implement camera-specific endpoints from malformed or undocumented responses.
+- [ ] Document camera-to-NVR shared-layer reuse points.
+- [x] Treat IPC-specific transport/auth as an ADR candidate before any implementation.
+- [ ] Decide whether ADR is needed before adding camera-specific public APIs.
+
+### Exit Criteria
+
+- C340I verification facts are recorded with model, hardware version, firmware version, and test date.
+- Shared and non-shared authentication, transport, session, error-handling, and integration-test harness observations are documented.
+- No camera-specific public SDK APIs are added.
+- Device matrix is updated with verification status.
+
+## Phase 6: NVR Device Inventory
 
 ### Goal
 
@@ -179,7 +228,7 @@ Implement read-only channel/device inventory after real-device authentication va
 - Integration tests remain opt-in.
 - Device matrix is updated with verification status.
 
-## Phase 6: Recording
+## Phase 7: NVR Recording Search
 
 ### Goal
 
@@ -199,7 +248,7 @@ Implement documented recording search APIs.
 - Result pagination/index behavior is tested.
 - Integration tests remain opt-in.
 
-## Phase 7: Replay
+## Phase 8: Replay / Export
 
 ### Goal
 
@@ -217,7 +266,7 @@ Support documented RTSP replay URL construction and integration planning.
 - URL construction tests pass.
 - No undocumented replay endpoint is introduced.
 
-## Phase 8: Snapshot
+## Phase 9: Snapshot Support Decision
 
 ### Goal
 
@@ -233,7 +282,7 @@ Determine whether snapshot is supported by official public documentation.
 
 - Snapshot status is documented as supported, unsupported, or TODO with official reference.
 
-## Phase 9: CLI
+## Phase 10: CLI
 
 ### Goal
 
@@ -250,11 +299,11 @@ Provide a thin command-line interface over SDK features.
 - CLI uses SDK APIs only.
 - CLI tests use mocks.
 
-## Phase 10: Integration Test Harness
+## Phase 11: Integration Test Harness Hardening
 
 ### Goal
 
-Create a real-device test harness for supported NVRs.
+Harden the real-device test harness for supported NVRs and verification devices.
 
 ### Tasks
 
@@ -268,7 +317,7 @@ Create a real-device test harness for supported NVRs.
 - Integration tests are opt-in.
 - Test output records model, firmware, and OpenAPI document version.
 
-## Phase 11: Release
+## Phase 12: Release
 
 ### Goal
 

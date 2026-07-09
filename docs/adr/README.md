@@ -61,6 +61,7 @@ What changes because of this decision?
 - [ADR-0003 Record Search Flow](ADR-0003-record-search-flow.md)
 - [ADR-0004 RTSP Replay Strategy](ADR-0004-rtsp-replay-strategy.md)
 - [ADR-0005 Testing And Integration Strategy](ADR-0005-testing-and-integration-strategy.md)
+- [ADR-0006 Separate NVR And IPC Auth Transports](ADR-0006-separate-nvr-and-ipc-auth-transports.md)
 
 ## Related Documents
 

@@ -13,8 +13,8 @@ Completed:
 
 Next:
 
-- Real-device authentication validation for `VIGI NVR1008H-8P`.
-- Device Inventory after authentication validation.
+- IPC auth/transport architecture work according to [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md), if standalone IPC SDK support is planned.
+- NVR Device Inventory after shared-layer verification.
 
 ## v0.1
 
@@ -42,11 +42,38 @@ Exit criteria:
 
 Goal:
 
-- Add read-only device inventory after authentication validation.
+- Validate shared SDK layers against C340I before expanding NVR-specific APIs.
 
 Scope:
 
-- Real-device authentication validation.
+- C340I hardware and firmware confirmation.
+- `VIGI C340I(UN) V1.20 2.2.0 Build 250926` or later requirement tracking.
+- Real-device authentication, transport, session, timeout, TLS, and redaction observations.
+- IPC document investigation showing C340I standalone control auth uses `doAuth`, not the NVR `/openapi/token` flow.
+- Manual IPC `doAuth` probe confirmation for port `20443`, with `stok` redacted.
+- Manual post-auth read-only IPC `getStreamPort` probe confirmation.
+- Opt-in real-device IPC integration test confirmation for `doAuth` plus internal `getStreamPort`.
+- ADR-0006 documentation of NVR auth and IPC auth separation.
+- Malformed/HTTP0.9-like response tracking for the incorrect NVR `GET /openapi/token` request on the IPC control port.
+- Camera-specific integration configuration kept opt-in and skipped by default.
+- RTSP/ONVIF verification tracked separately from HTTPS OpenAPI control APIs.
+
+Exit criteria:
+
+- C340I verification status is recorded in the device matrix.
+- SDK implementation remains blocked until IPC auth/transport architecture work is planned and implemented according to ADR-0006.
+- No camera-specific public SDK APIs are exposed.
+- Default tests do not require hardware.
+
+## v0.3
+
+Goal:
+
+- Add read-only NVR device inventory after shared-layer verification.
+
+Scope:
+
+- Real-device authentication validation for `VIGI NVR1008H-8P`.
 - `GET /openapi/added_devices`.
 - Device/channel response parsing.
 - Capability gate for `device.added_devices`.
@@ -58,7 +85,7 @@ Exit criteria:
 - Real-device verification status is recorded in the device matrix.
 - Default tests do not require hardware.
 
-## v0.3
+## v0.4
 
 Goal:
 
@@ -76,7 +103,7 @@ Exit criteria:
 - Recording mock tests pass.
 - Integration tests remain opt-in.
 
-## v0.4
+## v0.5
 
 Goal:
 
@@ -118,13 +145,14 @@ Exit criteria:
 
 Goal:
 
-- Evaluate direct standalone VIGI Camera support after hardware is available.
+- Evaluate direct standalone VIGI Camera public SDK support after verification data is available.
 
 Blocked by:
 
-- Physical standalone VIGI camera availability for integration testing.
-- Official public documentation review for direct camera behavior.
-- A new architecture ADR before public client changes. Suggested title: `ADR-0006 Split NVR and Camera Clients`.
+- C340I real-device verification records with model, hardware version, firmware version, and test date.
+- Official IPC documentation review, reproducible IPC `doAuth` verification, and post-auth read-only control verification for direct camera behavior.
+- IPC-specific transport/auth strategy implementation according to [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md).
+- A new architecture ADR before public client changes if standalone support requires public `VigiCameraClient` or `VigiNvrClient` changes.
 
 Candidate scope:
 
@@ -134,13 +162,24 @@ Candidate scope:
 
 This phase is not part of the current MVP and does not imply current standalone camera support.
 
+## Phase Order
+
+1. Phase 5: C340I Camera Integration Verification. Status: IPC auth and post-auth read-only control integration verified; SDK implementation pending ADR-0006 architecture work.
+2. Phase 6: NVR Device Inventory.
+3. Phase 7: NVR Recording Search.
+4. Phase 8: Replay / Export.
+5. Phase 9: Snapshot Support Decision.
+6. Phase 10: CLI.
+7. Phase 11: Integration Test Harness Hardening.
+8. Phase 12: Release.
+
 ## Long-Term Plan
 
 - CLI as a thin layer over the SDK.
 - More documented OpenAPI endpoint groups.
 - Mutating operations only behind explicit capability checks.
 - Expanded model and firmware verification matrix.
-- Optional standalone VIGI Camera support after physical device verification and ADR approval.
+- Optional standalone VIGI Camera public SDK support after official documentation, physical device verification, and ADR approval.
 - Event receiver support if officially documented behavior is sufficient.
 - AI pipeline integration using structured SDK outputs.
 - Automation platform features after SDK and CLI are stable.

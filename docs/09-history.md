@@ -16,6 +16,92 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-10: C340I IPC Integration Test Passed
+
+Status: Completed
+
+Summary:
+
+- Recorded successful opt-in real-device IPC integration test against `VIGI C340I`.
+- Test command: `python -m pytest tests/test_integration_ipc_auth.py -v`.
+- Test result: `tests/test_integration_ipc_auth.py::test_integration_ipc_do_auth_and_get_stream_port PASSED`; `1 passed`.
+- Verified `doAuth` Step 1 challenge, `doAuth` Step 2 `stok` issuance, and post-auth internal `getStreamPort`.
+- Confirmed `getStreamPort` returned stream port `554`.
+- Noted pytest cache warning from `.pytest_cache` permissions while preserving the test pass result.
+- Did not record password, nonce, digest response, or raw `stok`.
+
+### 2026-07-10: Internal IPC Auth Foundation Added
+
+Status: Completed
+
+Summary:
+
+- Added ADR-0006-based internal IPC session, `doAuth`, and control request builders.
+- Kept IPC `getStreamPort` as an internal verification method, not a public SDK API.
+- Added mock/unit coverage for IPC `doAuth` request parsing, digest response use, redaction, error paths, and `getStreamPort` request building.
+- Added opt-in IPC integration scaffold guarded by `VIGI_IPC_*` environment variables and skipped by default.
+- Did not add public camera clients, public IPC exports, snapshot, device-info, or RTSP behavior.
+
+### 2026-07-10: C340I IPC Post-Auth Probe Succeeded
+
+Status: Completed
+
+Summary:
+
+- Recorded manual C340I IPC post-auth `getStreamPort` success against `192.168.1.213:20443`.
+- Confirmed `getStreamPort` returned `result.streamPort: "554"` and `errCode: 0` with redacted `stok`.
+- Confirmed C340I IPC OpenAPI works through `doAuth` plus `stok`, not the NVR `/openapi/token` plus Bearer-token flow.
+- Added [ADR-0006 Separate NVR And IPC Auth Transports](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md).
+- Kept SDK implementation and public camera client work out of scope.
+
+### 2026-07-10: C340I IPC doAuth Success Recorded
+
+Status: Completed
+
+Summary:
+
+- Recorded manual C340I IPC `doAuth` Step 1 challenge success against `192.168.1.213:20443`.
+- Recorded manual C340I IPC `doAuth` Step 2 success with documented `params.nonce` and `params.response` schema.
+- Confirmed success response shape as top-level `stok` with `errCode: 0`; the actual `stok` value is redacted and must not be documented.
+- Identified official IPC `getStreamPort` as the next low-risk post-auth read-only control probe.
+- Kept SDK implementation blocked pending post-auth read-only control verification and IPC auth/transport ADR review.
+
+### 2026-07-10: IPC OpenAPI Document V1.1 Analyzed
+
+Status: Completed
+
+Summary:
+
+- Reviewed official `VIGI IPC OpenAPI Document_V1.1` linked from the C340I download page.
+- Confirmed IPC control authentication uses `doAuth` and `stok`, not the NVR `GET /openapi/token` Bearer-token flow.
+- Recorded IPC control request format as HTTPS POST JSON on the default ODP-discovered control port `20443`.
+- Recorded IPC discovery as ODP local service port `23001` with Ethernet protocol type `0x7210`.
+- Recorded IPC stream behavior as RTSP-style `MULTITRANS` with RTP over TCP and default stream port `554`.
+- Reframed the C340I malformed `/openapi/token` response as a likely request-format mismatch rather than a valid SDK behavior.
+- Kept SDK implementation blocked pending reproducible IPC `doAuth` verification and IPC-specific auth/transport design review.
+
+### 2026-07-10: C340I OpenAPI Token Flow Observation Recorded
+
+Status: Completed
+
+Summary:
+
+- Recorded C340I real-device OpenAPI observation.
+- Confirmed C340I hardware version `VIGI C340I 1.20` and firmware version `2.2.0 Build 250926 Rel.53599n`.
+- Confirmed OpenAPI Web UI setting and open TCP port `20443` after enabling OpenAPI and rebooting.
+- Recorded malformed/HTTP0.9-like response from `/openapi/token` on port `20443`.
+- Kept SDK implementation blocked pending official or reproducible token flow confirmation.
+
+### 2026-07-08: Phase 5 C340I Verification Realigned
+
+Status: Completed
+
+Summary:
+
+- Reframed Phase 5 as C340I Camera Integration Verification.
+- Added C340I as a next verification target based on official firmware release notes indicating VIGI OpenAPI support.
+- Kept MVP scope NVR-first and deferred camera-specific public APIs pending real-device verification and ADR.
+
 ### 2026-07-08: Standalone Camera Future Architecture Documented
 
 Status: Completed
