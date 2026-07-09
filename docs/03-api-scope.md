@@ -59,6 +59,49 @@ The official `id` field is the device channel number and is represented by the S
 
 Phase 6 does not include recording search, replay, export, snapshot, RTSP, IPC public APIs, `VigiCameraClient`, `VigiNvrClient`, or undocumented endpoints.
 
+## Phase 7 NVR Recording Search Scope
+
+Phase 7 implements the documented NVR recording search control endpoints only:
+
+- `GET /openapi/record/days`
+- `GET /openapi/record/search/free_process`
+- `GET /openapi/record/search/results`
+
+All Phase 7 recording search requests require a Bearer token after the documented NVR token flow.
+
+`GET /openapi/record/days` query fields:
+
+- `channel`: channel number.
+- `start`: month string in `%Y%m` format.
+- `end`: month string in `%Y%m` format.
+
+`GET /openapi/record/days` response fields:
+
+- `days`: array of objects with `day` string in `%Y%m%d` format.
+- `error_code`: numeric OpenAPI result code.
+
+`GET /openapi/record/search/free_process` response fields:
+
+- `process`: numeric free search process ID.
+- `error_code`: numeric OpenAPI result code.
+
+`GET /openapi/record/search/results` query fields:
+
+- `channel`: channel number.
+- `process`: search process ID from `/openapi/record/search/free_process`.
+- `day`: day string in `%Y%m%d` format.
+- `start_index`: first result index.
+- `end_index`: last result index.
+
+`GET /openapi/record/search/results` response fields:
+
+- `results`: array of objects with `start_time` and `end_time` timestamp strings.
+- `error_code`: numeric OpenAPI result code.
+
+The official recording result fields are limited to `start_time` and `end_time`. Phase 7 must not invent `recording_id`, `segment_id`, `file_id`, `duration`, `size`, or `record_type` fields.
+
+Phase 7 does not include replay, export, download, snapshot, RTSP, ffmpeg integration, video file storage, IPC public APIs, `VigiCameraClient`, `VigiNvrClient`, or undocumented endpoints.
+
 ## Standalone IPC Scope Notes
 
 `VIGI IPC OpenAPI Document_V1.1` does not describe IPC control authentication as the NVR `GET /openapi/token` Bearer-token flow. It describes IPC control authentication through `Method: doAuth`:

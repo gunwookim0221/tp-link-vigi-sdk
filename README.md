@@ -4,9 +4,9 @@ Work in progress Python SDK for TP-Link VIGI NVR OpenAPI.
 
 ## Current Status
 
-This project is in early development. It has project documentation, package skeleton, core models/types, transport/authentication foundations, documented OpenAPI authentication support, and read-only NVR device inventory support for `GET /openapi/added_devices`.
+This project is in early development. It has project documentation, package skeleton, core models/types, transport/authentication foundations, documented OpenAPI authentication support, read-only NVR device inventory support for `GET /openapi/added_devices`, and read-only NVR recording search endpoint wrappers.
 
-Remote VIGI NVR authentication and device inventory integration have been verified. Recording search, replay, snapshot, CLI, and release documentation are not ready.
+Remote VIGI NVR authentication, device inventory integration, and read-only recording search integration have been verified. Replay, snapshot, CLI, and release documentation are not ready.
 
 ## Project Goals
 
@@ -24,11 +24,12 @@ Implemented:
 - Transport and session boundaries.
 - OpenAPI authentication flow based on official token endpoint documentation.
 - Read-only NVR device inventory through documented `GET /openapi/added_devices`.
+- Read-only NVR recording search endpoint wrappers for documented recording APIs.
 - Mock/unit tests and skipped integration auth scaffold.
 
 Not implemented:
 
-- Recording search API.
+- Recording search convenience workflow across arbitrary time ranges.
 - RTSP replay support.
 - Snapshot support.
 - CLI.
@@ -44,6 +45,7 @@ Verification status:
 
 - Remote OpenAPI authentication validation is recorded.
 - Remote read-only device inventory validation is recorded.
+- Remote read-only recording search validation is recorded.
 
 ## Project Structure
 
@@ -71,7 +73,8 @@ Start with:
 - Phase 3: Transport and Authentication Foundation - complete
 - Phase 4: OpenAPI Authentication Implementation - complete
 - Phase 4.5: Project Quality and Developer Experience - complete
-- Phase 6: NVR Device Inventory - implemented with opt-in integration scaffold
+- Phase 6: NVR Device Inventory - implemented and integration verified
+- Phase 7: NVR Recording Search - implemented and integration verified
 
 ## License
 

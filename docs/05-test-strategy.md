@@ -41,6 +41,17 @@ Device inventory mock and unit tests should cover:
 - Authentication guard behavior before any network call when no Bearer token is available.
 - Secret redaction so Bearer tokens, passwords, nonce values, and Digest responses are not emitted in assertion messages or errors.
 
+Recording search mock and unit tests should cover:
+
+- Bearer-authenticated `GET /openapi/record/days` request construction with `channel`, `start`, and `end` query parameters.
+- Bearer-authenticated `GET /openapi/record/search/free_process` request construction.
+- Bearer-authenticated `GET /openapi/record/search/results` request construction with `channel`, `process`, `day`, `start_index`, and `end_index` query parameters.
+- Official response parsing for `days`, `process`, `results`, and `error_code`.
+- Empty `days` and empty `results` responses.
+- Invalid JSON, non-object top-level JSON, missing required fields, invalid field types, invalid day/month formats, invalid index ranges, non-zero `error_code`, and HTTP non-2xx responses.
+- Authentication guard behavior before any network call when no Bearer token is available.
+- Secret redaction so Bearer tokens, passwords, nonce values, and Digest responses are not emitted in assertion messages or errors.
+
 ## Integration Tests
 
 Integration tests require a real VIGI device. NVR-specific tests require a real VIGI NVR; Phase 5 camera verification requires a real C340I with hardware version, firmware version, and test date recorded.
@@ -55,6 +66,12 @@ VIGI_PASSWORD
 VIGI_VERIFY_SSL
 VIGI_DEVICE_MODEL
 VIGI_FIRMWARE_VERSION
+VIGI_RECORDING_CHANNEL_ID
+VIGI_RECORDING_START_MONTH
+VIGI_RECORDING_END_MONTH
+VIGI_RECORDING_DAY
+VIGI_RECORDING_START_INDEX
+VIGI_RECORDING_END_INDEX
 ```
 
 Standalone IPC verification must use a separate environment variable namespace:
@@ -89,6 +106,8 @@ Integration tests must:
 - Avoid mutating NVR settings unless the marker is more specific, such as `device_mutating`.
 - Redact credentials and tokens from logs.
 - Keep NVR device inventory tests read-only, opt-in, and avoid fixed assertions about the actual number of connected cameras.
+- Keep NVR recording search tests read-only, opt-in, and avoid fixed assertions about the actual number of recording segments.
+- Allow recording search integration tests to pass with empty recording results when the API is reachable and the response schema is valid.
 - Keep IPC real-device tests opt-in, skipped by default, and limited to documented read-only verification such as `doAuth` plus internal `getStreamPort`.
 
 ## Device Tests

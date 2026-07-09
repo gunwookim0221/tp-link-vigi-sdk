@@ -246,17 +246,26 @@ Implement documented recording search APIs.
 
 ### Tasks
 
-- [ ] Implement `GET /openapi/record/days`.
-- [ ] Implement `GET /openapi/record/search/free_process`.
-- [ ] Implement `GET /openapi/record/search/results`.
-- [ ] Model search process reuse.
-- [ ] Add mock tests.
+- [x] Document official recording search endpoints.
+- [x] Add typed record day, process, and result models.
+- [x] Add request builders for record days, free process, and results.
+- [x] Add response parsers for record days, free process, and results.
+- [x] Add Bearer-authenticated `RecordService`.
+- [x] Wire `VigiClient.records` with authenticated session.
+- [x] Add mock/unit tests.
+- [x] Add opt-in NVR recording integration test.
+- [x] Keep replay/export/download/snapshot/RTSP/ffmpeg/video file storage out of scope.
+- [x] Keep IPC public APIs, `VigiCameraClient`, and `VigiNvrClient` out of scope.
 
 ### Exit Criteria
 
 - Search process reuse behavior is tested.
 - Result pagination/index behavior is tested.
 - Integration tests remain opt-in.
+- Recording search remains read-only.
+- Real-device `GET /openapi/record/days` integration is verified.
+- Real-device `GET /openapi/record/search/free_process` integration is verified.
+- Real-device `GET /openapi/record/search/results` integration is verified.
 
 ## Phase 8: Replay / Export
 

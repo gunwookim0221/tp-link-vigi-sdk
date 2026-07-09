@@ -14,7 +14,7 @@ Completed:
 Next:
 
 - IPC auth/transport architecture work according to [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md), if standalone IPC SDK support is planned.
-- NVR Recording Search, now that remote MVP NVR device inventory validation is recorded.
+- NVR replay/export planning after recording search verification.
 
 ## v0.1
 
@@ -102,12 +102,24 @@ Scope:
 - `GET /openapi/record/days`.
 - `GET /openapi/record/search/free_process`.
 - `GET /openapi/record/search/results`.
-- Recording models and pagination/index behavior.
+- Read-only recording day, process, and result models.
+- Result pagination/index behavior.
+- Opt-in NVR recording search integration scaffold.
+- Replay, export, download, snapshot, RTSP, ffmpeg, and video file storage remain out of scope.
 
 Exit criteria:
 
 - Recording mock tests pass.
 - Integration tests remain opt-in.
+- Real-device recording search endpoint reachability and schema are verified when configured.
+
+Current status:
+
+- Recording search endpoint wrappers and mock coverage are implemented.
+- Opt-in recording integration test passed against the configured remote NVR.
+- Real-device `GET /openapi/record/days`, `GET /openapi/record/search/free_process`, and `GET /openapi/record/search/results` verification is complete.
+- `client.records.list_days(...)`, `client.records.get_free_process()`, and `client.records.list_results(...)` are verified.
+- Replay, export, download, snapshot, RTSP, ffmpeg, and video extraction remain out of scope for Phase 7.
 
 ## v0.5
 
@@ -172,7 +184,7 @@ This phase is not part of the current MVP and does not imply current standalone 
 
 1. Phase 5: C340I Camera Integration Verification. Status: IPC auth and post-auth read-only control integration verified; SDK implementation pending ADR-0006 architecture work.
 2. Phase 6: NVR Device Inventory. Status: implemented and real-device integration verified.
-3. Phase 7: NVR Recording Search.
+3. Phase 7: NVR Recording Search. Status: implemented and real-device integration verified.
 4. Phase 8: Replay / Export.
 5. Phase 9: Snapshot Support Decision.
 6. Phase 10: CLI.

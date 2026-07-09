@@ -16,14 +16,14 @@ This matrix tracks project verification status. Official TP-Link support status 
 
 | Model | Hardware version | Firmware | OpenAPI status | Project verification | Known issues |
 | --- | --- | --- | --- | --- | --- |
-| VIGI NVR1008H-8P | `V1.20` from official guide applicability list | TODO | Official guide applicability list includes this model/version | Remote OpenAPI auth and read-only `GET /openapi/added_devices` integration verified | TODO |
+| VIGI NVR1008H-8P | `V1.20` from official guide applicability list | TODO | Official guide applicability list includes this model/version | Remote OpenAPI auth, read-only `GET /openapi/added_devices`, and read-only recording search integration verified | TODO |
 
 ## Verification Devices
 
 | Model | Type | Role | Hardware | Firmware | OpenAPI status | Verification status | Purpose |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | VIGI C340I | Standalone Camera | Verification Target | `VIGI C340I 1.20` | `2.2.0 Build 250926 Rel.53599n` | Firmware release note indicates OpenAPI support; Web UI exposes OpenAPI setting; IPC OpenAPI document applies | IPC `doAuth` Step 1/2 and post-auth read-only `getStreamPort` verified by real-device integration test | Validate IPC auth/transport assumptions separately before any camera SDK expansion |
-| VIGI NVR1008H-8P | NVR | MVP Target | `V1.20` from official guide applicability list / TODO confirm actual hardware | TODO confirm | Official NVR OpenAPI target | Remote `/openapi/token` Digest challenge, SDK auth integration test, and read-only `/openapi/added_devices` integration test verified | Validate inventory, recording, replay, export |
+| VIGI NVR1008H-8P | NVR | MVP Target | `V1.20` from official guide applicability list / TODO confirm actual hardware | TODO confirm | Official NVR OpenAPI target | Remote `/openapi/token` Digest challenge, SDK auth integration test, read-only `/openapi/added_devices` integration test, and read-only recording search integration test verified | Validate replay and export |
 
 ## NVR Remote Auth Observation
 
@@ -70,6 +70,30 @@ Current conclusion:
 - `AddedDevicesResponse` is verified by real-device integration for Phase 6 scope.
 - Phase 6 is complete and Phase 7 recording search can proceed.
 
+## NVR Recording Search Observation
+
+Observation date: `2026-07-10`.
+
+| Item | Observation |
+| --- | --- |
+| Target | Chuncheon VIGI NVR |
+| Access path | DDNS plus ipTIME port forwarding |
+| OpenAPI endpoints | `GET /openapi/record/days`, `GET /openapi/record/search/free_process`, `GET /openapi/record/search/results` |
+| Authentication shape | NVR auth succeeded first, then Bearer-authenticated recording search requests succeeded |
+| SDK public methods | `client.records.list_days(...)`, `client.records.get_free_process()`, and `client.records.list_results(...)` succeeded |
+| SDK response types | `RecordDaysResponse`, `RecordSearchProcessResponse`, and `RecordSearchResultsResponse` verified |
+| Search result | Read-only recording day lookup, process lookup, and segment listing returned successfully |
+| Integration test | `python -m pytest tests/test_integration_records.py -v` passed `tests/test_integration_records.py::test_integration_recording_search_endpoints`; `1 passed` |
+| Integration test note | Pytest cache warning occurred due to `.pytest_cache` permission, but the real-device recording search test passed |
+
+Current conclusion:
+
+- Remote NVR OpenAPI read-only recording search against the documented Phase 7 endpoints is verified through the SDK integration scaffold.
+- `client.records.list_days(...)`, `client.records.get_free_process()`, and `client.records.list_results(...)` are verified against the real NVR for the documented response shapes.
+- `RecordDaysResponse`, `RecordSearchProcessResponse`, and `RecordSearchResultsResponse` are verified by real-device integration for Phase 7 scope.
+- Replay, export, download, snapshot, RTSP, ffmpeg, and video extraction remain out of scope for this verification.
+- Phase 7 is complete and Phase 8 replay/export planning can proceed.
+
 ## C340I Real-Device Observation
 
 Observation date: `2026-07-10`.
@@ -108,7 +132,7 @@ Current conclusion:
 
 | Mode | Scope | Verification status | Notes |
 | --- | --- | --- | --- |
-| NVR Mode | VIGI NVR OpenAPI and NVR-managed channels/cameras. | Remote auth integration and read-only `GET /openapi/added_devices` inventory integration verified for the MVP NVR. | MVP starts with `VIGI NVR1008H-8P`; Phase 7 recording search is the next validation target. |
+| NVR Mode | VIGI NVR OpenAPI and NVR-managed channels/cameras. | Remote auth integration, read-only `GET /openapi/added_devices` inventory integration, and read-only recording search integration are verified for the MVP NVR. | MVP starts with `VIGI NVR1008H-8P`; replay/export remains the next validation target. |
 | Standalone Camera Mode | Direct standalone VIGI IPC OpenAPI behavior. | C340I lab verification and opt-in integration test confirmed IPC `doAuth`, `stok`, and post-auth `getStreamPort`; NVR `/openapi/token` is not the IPC control auth flow. | Verified for IPC-specific auth/transport analysis only; not a supported public SDK device. |
 
 ## Candidate Devices From Official OpenAPI Guide Applicability List

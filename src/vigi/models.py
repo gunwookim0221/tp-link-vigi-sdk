@@ -108,6 +108,55 @@ class RecordSearchQuery:
 
 
 @dataclass(frozen=True, slots=True)
+class RecordDay:
+    """A day with recording returned by ``GET /openapi/record/days``."""
+
+    day: str
+
+    def __post_init__(self) -> None:
+        _require_non_empty(self.day, "day")
+
+
+@dataclass(frozen=True, slots=True)
+class RecordDaysResponse:
+    """Parsed response for NVR ``GET /openapi/record/days``."""
+
+    days: tuple[RecordDay, ...]
+    error_code: int
+
+
+@dataclass(frozen=True, slots=True)
+class RecordSearchProcessResponse:
+    """Parsed response for NVR ``GET /openapi/record/search/free_process``."""
+
+    process_id: int
+    error_code: int
+
+    def __post_init__(self) -> None:
+        _require_positive(self.process_id, "process_id")
+
+
+@dataclass(frozen=True, slots=True)
+class RecordSegment:
+    """Recording time range returned by ``GET /openapi/record/search/results``."""
+
+    start_time: str
+    end_time: str
+
+    def __post_init__(self) -> None:
+        _require_non_empty(self.start_time, "start_time")
+        _require_non_empty(self.end_time, "end_time")
+
+
+@dataclass(frozen=True, slots=True)
+class RecordSearchResultsResponse:
+    """Parsed response for NVR ``GET /openapi/record/search/results``."""
+
+    results: tuple[RecordSegment, ...]
+    error_code: int
+
+
+@dataclass(frozen=True, slots=True)
 class RecordFile:
     """Recording time range metadata returned by future search APIs."""
 

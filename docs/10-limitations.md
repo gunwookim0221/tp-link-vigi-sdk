@@ -2,8 +2,11 @@
 
 ## Current Known Limitations
 
-- Recording search, replay, snapshot, CLI, and camera-specific public SDK behavior are not implemented yet.
-- NVR device inventory is implemented and verified for the documented `GET /openapi/added_devices` schema, but recording search and later phases remain unimplemented.
+- Replay, export, download, snapshot, CLI, and camera-specific public SDK behavior are not implemented yet.
+- NVR device inventory is implemented and verified for the documented `GET /openapi/added_devices` schema.
+- Phase 7 recording search is implemented and verified for the documented read-only search endpoints and does not retrieve, export, download, or store video files.
+- Recording result `start_time` and `end_time` values are preserved as raw timestamp strings because the official recording search schema does not define a timezone conversion rule for those fields.
+- Recording search models do not include fields that are absent from the official schema, such as recording ID, segment ID, file ID, size, duration, or record type.
 - Firmware version for the MVP device is TODO.
 - Snapshot support is TODO because no snapshot endpoint was identified in the official OpenAPI reference PDF during Phase 0.
 - The project has not selected a license yet.
@@ -22,6 +25,7 @@
 - IPC discovery uses ODP local service port `23001` and Ethernet protocol type `0x7210`.
 - IPC stream requests are RTSP-style `MULTITRANS` requests and stream data uses RTP over TCP.
 - RTSP replay URL documentation says replay only supports stream `1` now.
+- Recording search provides time ranges that may later be used for replay planning, but the replay stream itself is RTSP and is outside Phase 7.
 - Supported products and firmware requirements may change.
 
 ## Firmware Dependency

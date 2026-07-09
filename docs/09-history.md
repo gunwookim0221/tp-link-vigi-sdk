@@ -16,6 +16,37 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-10: Phase 7 NVR Recording Search Integration Passed
+
+Status: Completed
+
+Summary:
+
+- Recorded successful remote NVR OpenAPI read-only recording search verification against the Chuncheon VIGI NVR.
+- Confirmed Bearer-authenticated `GET /openapi/record/days`, `GET /openapi/record/search/free_process`, and `GET /openapi/record/search/results` succeed after documented NVR auth.
+- Recorded successful SDK integration test command `python -m pytest tests/test_integration_records.py -v`.
+- Recorded test result `tests/test_integration_records.py::test_integration_recording_search_endpoints PASSED`; `1 passed`.
+- Verified `client.records.list_days(...)`, `client.records.get_free_process()`, and `client.records.list_results(...)` against the real NVR for Phase 7 scope.
+- Verified `RecordDaysResponse`, `RecordSearchProcessResponse`, and `RecordSearchResultsResponse` against the real NVR for the documented response shapes.
+- Noted pytest cache warning from `.pytest_cache` permissions while preserving the test pass result.
+- Confirmed replay, export, download, snapshot, RTSP, ffmpeg, and video extraction remain out of scope.
+- Did not record password, nonce, Digest response, access token, `stok`, or Authorization header values.
+
+### 2026-07-10: Phase 7 NVR Recording Search Implemented
+
+Status: Completed
+
+Summary:
+
+- Implemented documented NVR read-only recording search endpoint wrappers for `GET /openapi/record/days`, `GET /openapi/record/search/free_process`, and `GET /openapi/record/search/results`.
+- Added typed `RecordDay`, `RecordDaysResponse`, `RecordSearchProcessResponse`, `RecordSegment`, and `RecordSearchResultsResponse` models using official fields only.
+- Added Bearer-authenticated `RecordService` methods for listing recording days, getting a free process, and listing recording result segments.
+- Wired `VigiClient.records` through the existing authenticated session and transport.
+- Added mock/unit coverage for request construction, response parsing, empty results, malformed responses, API errors, index validation, auth guard behavior, and redaction.
+- Added opt-in NVR recording integration test scaffold using explicit `VIGI_RECORDING_*` environment variables.
+- Did not add replay, export, download, snapshot, RTSP, ffmpeg, video file storage, IPC public APIs, `VigiCameraClient`, or `VigiNvrClient`.
+- Phase 7 real-device verification is recorded separately in the integration-pass history entry.
+
 ### 2026-07-10: NVR Device Inventory Integration Passed
 
 Status: Completed
