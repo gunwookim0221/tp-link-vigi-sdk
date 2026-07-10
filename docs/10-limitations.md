@@ -80,7 +80,7 @@ Current limits:
 - This project treats C340I as an integration verification target for IPC auth/transport architecture, not as a supported public SDK device.
 - `VIGI IPC OpenAPI Document_V1.1` does not document IPC control authentication as `GET /openapi/token`.
 - Real-device verification currently shows that the NVR endpoint `GET /openapi/token` on port `20443` does not return the expected HTTP/1.1 `401` Digest challenge.
-- `curl` reported an HTTP/0.9-like response from `https://192.168.1.213:20443/openapi/token`; Postman reported a malformed response parse error.
+- Applying the NVR `/openapi/token` request shape to the IPC control port returned a malformed or HTTP/0.9-like response in local verification.
 - This malformed response is plausibly explained by an IPC control request-format mismatch, because the IPC document expects HTTPS POST JSON `doAuth` or `stok` control requests rather than an NVR REST-style token path.
 - The malformed response is not evidence of successful authentication and must not be used as an SDK behavior contract.
 - Camera-specific public SDK APIs are not exposed yet.

@@ -120,7 +120,7 @@ the shell, test runner, or CI secret configuration before invoking pytest.
 Example PowerShell IPC verification setup:
 
 ```powershell
-$env:VIGI_IPC_HOST = "192.168.1.213"
+$env:VIGI_IPC_HOST = "camera.example.invalid"
 $env:VIGI_IPC_PORT = "20443"
 $env:VIGI_IPC_USERNAME = "admin"
 $env:VIGI_IPC_PASSWORD = "<local-camera-password>"

@@ -128,7 +128,7 @@ The verified low-risk official IPC control method is `getStreamPort`:
 
 This method confirms that C340I IPC OpenAPI works after `doAuth`, while also confirming that IPC control auth is not compatible with the NVR `/openapi/token` plus Bearer-token flow. SDK implementation remains out of scope until the auth/transport split in [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md) is followed.
 
-## Supported Soon
+## Implemented and Deferred Scope
 
 Phase 7:
 

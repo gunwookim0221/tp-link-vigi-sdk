@@ -166,13 +166,13 @@ Verify shared SDK layers against `VIGI C340I` before expanding NVR-specific APIs
 
 ### Tasks
 
-- [ ] Confirm C340I hardware version.
-- [ ] Confirm current C340I firmware version.
-- [ ] Upgrade to `VIGI C340I(UN) V1.20 2.2.0 Build 250926` or later if applicable.
-- [ ] Record test date, hardware version, firmware version, and network mode.
+- [x] Confirm C340I hardware version.
+- [x] Confirm current C340I firmware version.
+- [x] Confirm the documented C340I firmware baseline applies to the verification device.
+- [x] Record test date, hardware version, firmware version, and network mode.
 - [ ] Confirm whether C340I appears in the official VIGI OpenAPI supported product list.
 - [x] Confirm whether standalone camera OpenAPI uses the same `/openapi/token` Digest flow as NVR OpenAPI.
-- [ ] Confirm OpenAPI setting and port on the camera if exposed by firmware/UI.
+- [x] Confirm OpenAPI setting and port on the camera if exposed by firmware/UI.
 - [x] Record real-device token challenge behavior.
 - [x] Review `VIGI IPC OpenAPI Document_V1.1` for standalone IPC authentication and request format.
 - [x] Confirm IPC control authentication uses `doAuth` and not the NVR `/openapi/token` endpoint.
@@ -194,15 +194,15 @@ Verify shared SDK layers against `VIGI C340I` before expanding NVR-specific APIs
 - [x] Harden IPC redaction tests so password, nonce, digest response, and `stok` do not appear in repr or sanitized error messages.
 - [x] Harden opt-in IPC integration verification to parse `getStreamPort` JSON and confirm method, `errCode: 0`, and `result.streamPort` presence.
 - [x] Document that `.env.example` is a placeholder reference and `.env` is not auto-loaded by tests.
-- [ ] Keep public camera SDK APIs blocked until a separate public API decision is made.
+- [x] Keep public camera SDK APIs blocked until a separate public API decision is made.
 - [x] Add or confirm camera-specific integration environment variables before running real-device tests.
 - [x] Keep all real-device integration tests skipped by default.
 - [ ] Verify RTSP/ONVIF separately from HTTPS OpenAPI control APIs.
-- [ ] Do not implement undocumented snapshot, device-info, or camera-control endpoints.
-- [ ] Do not implement camera-specific endpoints from malformed or undocumented responses.
-- [ ] Document camera-to-NVR shared-layer reuse points.
+- [x] Do not implement undocumented snapshot, device-info, or camera-control endpoints.
+- [x] Do not implement camera-specific endpoints from malformed or undocumented responses.
+- [x] Document camera-to-NVR shared-layer reuse points.
 - [x] Treat IPC-specific transport/auth as an ADR candidate before any implementation.
-- [ ] Decide whether ADR is needed before adding camera-specific public APIs.
+- [x] Decide that a new ADR is required before adding camera-specific public APIs.
 
 ### Exit Criteria
 

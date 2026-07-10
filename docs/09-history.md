@@ -58,7 +58,7 @@ Status: Completed
 
 Summary:
 
-- Recorded successful remote NVR OpenAPI read-only recording search verification against the Chuncheon VIGI NVR.
+- Recorded successful remote NVR OpenAPI read-only recording search verification against the configured NVR.
 - Confirmed Bearer-authenticated `GET /openapi/record/days`, `GET /openapi/record/search/free_process`, and `GET /openapi/record/search/results` succeed after documented NVR auth.
 - Recorded successful SDK integration test command `python -m pytest tests/test_integration_records.py -v`.
 - Recorded test result `tests/test_integration_records.py::test_integration_recording_search_endpoints PASSED`; `1 passed`.
@@ -89,7 +89,7 @@ Status: Completed
 
 Summary:
 
-- Recorded successful remote NVR OpenAPI read-only inventory verification against the Chuncheon VIGI NVR.
+- Recorded successful remote NVR OpenAPI read-only inventory verification against the configured NVR.
 - Confirmed Bearer-authenticated `GET /openapi/added_devices` succeeds after documented NVR auth.
 - Recorded successful SDK integration test command `python -m pytest tests/test_integration_devices.py -v`.
 - Recorded test result `tests/test_integration_devices.py::test_integration_added_devices_inventory PASSED`; `1 passed`.
@@ -118,7 +118,7 @@ Status: Completed
 
 Summary:
 
-- Recorded successful remote NVR OpenAPI authentication verification against the Chuncheon VIGI NVR through DDNS plus ipTIME port forwarding.
+- Recorded successful remote NVR OpenAPI authentication verification against the configured remote NVR.
 - Confirmed the documented NVR `GET /openapi/token` Digest challenge over external port `20443`.
 - Recorded successful SDK integration test command `python -m pytest tests/test_integration_auth.py -v`.
 - Recorded test result `tests/test_integration_auth.py::test_integration_openapi_authentication PASSED`; `1 passed`.
@@ -170,7 +170,7 @@ Status: Completed
 
 Summary:
 
-- Recorded manual C340I IPC post-auth `getStreamPort` success against `192.168.1.213:20443`.
+- Recorded manual C340I IPC post-auth `getStreamPort` success against the redacted local verification device.
 - Confirmed `getStreamPort` returned `result.streamPort: "554"` and `errCode: 0` with redacted `stok`.
 - Confirmed C340I IPC OpenAPI works through `doAuth` plus `stok`, not the NVR `/openapi/token` plus Bearer-token flow.
 - Added [ADR-0006 Separate NVR And IPC Auth Transports](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md).
@@ -182,7 +182,7 @@ Status: Completed
 
 Summary:
 
-- Recorded manual C340I IPC `doAuth` Step 1 challenge success against `192.168.1.213:20443`.
+- Recorded manual C340I IPC `doAuth` Step 1 challenge success against the redacted local verification device.
 - Recorded manual C340I IPC `doAuth` Step 2 success with documented `params.nonce` and `params.response` schema.
 - Confirmed success response shape as top-level `stok` with `errCode: 0`; the actual `stok` value is redacted and must not be documented.
 - Identified official IPC `getStreamPort` as the next low-risk post-auth read-only control probe.

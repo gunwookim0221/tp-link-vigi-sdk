@@ -18,7 +18,7 @@ The current MVP is NVR-first.
 - C340I IPC `doAuth` and post-auth read-only `getStreamPort` behavior are manually verified, but not implemented in the SDK.
 - No standalone camera public client is part of the current SDK architecture.
 
-## Proposed Package Structure
+## Current Package Structure
 
 ```text
 src/vigi/
@@ -28,18 +28,18 @@ src/vigi/
   transport.py
   capabilities.py
   exceptions.py
-  models/
-    auth.py
-    device.py
-    recording.py
-    stream.py
-  api/
-    devices.py
-    recordings.py
-    streams.py
+  models.py
+  devices.py
+  records.py
+  stream.py
+  ipc_auth.py
+  ipc_control.py
+  ipc_session.py
 ```
 
-This structure is proposed for Phase 1. It is not implemented in Phase 0.
+The NVR-facing services and models are implemented. IPC modules are internal
+verification infrastructure only; they do not expose standalone-camera public
+SDK APIs.
 
 ## Layers
 

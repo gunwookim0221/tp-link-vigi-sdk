@@ -10,6 +10,11 @@ Completed:
 - Phase 3 Transport and Authentication Foundation.
 - Phase 4 OpenAPI Authentication Implementation.
 - Phase 4.5 Project Quality and Developer Experience.
+- Phase 5 Camera Integration Verification.
+- Phase 6 NVR Device Inventory.
+- Phase 7 NVR Recording Search.
+- Phase 8 RTSP Replay URL Helper.
+- Phase 9 Snapshot Support Review / Unsupported Decision.
 - Phase 10B SDK Usability, Examples, and Developer Experience.
 
 Next:
@@ -140,7 +145,7 @@ Exit criteria:
 - RTSP replay URL helper tests pass.
 - Snapshot is documented as unsupported because the current official NVR and IPC documents do not define a snapshot or capture API.
 
-## v1.0
+## v0.1 Release Candidate
 
 Goal:
 

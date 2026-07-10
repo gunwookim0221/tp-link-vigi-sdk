@@ -31,9 +31,9 @@ Observation date: `2026-07-10`.
 
 | Item | Observation |
 | --- | --- |
-| Target | Chuncheon VIGI NVR |
-| Access path | DDNS plus ipTIME port forwarding |
-| Host | `smaniac.iptime.org` |
+| Target | Remote VIGI NVR (redacted) |
+| Access path | Remote access configuration (redacted) |
+| Host | Redacted |
 | External port | `20443` |
 | OpenAPI endpoint | `GET /openapi/token` |
 | Digest challenge | Confirmed through the remote NVR OpenAPI endpoint |
@@ -43,7 +43,7 @@ Observation date: `2026-07-10`.
 Current conclusion:
 
 - Remote NVR OpenAPI auth against `GET /openapi/token` is verified through the SDK integration scaffold.
-- The NVR documented Digest challenge flow works over DDNS and forwarded external port `20443`.
+- The NVR documented Digest challenge flow works over the configured remote OpenAPI connection.
 - Secret material such as password, nonce, Digest response, and issued token must remain redacted.
 - Phase 6 can proceed to NVR read-only inventory work because NVR auth validation is no longer the gating item.
 
@@ -53,8 +53,8 @@ Observation date: `2026-07-10`.
 
 | Item | Observation |
 | --- | --- |
-| Target | Chuncheon VIGI NVR |
-| Access path | DDNS plus ipTIME port forwarding |
+| Target | Remote VIGI NVR (redacted) |
+| Access path | Remote access configuration (redacted) |
 | OpenAPI endpoint | `GET /openapi/added_devices` |
 | Authentication shape | NVR auth succeeded first, then Bearer-authenticated inventory request succeeded |
 | SDK public method | `client.devices.list_added_devices()` succeeded |
@@ -76,8 +76,8 @@ Observation date: `2026-07-10`.
 
 | Item | Observation |
 | --- | --- |
-| Target | Chuncheon VIGI NVR |
-| Access path | DDNS plus ipTIME port forwarding |
+| Target | Remote VIGI NVR (redacted) |
+| Access path | Remote access configuration (redacted) |
 | OpenAPI endpoints | `GET /openapi/record/days`, `GET /openapi/record/search/free_process`, `GET /openapi/record/search/results` |
 | Authentication shape | NVR auth succeeded first, then Bearer-authenticated recording search requests succeeded |
 | SDK public methods | `client.records.list_days(...)`, `client.records.get_free_process()`, and `client.records.list_results(...)` succeeded |
@@ -92,7 +92,7 @@ Current conclusion:
 - `client.records.list_days(...)`, `client.records.get_free_process()`, and `client.records.list_results(...)` are verified against the real NVR for the documented response shapes.
 - `RecordDaysResponse`, `RecordSearchProcessResponse`, and `RecordSearchResultsResponse` are verified by real-device integration for Phase 7 scope.
 - Replay, export, download, snapshot, RTSP, ffmpeg, and video extraction remain out of scope for this verification.
-- Phase 7 is complete and Phase 8 replay/export planning can proceed.
+- Phase 7 is complete. Phase 8 later delivered the RTSP replay URL helper; export/download remains out of scope.
 
 ## C340I Real-Device Observation
 
@@ -103,16 +103,14 @@ Observation date: `2026-07-10`.
 | Device | `VIGI C340I` |
 | Hardware version | `VIGI C340I 1.20` |
 | Firmware version | `2.2.0 Build 250926 Rel.53599n` |
-| IP address | Local lab device, `192.168.1.213` |
+| IP address | Redacted local lab device |
 | OpenAPI UI setting | Exists under `Network Settings > Openapi` |
 | OpenAPI state | Enabled, applied, and device rebooted |
 | TCP `20443` | Open after enabling OpenAPI |
-| `GET https://192.168.1.213:20443/openapi/token` | `curl` reported `Received HTTP/0.9 when not allowed`; Postman reported malformed response parse error |
-| `GET https://192.168.1.213/openapi/token` | `HTTP/1.1 404 Not Found` |
-| `GET http://192.168.1.213/openapi/token` | `HTTP/1.1 302` redirect to `https://192.168.1.213:443` |
-| IPC `doAuth` Step 1 | `POST https://192.168.1.213:20443` with `{"method":"doAuth","params":null}` returned `authenticate` fields and `errCode: -10020` challenge |
-| IPC `doAuth` Step 2 | `POST https://192.168.1.213:20443` with `params.nonce` and `params.response` returned `stok` and `errCode: 0`; `stok` redacted |
-| IPC post-auth read-only method | Official IPC `getStreamPort`, request body `{"method":"getStreamPort"}`, URL `POST https://192.168.1.213:20443/stok=<redacted>`, returned `result.streamPort: "554"` and `errCode: 0` |
+| Incorrect NVR token request | The NVR `/openapi/token` request shape returned a malformed or HTTP/0.9-like response on the IPC control port; it was not treated as an authentication response. |
+| IPC `doAuth` Step 1 | HTTPS POST JSON `{"method":"doAuth","params":null}` returned documented challenge fields and `errCode: -10020`. |
+| IPC `doAuth` Step 2 | The documented nonce/response request returned `stok` and `errCode: 0`; `stok` redacted. |
+| IPC post-auth read-only method | Official IPC `getStreamPort` returned `result.streamPort: "554"` and `errCode: 0`; request address and session material redacted. |
 | IPC integration test | `python -m pytest tests/test_integration_ipc_auth.py -v` passed `tests/test_integration_ipc_auth.py::test_integration_ipc_do_auth_and_get_stream_port`; `1 passed` |
 | IPC integration test note | Pytest cache warning occurred due to `.pytest_cache` permission, but the real-device test passed |
 

@@ -14,7 +14,11 @@ This project follows the structure of Keep a Changelog and is not released yet.
 - Phase 3 Transport and Authentication Foundation.
 - Phase 4 OpenAPI Authentication Implementation.
 - Phase 4.5 Project Quality and Developer Experience work.
+- Phase 5 C340I IPC verification and the documented NVR/IPC authentication-transport separation.
+- Phase 6 NVR device inventory with `client.devices.list_added_devices()`.
+- Phase 7 NVR recording-day and recording-result search APIs.
 - Phase 8 RTSP replay URL helper with capability gating, explicit UTC replay-time validation, and replay stream `1` enforcement.
+- Phase 9 snapshot support review; snapshot remains unsupported under current official NVR and IPC documentation.
 - Phase 10B usage guide, opt-in read-only examples, and example import-safety smoke tests.
 
 ### Changed
