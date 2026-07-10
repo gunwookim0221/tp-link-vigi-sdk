@@ -1,7 +1,7 @@
 """NVR recording search support."""
 
 import json
-from typing import Mapping
+from typing import Mapping, cast
 from urllib.parse import urlencode
 
 from vigi.exceptions import AuthenticationError, VigiApiError, VigiResponseError, ValidationError
@@ -40,13 +40,15 @@ class RecordService:
             start_month=start_month,
             end_month=end_month,
         )
-        return parse_record_days_response(self.session.transport.send(request))
+        session = cast(Session, self.session)
+        return parse_record_days_response(session.transport.send(request))
 
     def get_free_process(self) -> RecordSearchProcessResponse:
         """Get a free recording search process ID."""
 
         request = build_record_free_process_request(self._bearer_headers())
-        return parse_record_free_process_response(self.session.transport.send(request))
+        session = cast(Session, self.session)
+        return parse_record_free_process_response(session.transport.send(request))
 
     def list_results(
         self,
@@ -67,7 +69,8 @@ class RecordService:
             start_index=start_index,
             end_index=end_index,
         )
-        return parse_record_results_response(self.session.transport.send(request))
+        session = cast(Session, self.session)
+        return parse_record_results_response(session.transport.send(request))
 
     def _bearer_headers(self) -> Mapping[str, str]:
         if self.session is None:
@@ -139,7 +142,7 @@ def build_record_results_request(
 def parse_record_days_response(response: Response) -> RecordDaysResponse:
     """Parse a documented recording days response."""
 
-    payload = _parse_payload(response, "Record days")
+    payload, error_code = _parse_payload(response, "Record days")
     days_payload = payload.get("days")
     if not isinstance(days_payload, list):
         raise VigiResponseError("Record days response days must be a list.")
@@ -151,24 +154,24 @@ def parse_record_days_response(response: Response) -> RecordDaysResponse:
         day = _required_str(day_payload, "day", "Record day")
         _require_response_ymd(day, "day")
         days.append(RecordDay(day=day))
-    return RecordDaysResponse(days=tuple(days), error_code=payload["error_code"])
+    return RecordDaysResponse(days=tuple(days), error_code=error_code)
 
 
 def parse_record_free_process_response(response: Response) -> RecordSearchProcessResponse:
     """Parse a documented free-process response."""
 
-    payload = _parse_payload(response, "Record free process")
+    payload, error_code = _parse_payload(response, "Record free process")
     process_id = _required_int(payload, "process", "Record free process")
     return RecordSearchProcessResponse(
         process_id=process_id,
-        error_code=payload["error_code"],
+        error_code=error_code,
     )
 
 
 def parse_record_results_response(response: Response) -> RecordSearchResultsResponse:
     """Parse a documented recording results response."""
 
-    payload = _parse_payload(response, "Record results")
+    payload, error_code = _parse_payload(response, "Record results")
     results_payload = payload.get("results")
     if not isinstance(results_payload, list):
         raise VigiResponseError("Record results response results must be a list.")
@@ -182,11 +185,11 @@ def parse_record_results_response(response: Response) -> RecordSearchResultsResp
         results.append(RecordSegment(start_time=start_time, end_time=end_time))
     return RecordSearchResultsResponse(
         results=tuple(results),
-        error_code=payload["error_code"],
+        error_code=error_code,
     )
 
 
-def _parse_payload(response: Response, label: str) -> dict[str, object]:
+def _parse_payload(response: Response, label: str) -> tuple[dict[str, object], int]:
     if response.status_code < 200 or response.status_code >= 300:
         raise VigiApiError(f"{label} endpoint returned HTTP {response.status_code}.")
 
@@ -203,7 +206,7 @@ def _parse_payload(response: Response, label: str) -> dict[str, object]:
         raise VigiResponseError(f"{label} response is missing numeric error_code.")
     if error_code != 0:
         raise VigiApiError(f"{label} endpoint returned error_code {error_code}.")
-    return payload
+    return payload, error_code
 
 
 def _required_int(payload: dict[str, object], key: str, label: str) -> int:

@@ -1,6 +1,7 @@
 """Client facade for the SDK skeleton."""
 
 from dataclasses import dataclass, field
+from typing import cast
 
 from vigi.auth_provider import AuthProvider
 from vigi.auth import AuthConfig, AuthService
@@ -45,5 +46,7 @@ class VigiClient:
     def login(self) -> None:
         """Authenticate the client and update session state."""
 
-        result = self.auth_provider.authenticate(self.auth._default_context(), self.transport)
+        auth_provider = cast(AuthProvider, self.auth_provider)
+        transport = cast(Transport, self.transport)
+        result = auth_provider.authenticate(self.auth._default_context(), transport)
         self.session.info = result.session_info
