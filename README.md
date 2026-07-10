@@ -1,6 +1,6 @@
 # TP-Link VIGI SDK
 
-Work-in-progress Python SDK for the documented, read-only portions of the
+Python SDK for the documented, read-only portions of the
 TP-Link VIGI NVR OpenAPI.
 
 ## Requirements and Installation

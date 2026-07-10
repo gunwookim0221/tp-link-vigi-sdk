@@ -1,4 +1,4 @@
-"""Python SDK skeleton for TP-Link VIGI NVR OpenAPI."""
+"""Python SDK for TP-Link VIGI NVR OpenAPI."""
 
 from vigi.auth import AuthConfig, AuthService
 from vigi.auth_provider import AuthProvider, AuthenticationContext, AuthenticationResult
@@ -95,4 +95,4 @@ __all__ = [
     "VigiError",
 ]
 
-__version__ = "0.0.0"
+__version__ = "0.1.0rc1"

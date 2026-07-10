@@ -1,4 +1,4 @@
-"""Exception hierarchy for the SDK skeleton."""
+"""Exception hierarchy for the TP-Link VIGI SDK."""
 
 
 class VigiError(Exception):

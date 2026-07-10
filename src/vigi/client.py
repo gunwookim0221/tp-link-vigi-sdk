@@ -1,4 +1,4 @@
-"""Client facade for the SDK skeleton."""
+"""Client facade for the TP-Link VIGI SDK."""
 
 from dataclasses import dataclass, field
 from typing import cast
@@ -16,7 +16,7 @@ from vigi.types import CapabilityName
 
 @dataclass(slots=True)
 class VigiClient:
-    """Minimal client facade that wires future service objects."""
+    """Client facade that wires the current service objects."""
 
     auth_config: AuthConfig
     transport: Transport | None = None

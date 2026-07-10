@@ -6,6 +6,12 @@ This project follows the structure of Keep a Changelog and is not released yet.
 
 ## [Unreleased]
 
+### Changed
+
+- Prepared the package and user-facing documentation for the `0.1.0rc1` release candidate.
+
+## [0.1.0rc1] - 2026-07-10
+
 ### Added
 
 - Phase 0 Documentation Foundation.
@@ -24,6 +30,7 @@ This project follows the structure of Keep a Changelog and is not released yet.
 
 ### Changed
 
+- Updated runtime package version references from `0.0.0` to `0.1.0rc1`.
 - GitHub Actions CI now runs Ruff, mypy, pytest, and examples compile smoke checks on Python 3.10 through 3.13.
 - Project metadata now includes release-oriented README, license, author, keyword, classifier, and project URL fields.
 - Roadmap and implementation checklist aligned to the actual development order.

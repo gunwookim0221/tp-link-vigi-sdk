@@ -42,7 +42,7 @@ class Response:
 
 
 class Transport:
-    """Transport interface placeholder.
+    """Transport interface.
 
     A concrete implementation will adapt this boundary to an HTTP library in a
     later phase.

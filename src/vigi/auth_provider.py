@@ -28,7 +28,7 @@ class AuthenticationResult:
 
 
 class AuthProvider:
-    """Authentication strategy interface placeholder."""
+    """Authentication strategy interface."""
 
     def authenticate(
         self, context: AuthenticationContext, transport: Transport
