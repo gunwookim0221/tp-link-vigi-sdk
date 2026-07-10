@@ -29,8 +29,10 @@ Fix token response parsing error handling
 Run the default local checks:
 
 ```bash
+python -m ruff check .
+python -m mypy src
 python -m pytest
-python -m compileall src tests
+python -m compileall -q examples tests/test_examples.py
 ```
 
 Integration tests must be opt-in and must not require hardware in the default test run.

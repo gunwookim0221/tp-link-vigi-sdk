@@ -195,7 +195,7 @@ This phase is not part of the current MVP and does not imply current standalone 
 5. Phase 9: Snapshot Support Review / Unsupported Decision. Status: completed; reconsider only after official documentation is published.
 6. Phase 10B: SDK Usability, Examples, and Developer Experience. Status: completed; no SDK API or dependency added.
 7. Phase 10: CLI.
-8. Phase 11: Integration Test Harness Hardening.
+8. Phase 11: Integration Test Harness Hardening. Status: CI quality gates completed; real-device harness work remains.
 9. Phase 12: Release.
 
 ## Long-Term Plan

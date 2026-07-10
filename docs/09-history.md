@@ -16,6 +16,17 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-10: CI Quality Gates Hardened
+
+Status: Completed
+
+Summary:
+
+- Expanded the existing GitHub Actions CI matrix to Python 3.10, 3.11, 3.12, and 3.13.
+- Added Ruff, mypy, default pytest, and examples compile smoke gates to the existing CI job.
+- Kept real-device integration tests opt-in; CI supplies no device configuration or secrets.
+- Added no SDK feature, endpoint, dependency, or release/publish workflow.
+
 ### 2026-07-10: Phase 10B SDK Usability, Examples, and Developer Experience Completed
 
 Status: Completed

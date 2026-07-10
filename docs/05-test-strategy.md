@@ -73,6 +73,13 @@ The smoke tests do not use real-device configuration and do not execute
 example `main()` functions. They verify import safety only; explicit execution
 of the read-only examples remains an opt-in real-device action.
 
+## Continuous Integration
+
+GitHub Actions runs Ruff, mypy, the default pytest suite, and the examples
+compile smoke test on Python 3.10, 3.11, 3.12, and 3.13. The workflow supplies
+no `VIGI_*` configuration, so opt-in real-device integration tests remain
+skipped and no NVR or IPC device is contacted.
+
 ## Phase 9 Snapshot Review
 
 No snapshot mock, unit, or integration tests are added because the current official NVR and IPC OpenAPI documents do not define a snapshot or capture API.

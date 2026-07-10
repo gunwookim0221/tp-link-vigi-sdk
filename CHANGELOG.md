@@ -23,6 +23,7 @@ This project follows the structure of Keep a Changelog and is not released yet.
 
 ### Changed
 
+- GitHub Actions CI now runs Ruff, mypy, pytest, and examples compile smoke checks on Python 3.10 through 3.13.
 - Roadmap and implementation checklist aligned to the actual development order.
 - Phase 8 re-scoped from replay/export to RTSP replay URL generation because official export/download endpoints are not documented.
 - README now documents installation, shell-based environment configuration, a minimal device-inventory quickstart, and current unsupported scope.

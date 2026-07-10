@@ -355,6 +355,7 @@ Harden the real-device test harness for supported NVRs and verification devices.
 
 ### Tasks
 
+- [x] Expand the existing GitHub Actions matrix to Python 3.10 through 3.13 with Ruff, mypy, pytest, and examples compile smoke gates.
 - [ ] Add integration config loader.
 - [ ] Add read-only device test.
 - [ ] Add recording search test.
