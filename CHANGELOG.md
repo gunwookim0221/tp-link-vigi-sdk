@@ -8,7 +8,18 @@ This project follows the structure of Keep a Changelog and is not released yet.
 
 ### Changed
 
-- Prepared the package and user-facing documentation for the `0.1.0rc1` release candidate.
+- Prepared the package and user-facing documentation for the `0.1.0` stable release.
+
+## [0.1.0] - 2026-07-10
+
+### Added
+
+- Stable release of the documented, read-only TP-Link VIGI NVR SDK surface.
+
+### Changed
+
+- Promoted the runtime package version from `0.1.0rc1` to `0.1.0`.
+- Kept the supported SDK surface aligned with the tested device inventory, recording search, and RTSP replay URL helper scope.
 
 ## [0.1.0rc1] - 2026-07-10
 
