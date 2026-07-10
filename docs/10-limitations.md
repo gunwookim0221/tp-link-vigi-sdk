@@ -10,7 +10,7 @@
 - `RecordSegment.start_time` and `end_time` are not automatically converted to replay URL times; callers must provide explicit UTC `YYYYMMDDtHHMMSSz` strings to the replay URL helper.
 - Recording search models do not include fields that are absent from the official schema, such as recording ID, segment ID, file ID, size, duration, or record type.
 - Firmware version for the MVP device is TODO.
-- Snapshot support is TODO because no snapshot endpoint was identified in the official OpenAPI reference PDF during Phase 0.
+- Snapshot is unsupported under the current official NVR OpenAPI V1.0 and IPC OpenAPI V1.1 documentation: no NVR snapshot endpoint or IPC snapshot method is documented.
 - The project has not selected a license yet.
 - C340I OpenAPI support is indicated by official firmware release notes and the device Web UI exposes an OpenAPI setting. IPC `doAuth` and post-auth read-only `getStreamPort` are manually verified, but SDK support is not implemented.
 - Standalone VIGI Camera public SDK APIs are not exposed yet.
@@ -51,7 +51,10 @@ Currently unsupported:
 
 - GUI automation.
 - Undocumented web UI endpoints.
-- Snapshot endpoint implementation.
+- NVR or IPC snapshot implementation until TP-Link publishes an official request and response contract.
+- RTSP frame capture as a substitute for a snapshot API.
+- ffmpeg integration, image processing, and snapshot file saving.
+- Private or undocumented snapshot URL usage.
 - Mutating device settings in MVP.
 - Event receiver service implementation.
 - Full RTSP client implementation.

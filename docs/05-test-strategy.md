@@ -62,6 +62,12 @@ Phase 8 replay URL helper tests are unit tests only and should cover:
 
 Phase 8 does not add RTSP-open integration tests, RTSP Digest handshake tests, video-byte receipt, or video file tests.
 
+## Phase 9 Snapshot Review
+
+No snapshot mock, unit, or integration tests are added because the current official NVR and IPC OpenAPI documents do not define a snapshot or capture API.
+
+If TP-Link publishes an official snapshot API, tests must be mock-first and cover the documented method, path or method name, authentication, request schema, and response schema. Image bytes, content type, and file-saving behavior must be tested only when the official response type defines them. Any opt-in integration test must validate in memory only; file saving remains outside SDK core scope.
+
 ## Integration Tests
 
 Integration tests require a real VIGI device. NVR-specific tests require a real VIGI NVR; Phase 5 camera verification requires a real C340I with hardware version, firmware version, and test date recorded.

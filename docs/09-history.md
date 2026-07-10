@@ -16,6 +16,18 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-10: Phase 9 Snapshot Support Review Completed
+
+Status: Completed
+
+Summary:
+
+- Reviewed the official NVR OpenAPI V1.0 and IPC OpenAPI V1.1 documents for snapshot and capture support.
+- Confirmed that neither document defines a snapshot or capture API; the NVR multipart mention is event-push formatting, not a snapshot response.
+- Recorded snapshot as unsupported under current official documentation.
+- Added no SDK code, tests, dependencies, public API, image model, file saving, image processing, RTSP frame capture, ffmpeg, or IPC public API behavior.
+- Snapshot may be reconsidered only if TP-Link publishes an official request and response contract.
+
 ### 2026-07-10: Phase 8 RTSP Replay URL Helper Implemented
 
 Status: Completed

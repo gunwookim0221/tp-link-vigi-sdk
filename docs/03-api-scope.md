@@ -153,9 +153,18 @@ Phase 8:
 - RTSP Digest authentication remains the responsibility of an external RTSP client; NVR HTTPS Bearer tokens are not used for RTSP.
 - Export, download, and video-file APIs remain unsupported until official endpoints are documented.
 
-Phase 9:
+## Phase 9 Snapshot Scope Decision
 
-- Snapshot support is `TODO` because no snapshot OpenAPI endpoint was identified in the official reference PDF during Phase 0.
+Snapshot is unsupported under the current official documentation:
+
+- NVR OpenAPI V1.0 does not document a snapshot or capture endpoint.
+- IPC OpenAPI V1.1 does not document a snapshot or capture method.
+- The NVR event-push multipart format is not a snapshot response.
+- The SDK does not add `SnapshotImage`, `client.snapshots`, or a snapshot capability without an official request and response contract.
+- RTSP frame capture is not a documented snapshot API and remains out of scope.
+- ffmpeg, image processing, file saving, web UI reverse engineering, and private or undocumented URL usage remain out of scope.
+
+Snapshot may be reconsidered only when TP-Link publishes official NVR or IPC snapshot documentation with its method, path or method name, authentication, request schema, and response type.
 
 ## Excluded From MVP
 

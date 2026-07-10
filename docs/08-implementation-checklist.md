@@ -287,21 +287,24 @@ Build the documented RTSP replay URL only; do not open or download a stream.
 - URL construction tests pass.
 - No undocumented replay endpoint, RTSP connection, or video-file behavior is introduced.
 
-## Phase 9: Snapshot Support Decision
+## Phase 9: Snapshot Support Review
 
 ### Goal
 
-Determine whether snapshot is supported by official public documentation.
+Determine whether snapshot is supported by official public documentation and document the resulting scope decision.
 
 ### Tasks
 
-- [ ] Re-check official OpenAPI documentation for snapshot endpoints.
-- [ ] If no endpoint exists, keep feature as unsupported.
-- [ ] If TP-Link publishes official support, add endpoint scope and tests.
+- [x] Review NVR OpenAPI V1.0 for snapshot or capture support.
+- [x] Review IPC OpenAPI V1.1 for snapshot or capture support.
+- [x] Confirm no official snapshot or capture endpoint or method is currently documented.
+- [x] Keep snapshot implementation out of SDK scope.
+- [x] Do not add `SnapshotImage`, `client.snapshots`, a snapshot capability, file saving, image processing, RTSP frame capture, or ffmpeg integration.
+- [x] Document future reconsideration criteria.
 
 ### Exit Criteria
 
-- Snapshot status is documented as supported, unsupported, or TODO with official reference.
+- Snapshot is documented as unsupported under current official documentation, with a future official-documentation reconsideration criterion.
 
 ## Phase 10: CLI
 

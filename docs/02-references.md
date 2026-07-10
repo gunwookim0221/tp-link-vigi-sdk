@@ -58,6 +58,8 @@ Review date: `2026-07-10`.
 
 Review date: `2026-07-10`.
 
+- The `VIGI NVR Open API Document` V1.0 does not document a snapshot or capture endpoint. Its multipart mention describes NVR event-push formatting, not a snapshot response.
+- `VIGI IPC OpenAPI Document_V1.1` does not document a snapshot or capture method. There is no official basis for an IPC `stok`-based snapshot request or response shape.
 - The NVR OpenAPI FAQ documents `GET /openapi/token`, no-auth Digest challenge acquisition, SHA-256 Digest response calculation, Bearer token usage, and default OpenAPI port `20443`.
 - The VIGI OpenAPI supported product list page documents the support policy for listed and higher hardware versions and latest firmware, but `VIGI C340I` was not found in the fetched page text during this review.
 - The C340I firmware release note for `VIGI C340I(UN) V1.20 2.2.0 Build 250926` documents added support for `VIGI OpenAPI`.
