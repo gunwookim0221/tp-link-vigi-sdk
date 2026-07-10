@@ -11,6 +11,8 @@
 - Recording search models do not include fields that are absent from the official schema, such as recording ID, segment ID, file ID, size, duration, or record type.
 - Firmware version for the MVP device is TODO.
 - Snapshot is unsupported under the current official NVR OpenAPI V1.0 and IPC OpenAPI V1.1 documentation: no NVR snapshot endpoint or IPC snapshot method is documented.
+- The supplied examples are opt-in scripts, not a CLI, and require explicit shell environment configuration; `.env` is not auto-loaded.
+- Replay URL examples require caller-provided UTC time strings and do not convert `RecordSegment` timestamps.
 - The project has not selected a license yet.
 - C340I OpenAPI support is indicated by official firmware release notes and the device Web UI exposes an OpenAPI setting. IPC `doAuth` and post-auth read-only `getStreamPort` are manually verified, but SDK support is not implemented.
 - Standalone VIGI Camera public SDK APIs are not exposed yet.
@@ -55,6 +57,7 @@ Currently unsupported:
 - RTSP frame capture as a substitute for a snapshot API.
 - ffmpeg integration, image processing, and snapshot file saving.
 - Private or undocumented snapshot URL usage.
+- CLI support; it remains deferred to a separate phase.
 - Mutating device settings in MVP.
 - Event receiver service implementation.
 - Full RTSP client implementation.

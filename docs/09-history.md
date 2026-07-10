@@ -16,6 +16,18 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-10: Phase 10B SDK Usability, Examples, and Developer Experience Completed
+
+Status: Completed
+
+Summary:
+
+- Added a concise README quickstart and a detailed read-only usage guide.
+- Added opt-in examples for device inventory, the recording-search workflow, and RTSP replay URL construction.
+- Added example syntax and import-safety smoke coverage; imports do not run example entry points or contact devices.
+- Documented explicit shell configuration and that `.env` is not auto-loaded.
+- Added no SDK feature, public API, runtime dependency, CLI, snapshot, RTSP-open, export/download, video-saving, or timestamp-conversion behavior.
+
 ### 2026-07-10: Phase 9 Snapshot Support Review Completed
 
 Status: Completed

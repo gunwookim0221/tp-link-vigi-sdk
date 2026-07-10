@@ -10,10 +10,11 @@ Completed:
 - Phase 3 Transport and Authentication Foundation.
 - Phase 4 OpenAPI Authentication Implementation.
 - Phase 4.5 Project Quality and Developer Experience.
+- Phase 10B SDK Usability, Examples, and Developer Experience.
 
 Next:
 
-- Phase 10 CLI or SDK usability and developer-experience improvements.
+- Phase 10 CLI, after a separate dependency and license review.
 - IPC auth/transport architecture work according to [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md), if standalone IPC SDK support is planned.
 
 ## v0.1
@@ -187,9 +188,10 @@ This phase is not part of the current MVP and does not imply current standalone 
 3. Phase 7: NVR Recording Search. Status: implemented and real-device integration verified.
 4. Phase 8: RTSP Replay URL Helper.
 5. Phase 9: Snapshot Support Review / Unsupported Decision. Status: completed; reconsider only after official documentation is published.
-6. Phase 10: CLI.
-7. Phase 11: Integration Test Harness Hardening.
-8. Phase 12: Release.
+6. Phase 10B: SDK Usability, Examples, and Developer Experience. Status: completed; no SDK API or dependency added.
+7. Phase 10: CLI.
+8. Phase 11: Integration Test Harness Hardening.
+9. Phase 12: Release.
 
 ## Long-Term Plan
 

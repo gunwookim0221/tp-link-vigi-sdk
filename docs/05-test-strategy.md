@@ -62,6 +62,17 @@ Phase 8 replay URL helper tests are unit tests only and should cover:
 
 Phase 8 does not add RTSP-open integration tests, RTSP Digest handshake tests, video-byte receipt, or video file tests.
 
+## Phase 10B Examples Smoke Tests
+
+Examples are syntax-compiled and imported by smoke tests. Imports must not
+perform login, device requests, recording searches, RTSP connections, or any
+other network operation. Each executable example keeps invocation in `main()`
+behind an `if __name__ == "__main__":` guard.
+
+The smoke tests do not use real-device configuration and do not execute
+example `main()` functions. They verify import safety only; explicit execution
+of the read-only examples remains an opt-in real-device action.
+
 ## Phase 9 Snapshot Review
 
 No snapshot mock, unit, or integration tests are added because the current official NVR and IPC OpenAPI documents do not define a snapshot or capture API.
@@ -88,6 +99,8 @@ VIGI_RECORDING_END_MONTH
 VIGI_RECORDING_DAY
 VIGI_RECORDING_START_INDEX
 VIGI_RECORDING_END_INDEX
+VIGI_REPLAY_START_TIME
+VIGI_REPLAY_END_TIME
 ```
 
 Standalone IPC verification must use a separate environment variable namespace:

@@ -17,6 +17,7 @@ Read these documents before every task:
 - [02-references.md](02-references.md)
 - [07-codex-instructions.md](07-codex-instructions.md)
 - [08-implementation-checklist.md](08-implementation-checklist.md)
+- [12-usage-guide.md](12-usage-guide.md)
 - [docs/adr/README.md](adr/README.md)
 
 ## Task-Specific Documents
@@ -33,6 +34,7 @@ Read these documents when the task touches the listed area:
 | Design decisions | [docs/adr/README.md](adr/README.md), [docs/adr/](adr/) |
 | Project progress or milestones | [09-history.md](09-history.md) |
 | Contributor or project operations | [../CONTRIBUTING.md](../CONTRIBUTING.md), [../CHANGELOG.md](../CHANGELOG.md), [../SECURITY.md](../SECURITY.md) |
+| SDK installation, examples, and read-only workflow | [12-usage-guide.md](12-usage-guide.md), [../README.md](../README.md), [../examples/](../examples/) |
 
 ## Workflow
 
@@ -75,6 +77,7 @@ For documentation-only tasks, the `Implement` step means applying the requested 
 - [07-codex-instructions.md](07-codex-instructions.md)
 - [08-implementation-checklist.md](08-implementation-checklist.md)
 - [09-history.md](09-history.md)
+- [12-usage-guide.md](12-usage-guide.md)
 - [../README.md](../README.md)
 - [../CONTRIBUTING.md](../CONTRIBUTING.md)
 - [../CHANGELOG.md](../CHANGELOG.md)

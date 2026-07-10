@@ -323,6 +323,30 @@ Provide a thin command-line interface over SDK features.
 - CLI uses SDK APIs only.
 - CLI tests use mocks.
 
+## Phase 10B: SDK Usability, Examples, and Developer Experience
+
+### Goal
+
+Make the existing read-only NVR workflow understandable and safe to try
+without adding SDK behavior, public APIs, or runtime dependencies.
+
+### Tasks
+
+- [x] Add installation, environment, quickstart, supported-scope, and opt-in integration guidance to the README.
+- [x] Add a detailed read-only usage guide for authentication, inventory, recording search, and replay URL generation.
+- [x] Add opt-in examples for listing devices, the read-only recording workflow, and replay URL construction.
+- [x] Keep `.env` loading explicit and add replay-time placeholders only.
+- [x] Add syntax and import-safety smoke coverage for examples.
+- [x] Document that snapshot remains unsupported and that RTSP URL generation does not open or download streams.
+- [x] Keep CLI work deferred to Phase 10.
+- [x] Add no public API, SDK behavior, or dependency.
+
+### Exit Criteria
+
+- New users can follow README and examples to understand the current read-only scope.
+- Examples perform network activity only when explicitly run.
+- Default tests include examples smoke coverage without requiring hardware.
+
 ## Phase 11: Integration Test Harness Hardening
 
 ### Goal
