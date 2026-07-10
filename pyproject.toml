@@ -5,9 +5,41 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tp-link-vigi-sdk"
 version = "0.0.0"
-description = "Python SDK skeleton for TP-Link VIGI NVR OpenAPI"
+description = "Python SDK for TP-Link VIGI NVR OpenAPI."
+readme = "README.md"
+license = "MIT"
 requires-python = ">=3.10"
 dependencies = []
+authors = [
+    { name = "김건우", email = "gunwookim0221@gmail.com" },
+]
+keywords = [
+    "tp-link",
+    "vigi",
+    "nvr",
+    "openapi",
+    "python",
+    "sdk",
+    "rtsp",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/gunwookim0221/tp-link-vigi-sdk"
+Repository = "https://github.com/gunwookim0221/tp-link-vigi-sdk"
+Issues = "https://github.com/gunwookim0221/tp-link-vigi-sdk/issues"
+Documentation = "https://github.com/gunwookim0221/tp-link-vigi-sdk/blob/main/docs/00-index.md"
 
 [project.optional-dependencies]
 dev = [

@@ -119,7 +119,7 @@ Start with:
 
 ## License
 
-TODO: a license has not been selected yet.
+This project is licensed under the [MIT License](LICENSE).
 
 ## Disclaimer
 
