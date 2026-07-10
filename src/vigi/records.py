@@ -1,16 +1,14 @@
 """NVR recording search support."""
 
 import json
-from typing import Callable, Mapping
+from typing import Mapping
 from urllib.parse import urlencode
 
 from vigi.exceptions import AuthenticationError, VigiApiError, VigiResponseError, ValidationError
 from vigi.models import (
     RecordDay,
     RecordDaysResponse,
-    RecordFile,
     RecordSearchProcessResponse,
-    RecordSearchQuery,
     RecordSearchResultsResponse,
     RecordSegment,
 )
@@ -70,11 +68,6 @@ class RecordService:
             end_index=end_index,
         )
         return parse_record_results_response(self.session.transport.send(request))
-
-    def search(self, query: RecordSearchQuery) -> list[RecordFile]:
-        """Search recordings through a future higher-level OpenAPI workflow."""
-
-        raise NotImplementedError("High-level recording search is planned for a later phase.")
 
     def _bearer_headers(self) -> Mapping[str, str]:
         if self.session is None:

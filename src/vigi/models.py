@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from vigi.exceptions import ValidationError
-from vigi.types import ChannelStatus, DeviceType, RecordType, StreamType
+from vigi.types import ChannelStatus, DeviceType, StreamType
 
 
 def _require_non_empty(value: str, field_name: str) -> None:
@@ -96,18 +96,6 @@ class AddedDevicesResponse:
 
 
 @dataclass(frozen=True, slots=True)
-class RecordSearchQuery:
-    """Input shape for a future documented recording search flow."""
-
-    channel_id: int
-    day: str
-
-    def __post_init__(self) -> None:
-        _require_positive(self.channel_id, "channel_id")
-        _require_non_empty(self.day, "day")
-
-
-@dataclass(frozen=True, slots=True)
 class RecordDay:
     """A day with recording returned by ``GET /openapi/record/days``."""
 
@@ -154,18 +142,6 @@ class RecordSearchResultsResponse:
 
     results: tuple[RecordSegment, ...]
     error_code: int
-
-
-@dataclass(frozen=True, slots=True)
-class RecordFile:
-    """Recording time range metadata returned by future search APIs."""
-
-    channel_id: int
-    time_range: TimeRange
-    record_type: RecordType = RecordType.UNKNOWN
-
-    def __post_init__(self) -> None:
-        _require_positive(self.channel_id, "channel_id")
 
 
 @dataclass(frozen=True, slots=True)

@@ -38,12 +38,6 @@ class ChannelStatus(str, Enum):
     UNKNOWN = "unknown"
 
 
-class RecordType(str, Enum):
-    """Recording type values used before official subtype mapping is verified."""
-
-    UNKNOWN = "unknown"
-
-
 class StreamType(str, Enum):
     """RTSP stream selectors documented by the OpenAPI stream interface."""
 

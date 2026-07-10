@@ -3,7 +3,6 @@ from vigi import (
     CapabilityName,
     ChannelStatus,
     DeviceType,
-    RecordType,
     StreamType,
 )
 
@@ -15,6 +14,5 @@ def test_enum_values_are_importable() -> None:
     assert DeviceType.UNKNOWN.value == "unknown"
     assert ChannelStatus.ONLINE.value == "1"
     assert ChannelStatus.OFFLINE.value == "0"
-    assert RecordType.UNKNOWN.value == "unknown"
     assert StreamType.MAIN.value == "1"
     assert StreamType.MINOR.value == "2"

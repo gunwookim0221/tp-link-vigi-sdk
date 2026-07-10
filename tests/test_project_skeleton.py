@@ -11,7 +11,6 @@ from vigi import (
     DeviceError,
     DeviceService,
     RecordError,
-    RecordSearchQuery,
     RecordService,
     RtspStreamInfo,
     StreamError,
@@ -34,7 +33,6 @@ def test_public_classes_import() -> None:
     assert DeviceError
     assert DeviceService
     assert RecordError
-    assert RecordSearchQuery
     assert RecordService
     assert RtspStreamInfo
     assert StreamError
@@ -64,9 +62,6 @@ def test_placeholder_methods_are_not_implemented() -> None:
 
     with pytest.raises(AuthenticationError):
         client.devices.list_added_devices()
-
-    with pytest.raises(NotImplementedError):
-        client.records.search(RecordSearchQuery(channel_id=1, day="20260707"))
 
     with pytest.raises(NotImplementedError):
         client.stream.open_replay(

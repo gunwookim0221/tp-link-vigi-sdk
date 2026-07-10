@@ -8,9 +8,6 @@ from vigi import (
     DeviceInfo,
     DeviceType,
     NvrInfo,
-    RecordFile,
-    RecordSearchQuery,
-    RecordType,
     RtspStreamInfo,
     StreamType,
     TimeRange,
@@ -32,14 +29,10 @@ def test_core_models_can_be_created() -> None:
 
     nvr = NvrInfo(model="VIGI NVR1008H-8P", hardware_version="V1.20")
     channel = ChannelInfo(channel_id=1, status=ChannelStatus.ONLINE, device=device)
-    query = RecordSearchQuery(channel_id=1, day="20260707")
-    record = RecordFile(channel_id=1, time_range=time_range, record_type=RecordType.UNKNOWN)
     stream = RtspStreamInfo(channel_id=1, stream_type=StreamType.MAIN, time_range=time_range)
 
     assert nvr.model == "VIGI NVR1008H-8P"
     assert channel.device == device
-    assert query.day == "20260707"
-    assert record.time_range == time_range
     assert stream.stream_type is StreamType.MAIN
 
 
@@ -62,6 +55,3 @@ def test_basic_identifier_validation() -> None:
 
     with pytest.raises(ValidationError):
         ChannelInfo(channel_id=0)
-
-    with pytest.raises(ValidationError):
-        RecordSearchQuery(channel_id=1, day="")
