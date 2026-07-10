@@ -14,7 +14,7 @@ Completed:
 Next:
 
 - IPC auth/transport architecture work according to [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md), if standalone IPC SDK support is planned.
-- NVR replay/export planning after recording search verification.
+- NVR RTSP replay URL helper after recording search verification.
 
 ## v0.1
 
@@ -125,18 +125,18 @@ Current status:
 
 Goal:
 
-- Add replay planning and snapshot decision.
+- Add the RTSP replay URL helper and snapshot decision.
 
 Scope:
 
-- RTSP live/replay URL helpers.
-- Replay UTC time formatting.
-- Documented replay stream limitation handling.
+- Capability-gated RTSP replay URL helper.
+- Explicit UTC replay-time strings and documented replay stream `1` limitation.
+- No RTSP connection, Digest handshake, export/download, or video extraction.
 - Snapshot support decision based only on official documentation.
 
 Exit criteria:
 
-- RTSP URL helper tests pass.
+- RTSP replay URL helper tests pass.
 - Snapshot is documented as supported, unsupported, or TODO with official reference.
 
 ## v1.0
@@ -185,7 +185,7 @@ This phase is not part of the current MVP and does not imply current standalone 
 1. Phase 5: C340I Camera Integration Verification. Status: IPC auth and post-auth read-only control integration verified; SDK implementation pending ADR-0006 architecture work.
 2. Phase 6: NVR Device Inventory. Status: implemented and real-device integration verified.
 3. Phase 7: NVR Recording Search. Status: implemented and real-device integration verified.
-4. Phase 8: Replay / Export.
+4. Phase 8: RTSP Replay URL Helper.
 5. Phase 9: Snapshot Support Decision.
 6. Phase 10: CLI.
 7. Phase 11: Integration Test Harness Hardening.
@@ -199,6 +199,9 @@ This phase is not part of the current MVP and does not imply current standalone 
 - Expanded model and firmware verification matrix.
 - Optional standalone VIGI Camera public SDK support after official documentation, physical device verification, and ADR approval.
 - Event receiver support if officially documented behavior is sufficient.
+- RTSP client integration only after a separate dependency, security, and integration-test decision.
+- Export/download only if TP-Link documents official endpoints and workflow.
+- CLI/video extraction tooling only after separate approval.
 - AI pipeline integration using structured SDK outputs.
 - Automation platform features after SDK and CLI are stable.
 

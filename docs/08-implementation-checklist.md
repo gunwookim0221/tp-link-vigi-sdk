@@ -267,23 +267,25 @@ Implement documented recording search APIs.
 - Real-device `GET /openapi/record/search/free_process` integration is verified.
 - Real-device `GET /openapi/record/search/results` integration is verified.
 
-## Phase 8: Replay / Export
+## Phase 8: RTSP Replay URL Helper
 
 ### Goal
 
-Support documented RTSP replay URL construction and integration planning.
+Build the documented RTSP replay URL only; do not open or download a stream.
 
 ### Tasks
 
-- [ ] Build replay RTSP URL helper.
-- [ ] Document UTC time conversion.
-- [ ] Confirm replay stream limitation that replay only supports stream `1`.
-- [ ] Add RTSP Digest authentication integration notes.
+- [x] Document official RTSP replay URL format.
+- [x] Define explicit UTC replay-time string policy without converting `RecordSegment` timestamps.
+- [x] Implement capability-gated replay URL builder.
+- [x] Allow replay stream `1` only.
+- [x] Add input validation and unit tests.
+- [x] Keep RTSP open, Digest handshake, export/download, ffmpeg, and video file handling out of scope.
 
 ### Exit Criteria
 
 - URL construction tests pass.
-- No undocumented replay endpoint is introduced.
+- No undocumented replay endpoint, RTSP connection, or video-file behavior is introduced.
 
 ## Phase 9: Snapshot Support Decision
 

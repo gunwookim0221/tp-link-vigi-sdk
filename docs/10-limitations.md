@@ -2,10 +2,12 @@
 
 ## Current Known Limitations
 
-- Replay, export, download, snapshot, CLI, and camera-specific public SDK behavior are not implemented yet.
+- The SDK builds documented RTSP replay URLs only; it does not open, play, authenticate to, download from, or save RTSP streams.
+- RTSP Digest handshake, ffmpeg integration, export/download endpoints, and video-file handling are unsupported.
 - NVR device inventory is implemented and verified for the documented `GET /openapi/added_devices` schema.
 - Phase 7 recording search is implemented and verified for the documented read-only search endpoints and does not retrieve, export, download, or store video files.
 - Recording result `start_time` and `end_time` values are preserved as raw timestamp strings because the official recording search schema does not define a timezone conversion rule for those fields.
+- `RecordSegment.start_time` and `end_time` are not automatically converted to replay URL times; callers must provide explicit UTC `YYYYMMDDtHHMMSSz` strings to the replay URL helper.
 - Recording search models do not include fields that are absent from the official schema, such as recording ID, segment ID, file ID, size, duration, or record type.
 - Firmware version for the MVP device is TODO.
 - Snapshot support is TODO because no snapshot endpoint was identified in the official OpenAPI reference PDF during Phase 0.

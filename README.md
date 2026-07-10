@@ -6,7 +6,7 @@ Work in progress Python SDK for TP-Link VIGI NVR OpenAPI.
 
 This project is in early development. It has project documentation, package skeleton, core models/types, transport/authentication foundations, documented OpenAPI authentication support, read-only NVR device inventory support for `GET /openapi/added_devices`, and read-only NVR recording search endpoint wrappers.
 
-Remote VIGI NVR authentication, device inventory integration, and read-only recording search integration have been verified. Replay, snapshot, CLI, and release documentation are not ready.
+Remote VIGI NVR authentication, device inventory integration, and read-only recording search integration have been verified. The SDK can build documented RTSP replay URLs, but it does not open, authenticate to, download from, or save RTSP streams. Snapshot, CLI, and release documentation are not ready.
 
 ## Project Goals
 
@@ -25,12 +25,13 @@ Implemented:
 - OpenAPI authentication flow based on official token endpoint documentation.
 - Read-only NVR device inventory through documented `GET /openapi/added_devices`.
 - Read-only NVR recording search endpoint wrappers for documented recording APIs.
+- Capability-gated RTSP replay URL generation using explicit UTC replay-time strings.
 - Mock/unit tests and skipped integration auth scaffold.
 
 Not implemented:
 
 - Recording search convenience workflow across arbitrary time ranges.
-- RTSP replay support.
+- RTSP connections, Digest authentication, playback, download, and video-file storage.
 - Snapshot support.
 - CLI.
 - Release-ready public API.
@@ -75,6 +76,7 @@ Start with:
 - Phase 4.5: Project Quality and Developer Experience - complete
 - Phase 6: NVR Device Inventory - implemented and integration verified
 - Phase 7: NVR Recording Search - implemented and integration verified
+- Phase 8: RTSP Replay URL Helper - implemented with unit tests
 
 ## License
 

@@ -14,10 +14,12 @@ This project follows the structure of Keep a Changelog and is not released yet.
 - Phase 3 Transport and Authentication Foundation.
 - Phase 4 OpenAPI Authentication Implementation.
 - Phase 4.5 Project Quality and Developer Experience work.
+- Phase 8 RTSP replay URL helper with capability gating, explicit UTC replay-time validation, and replay stream `1` enforcement.
 
 ### Changed
 
 - Roadmap and implementation checklist aligned to the actual development order.
+- Phase 8 re-scoped from replay/export to RTSP replay URL generation because official export/download endpoints are not documented.
 
 ### Security
 

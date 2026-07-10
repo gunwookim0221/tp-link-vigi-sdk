@@ -16,6 +16,18 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-07-10: Phase 8 RTSP Replay URL Helper Implemented
+
+Status: Completed
+
+Summary:
+
+- Implemented capability-gated construction of the official RTSP replay URL using explicit UTC replay-time strings.
+- Enforced the documented replay stream `1` limitation and validated host, channel, UTC-time format, and increasing time range.
+- Kept `RecordSegment` timestamps raw; no automatic timestamp conversion or datetime convenience API was added.
+- Added unit coverage only; no RTSP connection, Digest handshake, playback, video bytes, file storage, ffmpeg, export, download, snapshot, or IPC public API behavior was added.
+- Updated Phase 8 scope from `Replay / Export` to `RTSP Replay URL Helper` because official export/download endpoints remain undocumented.
+
 ### 2026-07-10: Phase 7 NVR Recording Search Integration Passed
 
 Status: Completed

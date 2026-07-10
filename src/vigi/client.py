@@ -10,6 +10,7 @@ from vigi.records import RecordService
 from vigi.session import Session, SessionInfo
 from vigi.stream import StreamService
 from vigi.transport import Transport, TransportConfig
+from vigi.types import CapabilityName
 
 
 @dataclass(slots=True)
@@ -39,7 +40,7 @@ class VigiClient:
         self.session = Session(transport=self.transport, info=SessionInfo())
         self.devices = DeviceService(self.session)
         self.records = RecordService(self.session)
-        self.stream = StreamService()
+        self.stream = StreamService({CapabilityName.STREAM_REPLAY_RTSP})
 
     def login(self) -> None:
         """Authenticate the client and update session state."""

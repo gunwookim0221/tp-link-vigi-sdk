@@ -21,7 +21,7 @@
 | Event | `GET /openapi/event_server`, `POST /openapi/event_server`, `POST /openapi/event_server/delete_server` | Later SDK phase |
 | Recording | `GET /openapi/record/days`, `GET /openapi/record/search/free_process`, `GET /openapi/record/search/results` | Phase 7 |
 | System | `POST /openapi/systemctl` | Excluded from MVP write path |
-| Stream | RTSP live URL and replay URL | Phase 8 planning |
+| Stream | RTSP live URL and replay URL | Phase 8 replay URL helper |
 
 ## MVP Supported API
 
@@ -146,9 +146,12 @@ Phase 6:
 
 Phase 8:
 
-- RTSP live URL construction.
-- RTSP replay URL construction.
-- RTSP Digest authentication integration plan.
+- Capability-gated RTSP replay URL construction only.
+- Official replay URL: `rtsp://<IP>/replay/<channel>/1/avm?starttime=<starttime>&endtime=<endtime>`.
+- Explicit UTC `YYYYMMDDtHHMMSSz` replay-time strings; Phase 7 raw recording timestamps are not converted automatically.
+- Replay stream `1` only.
+- RTSP Digest authentication remains the responsibility of an external RTSP client; NVR HTTPS Bearer tokens are not used for RTSP.
+- Export, download, and video-file APIs remain unsupported until official endpoints are documented.
 
 Phase 9:
 
