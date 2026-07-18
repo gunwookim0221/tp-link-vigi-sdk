@@ -48,6 +48,26 @@ class StreamService:
 
         return f"rtsp://{host}/live/{channel_id}/{stream.value}/avm"
 
+    def build_ipc_live_url(
+        self,
+        host: str,
+        stream: StreamType = StreamType.MAIN,
+    ) -> str:
+        """Build the documented standard RTSP live URL for a VIGI IPC camera.
+
+        This helper returns no credentials. An external RTSP client performs
+        camera-account authentication separately.
+        """
+
+        if CapabilityName.STREAM_LIVE_RTSP not in self._capabilities:
+            raise CapabilityError("RTSP live URL construction is not supported.")
+
+        _validate_host(host)
+        if type(stream) is not StreamType:
+            raise ValidationError("stream must be StreamType.MAIN or StreamType.MINOR.")
+
+        return f"rtsp://{host}/stream{stream.value}"
+
     def build_replay_url(
         self,
         host: str,

@@ -10,6 +10,8 @@ This project follows the structure of Keep a Changelog and is not released yet.
 
 - Capability-gated `StreamService.build_live_url(...)` for documented NVR RTSP
   live URL construction with main and minor stream selectors.
+- Capability-gated `StreamService.build_ipc_live_url(...)` for documented
+  standalone-camera RTSP URL construction with main and minor stream selectors.
 
 ### Changed
 

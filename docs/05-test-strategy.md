@@ -55,6 +55,7 @@ Recording search mock and unit tests should cover:
 Phase 8 RTSP URL helper tests are unit tests only and should cover:
 
 - Documented live URL construction for main and minor stream selectors.
+- Documented standalone-camera RTSP URL construction for main and minor stream selectors.
 - Documented RTSP replay URL construction and `starttime`, `endtime` query order.
 - Host, positive channel, supported live stream selectors, replay stream `1`, UTC time format, and increasing-time-range validation.
 - Capability-gated failure before any network operation.

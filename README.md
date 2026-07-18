@@ -75,6 +75,7 @@ Implemented read-only SDK support includes:
 - NVR-managed device inventory with `client.devices.list_added_devices()`.
 - Recording-day, free-search-process, and recording-result queries.
 - `client.stream.build_live_url(...)` for documented RTSP live URLs.
+- `client.stream.build_ipc_live_url(...)` for documented standalone-camera RTSP live URLs.
 - `client.stream.build_replay_url(...)` for documented RTSP replay URLs.
 
 The RTSP helpers only build URLs. They do not open RTSP, perform a Digest
@@ -89,7 +90,7 @@ Unsupported or deferred:
   documents do not define a snapshot or capture API.
 - Export/download, RTSP playback, video saving, ffmpeg, and image processing.
 - CLI: deferred to a separate phase.
-- Public standalone IPC/camera APIs.
+- Standalone IPC OpenAPI control APIs.
 
 ## Tests
 

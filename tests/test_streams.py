@@ -38,6 +38,62 @@ def test_build_live_url_uses_documented_format(stream: StreamType, expected_stre
     assert url == f"rtsp://nvr.example.invalid/live/3/{expected_stream}/avm"
 
 
+@pytest.mark.parametrize(
+    ("stream", "expected_path"),
+    [
+        (StreamType.MAIN, "stream1"),
+        (StreamType.MINOR, "stream2"),
+    ],
+)
+def test_build_ipc_live_url_uses_documented_camera_format(
+    stream: StreamType, expected_path: str
+) -> None:
+    url = StreamService().build_ipc_live_url(
+        host="camera.example.invalid",
+        stream=stream,
+    )
+
+    assert url == f"rtsp://camera.example.invalid/{expected_path}"
+
+
+def test_build_ipc_live_url_defaults_to_main_stream() -> None:
+    assert StreamService().build_ipc_live_url("camera.example.invalid") == (
+        "rtsp://camera.example.invalid/stream1"
+    )
+
+
+@pytest.mark.parametrize("stream", ["1", 1, True])
+def test_build_ipc_live_url_rejects_unsupported_stream_selector(stream: object) -> None:
+    with pytest.raises(ValidationError, match="stream"):
+        StreamService().build_ipc_live_url("camera.local", stream)
+
+
+@pytest.mark.parametrize(
+    "host",
+    ["", "rtsp://camera.local", "camera.local/path", "admin:password@camera.local"],
+)
+def test_build_ipc_live_url_rejects_host_components(host: str) -> None:
+    with pytest.raises(ValidationError):
+        StreamService().build_ipc_live_url(host)
+
+
+def test_build_ipc_live_url_is_capability_gated_without_network() -> None:
+    with pytest.raises(CapabilityError, match="RTSP live"):
+        StreamService({CapabilityName.STREAM_REPLAY_RTSP}).build_ipc_live_url("camera.local")
+
+
+def test_build_ipc_live_url_and_errors_do_not_echo_suspicious_host_content() -> None:
+    suspicious_host = "admin:password@camera.local"
+    with pytest.raises(ValidationError) as exc_info:
+        StreamService().build_ipc_live_url(suspicious_host)
+
+    assert "password" not in str(exc_info.value)
+    url = StreamService().build_ipc_live_url("camera.local")
+    assert "password" not in url
+    assert "token" not in url
+    assert "stok" not in url
+
+
 @pytest.mark.parametrize("channel_id", [0, -1, "1", True])
 def test_build_live_url_rejects_invalid_channel(channel_id: object) -> None:
     with pytest.raises(ValidationError, match="channel_id"):

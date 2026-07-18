@@ -10,6 +10,8 @@ These are the only factual API authorities for this project.
 | Supported Products | https://www.tp-link.com/us/vigi-open-api/product-list/ | Official | States that listed and higher hardware versions of listed models are supported, latest firmware should be installed, and the list may be updated. `VIGI C340I` was not identified in the fetched page text during the `2026-07-10` review. |
 | Official OpenAPI Reference PDF | https://static-community.tp-link.com/attach/14/2/2026/f4faddd9dbc246e3adbcc969ae457737.pdf | Official | `VIGI NVR Open API Document`, version `V1.0`, `Initial release`. |
 | NVR RTSP Server Guide | https://www.tp-link.com/pt/support/faq/4677/ | Official | Documents the NVR live URL `rtsp://<IP>/live/<channel>/<stream>/avm`, main/minor stream selectors, and separate NVR-credential RTSP authentication. |
+| VIGI Camera RTSP Guide | https://www.tp-link.com/us/support/faq/3718/ | Official | Lists `VIGI C340I` and documents third-party RTSP URLs `rtsp://<IP>/stream1` and `rtsp://<IP>/stream2`. |
+| VIGI Third-Party Integration Guide | https://www.tp-link.com/us/support/faq/4201/ | Official | Documents standard camera RTSP service port `554` and external camera-account authentication for third-party clients. |
 | RTSP / Web Access Guide Provided For This Project | https://www.tp-link.com/us/support/faq/4933/ | Official | The linked page title is `How do I log in to the web management page of VIGI IPC and NVR`, updated `2026-01-30`; it is useful for web access and device IP discovery, not a dedicated RTSP API reference. |
 | TP-Link VIGI C340I Firmware Release Note | https://static.tp-link.com/upload/firmware/2025/202511/20251104/Release%20Note%20VIGI%20C340I%28UN%29%201.2_2.2.0%20Build%20250926.pdf | Official firmware release note | `VIGI C340I(UN) V1.20 2.2.0 Build 250926`, release date `2025-11-04`, indicates added support for `VIGI OpenAPI`. |
 | TP-Link VIGI C340I Download Page | https://www.tp-link.com/us/support/download/vigi-c340i/ | Official product support page | Lists `VIGI C340I V1.20` and a standalone `VIGI IPC OpenAPI Document_V1.1` under manuals. |
@@ -35,6 +37,8 @@ These are the only factual API authorities for this project.
 - The NVR official reference says the stream interface is RTSP and supports live and replay URLs.
 - The official NVR RTSP guide documents the live URL as `rtsp://<IP>/live/<channel>/<stream>/avm`; stream `1` is main and stream `2` is minor.
 - RTSP authentication uses the NVR username and password through the RTSP server's configured Digest algorithm; it is separate from HTTPS OpenAPI Bearer authentication.
+- The official VIGI Camera RTSP guide lists C340I and documents standard third-party camera RTSP URLs: `/stream1` for the main stream and `/stream2` for the substream.
+- Standard camera RTSP uses the default service port `554`; an external RTSP client supplies the separate camera account credentials.
 - C340I OpenAPI support is officially indicated in TP-Link firmware release notes for `VIGI C340I(UN) V1.20` firmware `2.2.0 Build 250926`.
 - Actual C340I endpoint behavior must still be verified on the user's hardware and firmware before SDK support is claimed.
 - C340I hardware version and installed firmware version must be recorded before device observations become project verification facts.

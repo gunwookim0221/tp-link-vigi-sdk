@@ -43,7 +43,7 @@ The MVP authentication endpoints above are NVR OpenAPI endpoints. They must not 
 
 The current public API scope is NVR-first. Connected cameras are in scope only when represented by documented NVR OpenAPI responses, such as NVR-managed channels or added devices.
 
-Standalone camera direct login, snapshot, stream, settings, and other direct camera APIs are out of current MVP scope. C340I OpenAPI support is indicated by official firmware release notes, but endpoint behavior still requires physical standalone camera integration testing against the IPC OpenAPI document. Public camera SDK support requires official documentation or release-note coverage, verification records, and a new architecture ADR.
+Standalone camera OpenAPI login, snapshot, settings, and other direct camera APIs are out of current MVP scope. The SDK supports only deterministic construction of the separately documented standard camera RTSP URLs; it does not implement IPC OpenAPI authentication, media transport, or camera settings.
 
 ## Phase 6 NVR Device Inventory Scope
 
@@ -148,6 +148,7 @@ Phase 8:
 
 - Capability-gated RTSP live URL construction: `rtsp://<IP>/live/<channel>/<stream>/avm`.
 - Live stream selectors `1` (main) and `2` (minor) only, for positive NVR-managed channel IDs.
+- Capability-gated standalone-camera RTSP URL construction: `rtsp://<IP>/stream1` and `rtsp://<IP>/stream2`.
 - Capability-gated RTSP replay URL construction only.
 - Official replay URL: `rtsp://<IP>/replay/<channel>/1/avm?starttime=<starttime>&endtime=<endtime>`.
 - Explicit UTC `YYYYMMDDtHHMMSSz` replay-time strings; Phase 7 raw recording timestamps are not converted automatically.

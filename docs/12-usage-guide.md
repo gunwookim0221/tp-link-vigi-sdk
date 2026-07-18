@@ -135,6 +135,24 @@ an HTTPS OpenAPI Bearer token only; it does not authenticate an RTSP session.
 Treat the returned URL as sensitive connection metadata and avoid logging or
 persisting it.
 
+## Build a standalone-camera RTSP live URL
+
+For a VIGI camera's documented standard RTSP service, build the credential-free
+main or substream URL without creating an IPC OpenAPI session:
+
+```python
+camera_url = client.stream.build_ipc_live_url(
+    host="camera.example.invalid",
+    stream=StreamType.MAIN,
+)
+print(camera_url)
+```
+
+The result is `rtsp://<host>/stream1` or `rtsp://<host>/stream2` and assumes
+the documented default RTSP port `554`. The external RTSP client supplies the
+camera account credentials; the SDK does not perform RTSP authentication or
+embed credentials in the URL.
+
 ## Build an RTSP replay URL
 
 The helper requires explicit UTC values in `YYYYMMDDtHHMMSSz` format. Provide

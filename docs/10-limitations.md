@@ -2,9 +2,10 @@
 
 ## Current Known Limitations
 
-- The SDK builds documented RTSP live and replay URLs only; it does not open, play, authenticate to, download from, or save RTSP streams.
+- The SDK builds documented NVR live/replay and standalone-camera live RTSP URLs only; it does not open, play, authenticate to, download from, or save RTSP streams.
 - RTSP Digest handshake, ffmpeg integration, export/download endpoints, and video-file handling are unsupported.
 - Live URLs support positive NVR-managed channel IDs and stream `1` (main) or `2` (minor); Channel-Zero is outside this public builder's scope.
+- Standalone camera URLs use the documented `/stream1` and `/stream2` paths with the default RTSP service port; non-default RTSP ports are outside the current builder contract.
 - NVR device inventory is implemented and verified for the documented `GET /openapi/added_devices` schema.
 - Phase 7 recording search is implemented and verified for the documented read-only search endpoints and does not retrieve, export, download, or store video files.
 - Recording result `start_time` and `end_time` values are preserved as raw timestamp strings because the official recording search schema does not define a timezone conversion rule for those fields.
