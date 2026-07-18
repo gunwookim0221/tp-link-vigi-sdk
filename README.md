@@ -57,7 +57,7 @@ client or importing `vigi` does not make a network request.
 
 The detailed [usage guide](docs/12-usage-guide.md) covers authentication,
 device inventory, recording-day and recording-result searches, explicit error
-handling, and RTSP replay URL construction.
+handling, and RTSP live and replay URL construction.
 
 - [List devices](examples/list_devices.py)
 - [Read-only recording workflow](examples/read_only_workflow.py)
@@ -74,11 +74,14 @@ Implemented read-only SDK support includes:
 - Documented NVR authentication.
 - NVR-managed device inventory with `client.devices.list_added_devices()`.
 - Recording-day, free-search-process, and recording-result queries.
+- `client.stream.build_live_url(...)` for documented RTSP live URLs.
 - `client.stream.build_replay_url(...)` for documented RTSP replay URLs.
 
-The RTSP helper only builds a URL. It does not open RTSP, perform a Digest
-handshake, download video, or save video files. Replay stream `1` and explicit
-UTC `YYYYMMDDtHHMMSSz` times are required.
+The RTSP helpers only build URLs. They do not open RTSP, perform a Digest
+handshake, download video, or save video files. Live URLs support main stream
+`1` and minor stream `2`; replay requires stream `1` and explicit UTC
+`YYYYMMDDtHHMMSSz` times. HTTPS OpenAPI Bearer authentication is separate from
+RTSP Digest authentication and is not included in generated URLs.
 
 Unsupported or deferred:
 

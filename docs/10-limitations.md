@@ -2,8 +2,9 @@
 
 ## Current Known Limitations
 
-- The SDK builds documented RTSP replay URLs only; it does not open, play, authenticate to, download from, or save RTSP streams.
+- The SDK builds documented RTSP live and replay URLs only; it does not open, play, authenticate to, download from, or save RTSP streams.
 - RTSP Digest handshake, ffmpeg integration, export/download endpoints, and video-file handling are unsupported.
+- Live URLs support positive NVR-managed channel IDs and stream `1` (main) or `2` (minor); Channel-Zero is outside this public builder's scope.
 - NVR device inventory is implemented and verified for the documented `GET /openapi/added_devices` schema.
 - Phase 7 recording search is implemented and verified for the documented read-only search endpoints and does not retrieve, export, download, or store video files.
 - Recording result `start_time` and `end_time` values are preserved as raw timestamp strings because the official recording search schema does not define a timezone conversion rule for those fields.
@@ -24,6 +25,7 @@
 - The NVR control interface requests are HTTPS only.
 - NVR control requests require Bearer token authentication except token acquisition.
 - The NVR official stream interface is RTSP, not an HTTPS JSON endpoint.
+- HTTPS OpenAPI Bearer tokens do not authenticate RTSP; external RTSP clients use separate NVR credentials for the configured Digest challenge.
 - `VIGI IPC OpenAPI Document_V1.1` documents IPC control requests as HTTPS `POST https://device_addr:port/stok=xx` with JSON method payloads.
 - The IPC control port is obtained through ODP and defaults to `20443`.
 - IPC discovery uses ODP local service port `23001` and Ethernet protocol type `0x7210`.

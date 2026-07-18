@@ -6,7 +6,7 @@ import re
 
 from vigi.exceptions import CapabilityError, ValidationError
 from vigi.models import RtspStreamInfo
-from vigi.types import CapabilityName
+from vigi.types import CapabilityName, StreamType
 
 
 _REPLAY_TIME_FORMAT = "%Y%m%dt%H%M%Sz"
@@ -18,8 +18,35 @@ class StreamService:
 
     def __init__(self, capabilities: Collection[CapabilityName] | None = None) -> None:
         self._capabilities = frozenset(
-            {CapabilityName.STREAM_REPLAY_RTSP} if capabilities is None else capabilities
+            {
+                CapabilityName.STREAM_LIVE_RTSP,
+                CapabilityName.STREAM_REPLAY_RTSP,
+            }
+            if capabilities is None
+            else capabilities
         )
+
+    def build_live_url(
+        self,
+        host: str,
+        channel_id: int,
+        stream: StreamType = StreamType.MAIN,
+    ) -> str:
+        """Build the documented RTSP live URL for an NVR-managed channel.
+
+        This helper only builds a URL. An external RTSP client performs the
+        separate Digest handshake with the NVR username and password.
+        """
+
+        if CapabilityName.STREAM_LIVE_RTSP not in self._capabilities:
+            raise CapabilityError("RTSP live URL construction is not supported.")
+
+        _validate_host(host)
+        _validate_positive_int(channel_id, "channel_id")
+        if type(stream) is not StreamType:
+            raise ValidationError("stream must be StreamType.MAIN or StreamType.MINOR.")
+
+        return f"rtsp://{host}/live/{channel_id}/{stream.value}/avm"
 
     def build_replay_url(
         self,
@@ -47,10 +74,7 @@ class StreamService:
         if start_time >= end_time:
             raise ValidationError("start_time must be before end_time.")
 
-        return (
-            f"rtsp://{host}/replay/{channel_id}/1/avm?"
-            f"starttime={start_time}&endtime={end_time}"
-        )
+        return f"rtsp://{host}/replay/{channel_id}/1/avm?starttime={start_time}&endtime={end_time}"
 
     def open_replay(self, stream: RtspStreamInfo) -> None:
         """Remain explicitly unsupported; this SDK does not open RTSP streams."""

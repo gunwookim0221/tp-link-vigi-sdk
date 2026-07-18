@@ -3,8 +3,8 @@
 ## Scope
 
 This guide covers the current documented, read-only NVR SDK workflow:
-authentication, device inventory, recording searches, and RTSP replay URL
-generation. It does not describe undocumented device behavior.
+authentication, device inventory, recording searches, and RTSP live and replay
+URL generation. It does not describe undocumented device behavior.
 
 ## Installation
 
@@ -111,6 +111,29 @@ else:
 An empty recording-day or result list is valid. `RecordSegment.start_time` and
 `end_time` remain raw strings from the documented response; the SDK does not
 convert them into replay timestamps.
+
+## Build an RTSP live URL
+
+Use the documented NVR-managed `channel_id` with either the main or minor
+stream selector:
+
+```python
+from vigi import StreamType
+
+live_url = client.stream.build_live_url(
+    host=os.environ["VIGI_HOST"],
+    channel_id=channel_id,
+    stream=StreamType.MAIN,
+)
+print(live_url)
+```
+
+The result is `rtsp://<host>/live/<channel>/<1|2>/avm`. It contains no
+credentials. An external RTSP client must complete the NVR's configured Digest
+challenge with separately supplied NVR credentials. `client.login()` obtains
+an HTTPS OpenAPI Bearer token only; it does not authenticate an RTSP session.
+Treat the returned URL as sensitive connection metadata and avoid logging or
+persisting it.
 
 ## Build an RTSP replay URL
 

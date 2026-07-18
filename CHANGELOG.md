@@ -6,6 +6,11 @@ This project follows the structure of Keep a Changelog and is not released yet.
 
 ## [Unreleased]
 
+### Added
+
+- Capability-gated `StreamService.build_live_url(...)` for documented NVR RTSP
+  live URL construction with main and minor stream selectors.
+
 ### Changed
 
 - Prepared the package and user-facing documentation for the `0.1.0` stable release.

@@ -41,7 +41,12 @@ class VigiClient:
         self.session = Session(transport=self.transport, info=SessionInfo())
         self.devices = DeviceService(self.session)
         self.records = RecordService(self.session)
-        self.stream = StreamService({CapabilityName.STREAM_REPLAY_RTSP})
+        self.stream = StreamService(
+            {
+                CapabilityName.STREAM_LIVE_RTSP,
+                CapabilityName.STREAM_REPLAY_RTSP,
+            }
+        )
 
     def login(self) -> None:
         """Authenticate the client and update session state."""

@@ -52,15 +52,18 @@ Recording search mock and unit tests should cover:
 - Authentication guard behavior before any network call when no Bearer token is available.
 - Secret redaction so Bearer tokens, passwords, nonce values, and Digest responses are not emitted in assertion messages or errors.
 
-Phase 8 replay URL helper tests are unit tests only and should cover:
+Phase 8 RTSP URL helper tests are unit tests only and should cover:
 
+- Documented live URL construction for main and minor stream selectors.
 - Documented RTSP replay URL construction and `starttime`, `endtime` query order.
-- Host, channel, stream `1`, UTC time format, and increasing-time-range validation.
+- Host, positive channel, supported live stream selectors, replay stream `1`, UTC time format, and increasing-time-range validation.
 - Capability-gated failure before any network operation.
 - Redaction of suspicious host content from validation errors and generated URLs.
 - Explicitly unsupported `open_replay()` behavior without attempting an RTSP connection.
 
-Phase 8 does not add RTSP-open integration tests, RTSP Digest handshake tests, video-byte receipt, or video file tests.
+Phase 8 does not add RTSP-open integration tests, RTSP Digest handshake tests,
+video-byte receipt, or video file tests. Real-device RTSP playback is an
+opt-in external-client validation and is not exercised by the default suite.
 
 ## Phase 10B Examples Smoke Tests
 
