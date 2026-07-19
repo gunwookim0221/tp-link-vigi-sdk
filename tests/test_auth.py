@@ -25,10 +25,7 @@ def test_digest_response_calculation() -> None:
         uri="/openapi/token",
     )
 
-    assert response == (
-        "a3f7e86332d25692c9ba1cd261d55d25"
-        "938b5ea7ff78580d0a9110102ba8fcd5"
-    )
+    assert response == ("a3f7e86332d25692c9ba1cd261d55d25938b5ea7ff78580d0a9110102ba8fcd5")
 
 
 def test_token_endpoint_request_creation() -> None:

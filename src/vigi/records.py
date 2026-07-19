@@ -28,9 +28,7 @@ class RecordService:
     def __init__(self, session: Session | None = None) -> None:
         self.session = session
 
-    def list_days(
-        self, channel_id: int, start_month: str, end_month: str
-    ) -> RecordDaysResponse:
+    def list_days(self, channel_id: int, start_month: str, end_month: str) -> RecordDaysResponse:
         """List days with recordings for a channel over a month range."""
 
         headers = self._bearer_headers()

@@ -47,9 +47,7 @@ def parse_added_devices_response(response: Response) -> AddedDevicesResponse:
     """Parse a documented added-devices response."""
 
     if response.status_code < 200 or response.status_code >= 300:
-        raise VigiApiError(
-            f"Added devices endpoint returned HTTP {response.status_code}."
-        )
+        raise VigiApiError(f"Added devices endpoint returned HTTP {response.status_code}.")
 
     try:
         payload = json.loads((response.body or b"{}").decode("utf-8"))

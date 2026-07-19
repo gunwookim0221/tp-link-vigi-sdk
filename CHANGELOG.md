@@ -2,9 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
-This project follows the structure of Keep a Changelog and is not released yet.
+This project follows the structure of Keep a Changelog.
 
-## [Unreleased]
+## [0.2.0] - 2026-07-20
 
 ### Added
 
@@ -12,10 +12,6 @@ This project follows the structure of Keep a Changelog and is not released yet.
   live URL construction with main and minor stream selectors.
 - Capability-gated `StreamService.build_ipc_live_url(...)` for documented
   standalone-camera RTSP URL construction with main and minor stream selectors.
-
-### Changed
-
-- Prepared the package and user-facing documentation for the `0.1.0` stable release.
 
 ## [0.1.0] - 2026-07-10
 
@@ -26,6 +22,7 @@ This project follows the structure of Keep a Changelog and is not released yet.
 ### Changed
 
 - Promoted the runtime package version from `0.1.0rc1` to `0.1.0`.
+- Prepared the package and user-facing documentation for the `0.1.0` stable release.
 - Kept the supported SDK surface aligned with the tested device inventory, recording search, and RTSP replay URL helper scope.
 
 ## [0.1.0rc1] - 2026-07-10

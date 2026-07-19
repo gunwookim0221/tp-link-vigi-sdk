@@ -7,10 +7,7 @@ from vigi.types import ChannelStatus
 
 
 def _integration_config_available() -> bool:
-    return all(
-        os.getenv(name)
-        for name in ("VIGI_HOST", "VIGI_USERNAME", "VIGI_PASSWORD")
-    )
+    return all(os.getenv(name) for name in ("VIGI_HOST", "VIGI_USERNAME", "VIGI_PASSWORD"))
 
 
 @pytest.mark.skipif(

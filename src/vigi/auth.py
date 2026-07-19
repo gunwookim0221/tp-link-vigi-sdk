@@ -88,9 +88,7 @@ def build_token_request(
     return Request(method="GET", path=token_path, headers=headers or {})
 
 
-def build_refresh_token_request(
-    token_path: str, refresh_token: str
-) -> Request:
+def build_refresh_token_request(token_path: str, refresh_token: str) -> Request:
     """Build a documented refresh-token request."""
 
     return Request(
@@ -145,8 +143,7 @@ def build_digest_authorization(
         algorithm=algorithm,
     )
     return (
-        'Digest username="{username}", nonce="{nonce}", realm="{realm}", '
-        'response="{response}"'
+        'Digest username="{username}", nonce="{nonce}", realm="{realm}", response="{response}"'
     ).format(username=username, nonce=nonce, realm=realm, response=response)
 
 

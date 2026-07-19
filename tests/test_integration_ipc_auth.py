@@ -11,8 +11,7 @@ from vigi.transport import TransportConfig
 
 def _integration_config_available() -> bool:
     return all(
-        os.getenv(name)
-        for name in ("VIGI_IPC_HOST", "VIGI_IPC_USERNAME", "VIGI_IPC_PASSWORD")
+        os.getenv(name) for name in ("VIGI_IPC_HOST", "VIGI_IPC_USERNAME", "VIGI_IPC_PASSWORD")
     )
 
 

@@ -84,8 +84,7 @@ def test_record_results_request_creation() -> None:
 
     assert request.method == "GET"
     assert request.path == (
-        f"{RECORD_RESULTS_PATH}?channel=1&process=6&day=20250101"
-        "&start_index=0&end_index=99"
+        f"{RECORD_RESULTS_PATH}?channel=1&process=6&day=20250101&start_index=0&end_index=99"
     )
     assert request.headers == {"Authorization": "Bearer secret-token"}
 
@@ -145,9 +144,7 @@ def test_record_results_request_creation() -> None:
         ),
     ],
 )
-def test_record_results_request_validation(
-    kwargs: dict[str, int | str], error_match: str
-) -> None:
+def test_record_results_request_validation(kwargs: dict[str, int | str], error_match: str) -> None:
     with pytest.raises(ValueError, match=error_match):
         build_record_results_request({"Authorization": "Bearer secret-token"}, **kwargs)
 
@@ -169,12 +166,15 @@ def test_parse_record_days_success_and_empty_response() -> None:
         days=(RecordDay(day="20250101"), RecordDay(day="20250102")),
         error_code=0,
     )
-    assert parse_record_days_response(
-        Response(
-            status_code=200,
-            body=json.dumps({"days": [], "error_code": 0}).encode("utf-8"),
-        )
-    ).days == ()
+    assert (
+        parse_record_days_response(
+            Response(
+                status_code=200,
+                body=json.dumps({"days": [], "error_code": 0}).encode("utf-8"),
+            )
+        ).days
+        == ()
+    )
 
 
 def test_parse_record_free_process_response() -> None:
@@ -211,12 +211,15 @@ def test_parse_record_results_success_and_empty_response() -> None:
         ),
         error_code=0,
     )
-    assert parse_record_results_response(
-        Response(
-            status_code=200,
-            body=json.dumps({"results": [], "error_code": 0}).encode("utf-8"),
-        )
-    ).results == ()
+    assert (
+        parse_record_results_response(
+            Response(
+                status_code=200,
+                body=json.dumps({"results": [], "error_code": 0}).encode("utf-8"),
+            )
+        ).results
+        == ()
+    )
 
 
 @pytest.mark.parametrize(
@@ -300,9 +303,7 @@ def test_record_service_uses_bearer_session_and_parsers() -> None:
                 status_code=200,
                 body=json.dumps(
                     {
-                        "results": [
-                            {"start_time": "1696118400", "end_time": "1696119000"}
-                        ],
+                        "results": [{"start_time": "1696118400", "end_time": "1696119000"}],
                         "error_code": 0,
                     }
                 ).encode(),
@@ -321,9 +322,7 @@ def test_record_service_uses_bearer_session_and_parsers() -> None:
 
     assert days.days == (RecordDay(day="20250101"),)
     assert process.process_id == 6
-    assert results.results == (
-        RecordSegment(start_time="1696118400", end_time="1696119000"),
-    )
+    assert results.results == (RecordSegment(start_time="1696118400", end_time="1696119000"),)
     assert [request.method for request in transport.requests] == ["GET", "GET", "GET"]
     assert transport.requests[0].path.startswith("/openapi/record/days?")
     assert transport.requests[1].path == "/openapi/record/search/free_process"

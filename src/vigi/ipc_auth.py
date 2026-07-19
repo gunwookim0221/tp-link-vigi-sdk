@@ -213,9 +213,7 @@ def _json_payload(response: Response, error_message: str) -> dict[str, Any]:
     return payload
 
 
-def _require_payload_method(
-    payload: dict[str, Any], *, expected: str, context: str
-) -> None:
+def _require_payload_method(payload: dict[str, Any], *, expected: str, context: str) -> None:
     method = payload.get("method")
     if method != expected:
         raise VigiResponseError(f"{context} has unexpected method.")
