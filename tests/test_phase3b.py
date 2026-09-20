@@ -256,6 +256,18 @@ def test_ptz_parsers_cover_capability_presets_tours_tracking_and_empty_batch() -
     assert tracking.settings.people_enabled is PtzTargetTrackMode.ON
 
 
+def test_ptz_batch_parser_rejects_observed_vendor_partial_item() -> None:
+    observed_partial_response = {
+        "capability": [{"id": 2, "pan_tilt_supported": "0"}],
+        "error_code": 0,
+    }
+
+    with pytest.raises(VigiResponseError, match="zoom_supported"):
+        parse_ptz_batch_capability_response(
+            Response(status_code=200, body=json.dumps(observed_partial_response).encode())
+        )
+
+
 @pytest.mark.parametrize(
     "builder",
     [

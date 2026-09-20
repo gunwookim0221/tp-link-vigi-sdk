@@ -29,7 +29,7 @@ and the opt-in sanitized harness in
 | Live RTSP URL construction | PASS | Contract/SDK verified only | Main and minor URL builders succeeded. The SDK has no RTSP client/open check, so no NVR stream connection was attempted. |
 | Replay RTSP URL construction | PASS | Contract/SDK verified only | Replay URL construction and configured UTC time formatting succeeded. No replay connection or media operation was attempted. |
 | PTZ per-channel capability | UNSUPPORTED | NVR-verified | The endpoint returned the SDK API-error path for the selected channel. |
-| PTZ batch capability | FAIL | NVR-verified | HTTP succeeded, but each returned entry exposed only `id` and `pan_tilt_supported`; the V1.4 contract documents additional fields, so the strict parser rejected the response. |
+| PTZ batch capability | FAIL (DOCUMENTATION_DEVICE_DEVIATION) | NVR-verified | HTTP succeeded, but each returned entry exposed only `id` and `pan_tilt_supported`; the V1.4 contract documents additional fields, so the strict parser correctly rejected the response. |
 | Audio NVR/channel capability and input/output reads | PASS | NVR-verified | NVR capability, channel capability, output sound, and input sound read calls all parsed successfully. |
 | NVR alarm-output read | UNSUPPORTED | NVR-verified | The endpoint returned the SDK API-error path. |
 | IPC alarm-output read | UNSUPPORTED | NVR-verified | The selected-channel endpoint returned the SDK API-error path. |
@@ -37,9 +37,35 @@ and the opt-in sanitized harness in
 
 `UNSUPPORTED` above means the documented call reached the NVR but returned the
 SDK's API-error result; it is not a claim that every firmware version rejects
-the endpoint. The PTZ batch result is a response-shape compatibility failure,
-not evidence that missing fields should be filled with undocumented defaults.
-No runtime change was made for either condition.
+the endpoint. The PTZ batch result is classified as
+`DOCUMENTATION_DEVICE_DEVIATION`, not an SDK parser defect: the device omitted
+documented fields without a documented partial-item representation. No runtime
+change was made; the parser remains contract-safe and rejects the deviation.
+
+## PTZ batch RCA
+
+The authoritative V1.4 section `4.11.9` documents `GET
+/openapi/ptz/batch_capability` with no request fields. The top-level response is
+a `capability` array plus numeric `error_code`. The documented per-item fields
+include `id`, `pan_tilt_supported`, `zoom_supported`, `preset_supported`,
+`preset_number_max`, `tour_number_max`, `pattern_number_max`,
+`aperture_supported`, `focus_supported`, `calibrate_supported`, and
+`diagonal_motion_supported`; the example also contains tour/pattern flags and
+numeric range/stay-time fields. The PDF does not state that these fields are
+optional, permit omitted fields for unsupported channels, or define a partial
+item schema.
+
+The sanitized live response was: HTTP `200`; top-level keys
+`capability`/`error_code`; `error_code` type integer; 8 capability items; every
+item had only `id` (integer) and `pan_tilt_supported` (string), with the
+observed flag value `"0"`. Because this is materially outside the documented
+shape, the RCA classification is **DOCUMENTATION_DEVICE_DEVIATION**.
+
+The focused regression test preserves this boundary: fully populated and empty
+documented batch responses continue to parse, while the observed partial item
+continues to raise a response-shape error. The final PTZ batch status is
+therefore vendor-deviation / not fully verified, rather than silently accepting
+undocumented data.
 
 ## Explicit verification boundary
 
@@ -60,7 +86,7 @@ any camera based solely on NVR inventory or NVR-side capability responses.
 ## Validation
 
 The existing authentication, inventory, and recording integration tests plus
-the new read-only V1.4 harness completed with `4 passed`. The harness reported
-the statuses above and emitted no secret values. The only pytest warning was a
-pre-existing inability to write `.pytest_cache` in the workspace; it did not
-affect test execution.
+the read-only V1.4 harness completed with `4 passed`. The focused PTZ Phase 3B
+tests also pass. The harness reported the statuses above and emitted no secret
+values. The only pytest warning was a pre-existing inability to write
+`.pytest_cache` in the workspace; it did not affect test execution.

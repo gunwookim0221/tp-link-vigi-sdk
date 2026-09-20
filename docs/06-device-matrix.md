@@ -22,7 +22,8 @@ Initial authentication, module discovery, snapshot, added-device inventory,
 recording search, and audio reads were verified against the configured NVR.
 Batch IPC alarm reads also passed. Refresh, per-channel PTZ capability, and
 NVR/IPC alarm-output reads returned API-error results; PTZ batch capability
-returned a partial response that did not satisfy the V1.4 response shape.
+returned a partial response that did not satisfy the V1.4 response shape and is
+classified as a vendor documentation/device deviation.
 RTSP URL construction remains SDK/contract-only because the repository has no
 RTSP open flow. All state-changing APIs remain unverified by design.
 
@@ -30,7 +31,7 @@ RTSP open flow. All state-changing APIs remain unverified by design.
 
 | Feature | Official V1.4 support | SDK status | Contract-test status | NVR/device status |
 | --- | --- | --- | --- | --- |
-| PTZ capability, movement, park, target tracking | Documented in section 4.11 | Implemented through `PtzService` | Fake-transport tests pass | Per-channel capability returned an API-error result; batch capability returned a partial response rejected by the strict parser; controls not tested |
+| PTZ capability, movement, park, target tracking | Documented in section 4.11 | Implemented through `PtzService` | Fake-transport tests pass | Per-channel capability returned an API-error result; batch capability is a documented device-deviation response rejected by the strict parser; controls not tested |
 | PTZ preset/tour listing | Documented in section 4.11 | Implemented as read-only lists | Fake-transport tests pass | Not tested by Phase 4 PTZ-capability-only scope |
 | PTZ preset/tour mutation | No endpoint documented | Intentionally omitted | Not applicable | Unknown / not enough evidence |
 | Audio capability and sound controls | Documented in section 4.5 | Implemented through `AudioService` | Fake-transport tests pass | NVR/channel capability and input/output reads verified; writes not tested |
