@@ -14,11 +14,14 @@ Completed:
 - Phase 6 NVR Device Inventory.
 - Phase 7 NVR Recording Search.
 - Phase 8 RTSP Replay URL Helper.
-- Phase 9 Snapshot Support Review / Unsupported Decision.
+- Phase 9 Snapshot Support Review.
 - Phase 10B SDK Usability, Examples, and Developer Experience.
 
 Next:
 
+- Phase 13 V1.4 read-only compatibility baseline: authentication verification,
+  module discovery, snapshot review/implementation boundary, and regression
+  preservation.
 - Phase 10 CLI, after a separate dependency and license review.
 - IPC auth/transport architecture work according to [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md), if standalone IPC SDK support is planned.
 
@@ -136,14 +139,51 @@ Goal:
 Scope:
 
 - Capability-gated RTSP replay URL helper.
-- Explicit UTC replay-time strings and documented replay stream `1` limitation.
+- Explicit UTC replay-time strings; the current helper uses stream `1`, while V1.4 documents stream `1` and `2`.
 - No RTSP connection, Digest handshake, export/download, or video extraction.
-- Snapshot support review based only on official documentation; current result is unsupported.
+- Snapshot support review based only on official documentation; V1.4 now documents a snapshot endpoint, but SDK implementation and device verification remain pending.
 
 Exit criteria:
 
 - RTSP replay URL helper tests pass.
-- Snapshot is documented as unsupported because the current official NVR and IPC documents do not define a snapshot or capture API.
+- Snapshot is documented by NVR V1.4 but remains unimplemented; IPC V1.1 still has no documented snapshot method.
+
+## Phase 13: V1.4 Read-Only Compatibility Baseline
+
+Goal:
+
+- Verify and incrementally implement low-risk V1.4 NVR compatibility without
+  overstating current SDK support.
+
+First boundary:
+
+- Verify V1.1+ Digest authentication, especially SHA-256 semantics, token
+  refresh headers, percent-encoded token handling, expiry, and redaction.
+- Add documented `GET /openapi/module_list` discovery with tolerant handling of
+  unknown module names and no assumption that module presence proves endpoint
+  support.
+- Verify and, if the JPEG contract is stable on the target NVR, implement
+  `GET /openapi/snapshot` as a read-only in-memory response. Do not add file
+  saving or undocumented image behavior.
+- Preserve regression coverage for token acquisition, refresh,
+  `added_devices`, recording search, replay URL construction, and existing
+  RTSP/replay validation.
+
+Later boundary:
+
+- Keep recording control, add/remove devices, RTSP-device addition, PTZ
+  movement/control, audio writes, alarm/output writes, system control, and
+  other state-changing or hardware-dependent APIs behind separate explicit
+  planning and device verification.
+
+Exit criteria:
+
+- The V1.4 read-only verification record names the NVR model, hardware,
+  firmware, test date, endpoint, and result.
+- Current SDK support claims distinguish implemented behavior from documented,
+  planned, and device-unverified behavior.
+- Existing token, inventory, recording-search, and replay regressions remain
+  covered without adding runtime changes outside the approved boundary.
 
 ## v0.1 Release Candidate
 
@@ -192,11 +232,12 @@ This phase is not part of the current MVP and does not imply current standalone 
 2. Phase 6: NVR Device Inventory. Status: implemented and real-device integration verified.
 3. Phase 7: NVR Recording Search. Status: implemented and real-device integration verified.
 4. Phase 8: RTSP Replay URL Helper.
-5. Phase 9: Snapshot Support Review / Unsupported Decision. Status: completed; reconsider only after official documentation is published.
+5. Phase 9: Snapshot Support Review. Status: completed against the historical V1.0/IPC V1.1 sources; V1.4 reopened the NVR snapshot implementation boundary.
 6. Phase 10B: SDK Usability, Examples, and Developer Experience. Status: completed; no SDK API or dependency added.
 7. Phase 10: CLI.
 8. Phase 11: Integration Test Harness Hardening. Status: CI quality gates completed; real-device harness work remains.
 9. Phase 12: Release.
+10. Phase 13: V1.4 Read-Only Compatibility Baseline.
 
 ## Long-Term Plan
 

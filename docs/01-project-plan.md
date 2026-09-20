@@ -13,7 +13,7 @@ If another project document conflicts with this file, update the conflicting doc
 - TP-Link publishes a VIGI NVR OpenAPI guide for calling NVR API interfaces from third-party software.
 - The official OpenAPI guide says the OpenAPI function must be enabled in the NVR web interface under `Settings > Network > Openapi`.
 - The official OpenAPI guide says the default OpenAPI port is `20443`.
-- The official OpenAPI reference PDF identifies the OpenAPI document version as `V1.0` with `Initial release`.
+- The repository's original official OpenAPI baseline was `V1.0` with `Initial release`; the latest reviewed official baseline is `V1.4`.
 - The official OpenAPI reference PDF defines three OpenAPI areas: control protocol, event protocol, and stream protocol.
 - The official OpenAPI reference PDF says VIGI NVR uses RTSP as the stream protocol.
 - TP-Link firmware release notes for `VIGI C340I(UN) V1.20 2.2.0 Build 250926` indicate added support for `VIGI OpenAPI`.
@@ -52,7 +52,7 @@ Phase 5 is `Camera Integration Verification`. C340I OpenAPI UI support, the docu
 - `VIGI NVR1008H-8P` support will be validated against a real device during integration testing.
 - `VIGI C340I` is a shared-layer verification target; its hardware version, firmware version, and test date are recorded in the device matrix.
 - Other VIGI NVR models will be added through capability declarations instead of model-specific branching.
-- The public OpenAPI surface may change after document version `V1.0`; the project must keep endpoint metadata easy to update.
+- The public OpenAPI surface may change after document version `V1.4`; the project must keep the historical V1.0 baseline and version delta easy to audit.
 
 ## Development Principles
 

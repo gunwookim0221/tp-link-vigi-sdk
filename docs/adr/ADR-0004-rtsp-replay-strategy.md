@@ -6,7 +6,11 @@ Accepted
 
 ## Context
 
-The official OpenAPI reference says the stream interface is RTSP. It documents live and replay RTSP URL formats and says replay currently supports stream `1`.
+The V1.0-era official OpenAPI reference used for this decision documented the
+stream interface as RTSP and the SDK helper was constrained to replay stream
+`1`. The reviewed V1.4 reference documents live and replay RTSP URL formats
+with stream `1` or `2`. The SDK still supports URL construction for stream `1`
+only pending compatibility verification.
 
 The OpenAPI control interface is HTTPS JSON, while stream playback uses RTSP Digest authentication.
 

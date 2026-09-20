@@ -213,6 +213,8 @@ python -m pytest
 
 ## Unsupported features
 
-Snapshot is unsupported under the current official NVR and IPC documentation.
+NVR OpenAPI V1.4 documents `GET /openapi/snapshot`, but the SDK does not yet
+implement or verify it against a real NVR. IPC OpenAPI V1.1 still does not
+document a snapshot method.
 Export/download, RTSP open and playback, video saving, ffmpeg, image
 processing, and CLI support are also outside the current SDK scope.

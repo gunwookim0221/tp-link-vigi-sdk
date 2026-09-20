@@ -12,9 +12,11 @@
 - `RecordSegment.start_time` and `end_time` are not automatically converted to replay URL times; callers must provide explicit UTC `YYYYMMDDtHHMMSSz` strings to the replay URL helper.
 - Recording search models do not include fields that are absent from the official schema, such as recording ID, segment ID, file ID, size, duration, or record type.
 - Firmware version for the MVP device is TODO.
-- Snapshot is unsupported under the current official NVR OpenAPI V1.0 and IPC OpenAPI V1.1 documentation: no NVR snapshot endpoint or IPC snapshot method is documented.
+- NVR snapshot is documented in V1.4 as `GET /openapi/snapshot?channel=<channel>` returning JPEG, but it is not implemented or real-device verified. IPC OpenAPI V1.1 still does not document a snapshot method.
 - The supplied examples are opt-in scripts, not a CLI, and require explicit shell environment configuration; `.env` is not auto-loaded.
 - Replay URL examples require caller-provided UTC time strings and do not convert `RecordSegment` timestamps.
+- The V1.4 RTSP contract documents stream `1` and `2`; the current SDK helper accepts stream `1` only, and stream `2` compatibility is unverified.
+- The V1.4 token refresh example includes a Bearer header; the current refresh request builder does not add that header and requires compatibility verification before an implementation change.
 - The project has not selected a license yet.
 - C340I OpenAPI support is indicated by official firmware release notes and the device Web UI exposes an OpenAPI setting. IPC `doAuth` and post-auth read-only `getStreamPort` are manually verified, but SDK support is not implemented.
 - Standalone VIGI Camera public SDK APIs are not exposed yet.
@@ -31,7 +33,7 @@
 - The IPC control port is obtained through ODP and defaults to `20443`.
 - IPC discovery uses ODP local service port `23001` and Ethernet protocol type `0x7210`.
 - IPC stream requests are RTSP-style `MULTITRANS` requests and stream data uses RTP over TCP.
-- RTSP replay URL documentation says replay only supports stream `1` now.
+- The V1.4 RTSP replay URL documentation lists stream `1` or `2`; the current SDK helper still supports only stream `1` pending compatibility verification.
 - Recording search provides time ranges that may later be used for replay planning, but the replay stream itself is RTSP and is outside Phase 7.
 - Supported products and firmware requirements may change.
 
@@ -56,7 +58,7 @@ Currently unsupported:
 
 - GUI automation.
 - Undocumented web UI endpoints.
-- NVR or IPC snapshot implementation until TP-Link publishes an official request and response contract.
+- NVR snapshot implementation until the V1.4 JPEG response and authentication behavior are verified on a real NVR.
 - RTSP frame capture as a substitute for a snapshot API.
 - ffmpeg integration, image processing, and snapshot file saving.
 - Private or undocumented snapshot URL usage.
@@ -68,6 +70,15 @@ Currently unsupported:
 - Direct standalone camera snapshot.
 - Direct standalone camera stream handling as an OpenAPI control API.
 - Direct standalone camera settings APIs.
+
+## V1.4 Compatibility Limitations
+
+The V1.4 PDF is a documentation baseline, not proof of support on the target
+NVR. The SDK has no runtime support for V1.4 module discovery, snapshot,
+RTSP-device addition, recording control, audio capabilities, PTZ, alarm output,
+or the other documented groups listed in the [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md).
+Real-device verification remains required for newly documented read-only
+contracts and all mutating or hardware-dependent contracts.
 
 ## Standalone Camera Limitations
 

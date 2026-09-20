@@ -8,7 +8,8 @@ These are the only factual API authorities for this project.
 | --- | --- | --- | --- |
 | TP-Link VIGI OpenAPI Guide | https://www.tp-link.com/us/support/faq/4797/ | Official | Updated `2025-11-20`; describes enabling OpenAPI, default port, Digest token flow, and example API calls. |
 | Supported Products | https://www.tp-link.com/us/vigi-open-api/product-list/ | Official | States that listed and higher hardware versions of listed models are supported, latest firmware should be installed, and the list may be updated. `VIGI C340I` was not identified in the fetched page text during the `2026-07-10` review. |
-| Official OpenAPI Reference PDF | https://static-community.tp-link.com/attach/14/2/2026/f4faddd9dbc246e3adbcc969ae457737.pdf | Official | `VIGI NVR Open API Document`, version `V1.0`, `Initial release`. |
+| Official OpenAPI Reference PDF (historical baseline) | https://static-community.tp-link.com/attach/14/2/2026/f4faddd9dbc246e3adbcc969ae457737.pdf | Official | `VIGI NVR Open API Document`, version `V1.0`, `Initial release`; retained as the SDK comparison baseline. |
+| Official OpenAPI Reference PDF V1.4 (local review source) | Local-only: `D:\Download\VIGI NVR Open API Document_v1.4.pdf` | Official vendor document supplied for this review | SHA-256 `A4478689664F4F300FC5EA2F69A3BF40564D43A4A71D411D48FE13BF0F651E6A`; the PDF is not committed. See [the V1.4 reference record](openapi/nvr-openapi-v1.4-reference.md). |
 | NVR RTSP Server Guide | https://www.tp-link.com/pt/support/faq/4677/ | Official | Documents the NVR live URL `rtsp://<IP>/live/<channel>/<stream>/avm`, main/minor stream selectors, and separate NVR-credential RTSP authentication. |
 | VIGI Camera RTSP Guide | https://www.tp-link.com/us/support/faq/3718/ | Official | Lists `VIGI C340I` and documents third-party RTSP URLs `rtsp://<IP>/stream1` and `rtsp://<IP>/stream2`. |
 | VIGI Third-Party Integration Guide | https://www.tp-link.com/us/support/faq/4201/ | Official | Documents standard camera RTSP service port `554` and external camera-account authentication for third-party clients. |
@@ -23,9 +24,15 @@ These are the only factual API authorities for this project.
 | Item | Value |
 | --- | --- |
 | Document title | `VIGI NVR Open API Document` |
-| Version | `V1.0` |
-| Update history | `Initial release` |
-| Verified date for this project context | `2026-07-07` |
+| Latest reviewed version | `V1.4` |
+| Historical SDK baseline | `V1.0`, `Initial release` |
+| V1.4 review date | `2026-09-20` |
+| V1.4 local source hash | `A4478689664F4F300FC5EA2F69A3BF40564D43A4A71D411D48FE13BF0F651E6A` |
+
+The V1.4 source registration and page-level review notes are in
+[openapi/nvr-openapi-v1.4-reference.md](openapi/nvr-openapi-v1.4-reference.md).
+The exact compatibility classification is in
+[openapi/nvr-openapi-v1.0-to-v1.4-diff.md](openapi/nvr-openapi-v1.0-to-v1.4-diff.md).
 
 ## Fact
 
@@ -39,6 +46,13 @@ These are the only factual API authorities for this project.
 - RTSP authentication uses the NVR username and password through the RTSP server's configured Digest algorithm; it is separate from HTTPS OpenAPI Bearer authentication.
 - The official VIGI Camera RTSP guide lists C340I and documents standard third-party camera RTSP URLs: `/stream1` for the main stream and `/stream2` for the substream.
 - Standard camera RTSP uses the default service port `554`; an external RTSP client supplies the separate camera account credentials.
+- V1.4 documents `GET /openapi/module_list`, `GET /openapi/snapshot`,
+  `POST /openapi/record_control`, RTSP-device addition, audio capability,
+  PTZ, and alarm-output interfaces; these are not current SDK support claims.
+- V1.4 documents a JPEG response for `GET /openapi/snapshot`; it does not
+  establish SDK file-storage behavior or device-wide compatibility.
+- V1.4 documents RTSP stream selectors `1` and `2`; the current SDK replay URL
+  helper still intentionally accepts only stream `1` pending compatibility work.
 - C340I OpenAPI support is officially indicated in TP-Link firmware release notes for `VIGI C340I(UN) V1.20` firmware `2.2.0 Build 250926`.
 - Actual C340I endpoint behavior must still be verified on the user's hardware and firmware before SDK support is claimed.
 - C340I hardware version and installed firmware version must be recorded before device observations become project verification facts.
@@ -61,11 +75,11 @@ Review date: `2026-07-10`.
 - IPC stream interface port corresponds to RTSP, defaults to `554`, and is available through `getStreamPort`.
 - IPC Digest Authentication in section `2.2.2` is documented for establishing OpenAPI stream connections, not for IPC control `doAuth`.
 
-## Official Document Review Notes
+## Historical and Related Document Review Notes
 
 Review date: `2026-07-10`.
 
-- The `VIGI NVR Open API Document` V1.0 does not document a snapshot or capture endpoint. Its multipart mention describes NVR event-push formatting, not a snapshot response.
+- The historical `VIGI NVR Open API Document` V1.0 did not document a snapshot or capture endpoint. V1.4 now documents `GET /openapi/snapshot` with a JPEG response; the SDK has not implemented it.
 - `VIGI IPC OpenAPI Document_V1.1` does not document a snapshot or capture method. There is no official basis for an IPC `stok`-based snapshot request or response shape.
 - The NVR OpenAPI FAQ documents `GET /openapi/token`, no-auth Digest challenge acquisition, SHA-256 Digest response calculation, Bearer token usage, and default OpenAPI port `20443`.
 - The VIGI OpenAPI supported product list page documents the support policy for listed and higher hardware versions and latest firmware, but `VIGI C340I` was not found in the fetched page text during this review.
@@ -74,6 +88,15 @@ Review date: `2026-07-10`.
 - The NVR OpenAPI FAQ and IPC OpenAPI document describe different authentication/request flows.
 - `GET /openapi/token` is documented for the NVR flow, but it was not identified in the IPC control authentication flow.
 - C340I standalone verification must use the IPC document flow, starting with a manual `doAuth` probe, before any SDK implementation is considered.
+
+## V1.4 Review Notes
+
+Review date: `2026-09-20`.
+
+- V1.4 NVR endpoint reachability, snapshot JPEG behavior, module-list contents,
+  refresh-header behavior, and other newly documented capabilities remain
+  unverified unless a device observation records the model, hardware, firmware,
+  and test date.
 
 ## GitHub Reference Projects
 
@@ -102,6 +125,9 @@ When TP-Link updates official documentation:
 4. Update device support in [06-device-matrix.md](06-device-matrix.md).
 5. Update implementation phases in [08-implementation-checklist.md](08-implementation-checklist.md) if required.
 6. Add a new ADR under [docs/adr/](adr/) if the official change affects a design decision.
+
+For the V1.4 baseline, the detailed record and delta are maintained under
+[docs/openapi/](openapi/). The vendor PDF remains local-only.
 
 ## Related Documents
 

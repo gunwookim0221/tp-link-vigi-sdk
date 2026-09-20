@@ -27,6 +27,7 @@ Read these documents when the task touches the listed area:
 | Task area | Read |
 | --- | --- |
 | API endpoint scope, official API behavior, support status | [03-api-scope.md](03-api-scope.md), [02-references.md](02-references.md) |
+| OpenAPI version baseline and compatibility delta | [openapi/nvr-openapi-v1.4-reference.md](openapi/nvr-openapi-v1.4-reference.md), [openapi/nvr-openapi-v1.0-to-v1.4-diff.md](openapi/nvr-openapi-v1.0-to-v1.4-diff.md) |
 | SDK structure, layers, capabilities, exceptions | [04-architecture.md](04-architecture.md), [docs/adr/README.md](adr/README.md) |
 | Testing, integration tests, real-device validation | [05-test-strategy.md](05-test-strategy.md), [06-device-matrix.md](06-device-matrix.md) |
 | Device model, firmware, known issues | [06-device-matrix.md](06-device-matrix.md), [10-limitations.md](10-limitations.md) |
@@ -68,6 +69,14 @@ For documentation-only tasks, the `Implement` step means applying the requested 
 - Official TP-Link public documentation is the only source for API facts.
 - Device observations must include model, hardware version, firmware version, and test date before they become project verification facts.
 - Unverified details must be marked `TODO` or `Assumption`.
+
+## Current OpenAPI Baseline
+
+The latest reviewed official NVR contract is V1.4. The SDK still exposes only
+the implemented V1.0-era runtime subset; V1.4 documentation is not an
+implementation claim. Use the [V1.4 reference record](openapi/nvr-openapi-v1.4-reference.md)
+and [exact V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md) to
+distinguish documented, implemented, planned, and device-unverified behavior.
 
 ## Related Documents
 

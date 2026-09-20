@@ -86,9 +86,15 @@ skipped and no NVR or IPC device is contacted.
 
 ## Phase 9 Snapshot Review
 
-No snapshot mock, unit, or integration tests are added because the current official NVR and IPC OpenAPI documents do not define a snapshot or capture API.
+No snapshot mock, unit, or integration tests are added in the current SDK
+because V1.4 documents the NVR contract but runtime support and the real JPEG
+response have not been verified; IPC V1.1 still has no snapshot method.
 
-If TP-Link publishes an official snapshot API, tests must be mock-first and cover the documented method, path or method name, authentication, request schema, and response schema. Image bytes, content type, and file-saving behavior must be tested only when the official response type defines them. Any opt-in integration test must validate in memory only; file saving remains outside SDK core scope.
+Snapshot work must be mock-first and cover the documented method, path,
+authentication, request schema, and JPEG response. Image bytes and content type
+must be tested only to the extent the official response defines them. Any
+opt-in integration test must validate in memory only; file saving remains
+outside SDK core scope.
 
 ## Integration Tests
 

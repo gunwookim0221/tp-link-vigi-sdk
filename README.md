@@ -86,8 +86,9 @@ RTSP Digest authentication and is not included in generated URLs.
 
 Unsupported or deferred:
 
-- Snapshot: unsupported because the current official NVR and IPC OpenAPI
-  documents do not define a snapshot or capture API.
+- Snapshot: documented by NVR OpenAPI V1.4 as `GET /openapi/snapshot`, but not
+  implemented or real-device verified; IPC OpenAPI V1.1 still has no snapshot
+  method.
 - Export/download, RTSP playback, video saving, ffmpeg, and image processing.
 - CLI: deferred to a separate phase.
 - Standalone IPC OpenAPI control APIs.

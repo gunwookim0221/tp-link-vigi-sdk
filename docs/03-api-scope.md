@@ -7,21 +7,38 @@
 - Endpoint behavior must be implemented from documented request/response fields only.
 - Model-specific behavior must be represented through capabilities.
 
+## Version Baseline And Support Labels
+
+The repository's implementation baseline is the V1.0-era subset already
+implemented and verified. The latest reviewed official contract is V1.4, but
+V1.4 documentation is not an implementation claim. See the [V1.4 reference](openapi/nvr-openapi-v1.4-reference.md)
+and [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md).
+
+| Label | Meaning in this project |
+| --- | --- |
+| Implemented | Runtime code and tests exist; real-device verification is stated separately. |
+| V1.4 documented | The vendor PDF defines the contract, but the SDK may not implement it. |
+| Planned | A documented capability is inside a future implementation boundary. |
+| Device-unverified | The contract or compatibility still needs a real NVR/device observation with model, hardware, firmware, and test date. |
+
 ## Official API Groups
 
 | Group | Official endpoints | MVP status |
 | --- | --- | --- |
 | Authentication | `GET /openapi/token` | Phase 4 NVR flow only |
-| Channel Management | `GET /openapi/added_devices` | Phase 6 |
+| Module discovery | `GET /openapi/module_list` | V1.4 documented; planned read-only compatibility work |
+| Channel Management | `GET /openapi/added_devices`, `POST /openapi/add_device`, `POST /openapi/remove_device`, `GET /openapi/device_scan`, `GET /openapi/snapshot`, `POST /openapi/add_device_rtsp` | Only `added_devices` implemented; remaining V1.3/V1.4 work is planned |
 | Video | `GET /openapi/resolution`, `GET /openapi/valid_resolutions`, `POST /openapi/resolution`, `GET /openapi/bitrate`, `GET /openapi/bitrate_capability`, `POST /openapi/bitrate` | Later SDK phase |
 | Time | `GET /openapi/timing_mode`, `PUT /openapi/timing_mode`, `GET /openapi/ntp`, `PUT /openapi/ntp` | Later SDK phase |
-| Audio | `GET /openapi/audio/output/sound`, `GET /openapi/audio/input/sound`, `POST /openapi/audio/output/sound`, `POST /openapi/audio/input/sound` | Later SDK phase |
+| Audio | Existing input/output sound GET/POST plus V1.4 `GET /openapi/audio/channel_capability`, `GET /openapi/audio/capability` | V1.4 documented; no audio runtime support |
 | Disk | `GET /openapi/disks`, `GET /openapi/esata_disks`, `POST /openapi/smartctl_process`, `GET /openapi/smartctl_process/capability`, `POST /openapi/smartctl_process/test`, `GET /openapi/smartctl_process/schedule`, `GET /openapi/smartctl_process/attribute` | Later SDK phase |
 | PoE | `GET /openapi/poe/info`, `POST /openapi/poe/info`, `GET /openapi/poe/link_mode`, `POST /openapi/poe/link_mode`, `GET /openapi/poe/status`, `GET /openapi/poe/link_status` | Later SDK phase |
 | Event | `GET /openapi/event_server`, `POST /openapi/event_server`, `POST /openapi/event_server/delete_server` | Later SDK phase |
-| Recording | `GET /openapi/record/days`, `GET /openapi/record/search/free_process`, `GET /openapi/record/search/results` | Phase 7 |
+| Recording | `GET /openapi/record/days`, `GET /openapi/record/search/free_process`, `GET /openapi/record/search/results`, V1.2 `POST /openapi/record_control` | Search implemented; control planned and mutating |
 | System | `POST /openapi/systemctl` | Excluded from MVP write path |
-| Stream | RTSP live URL and replay URL | Phase 8 URL helpers |
+| PTZ | V1.3 PTZ interfaces and V1.4 batch capability | V1.4 documented; planned and hardware-dependent |
+| Alarm output | V1.4 alarm-output interfaces | V1.4 documented; planned and mutating/hardware-dependent |
+| Stream | RTSP live URL and replay URL; V1.4 documents stream `1` and `2` | Live URL helpers support streams `1` and `2`; replay URL helper supports stream `1`; live/open RTSP remains unsupported |
 
 ## MVP Supported API
 
@@ -150,24 +167,26 @@ Phase 8:
 - Live stream selectors `1` (main) and `2` (minor) only, for positive NVR-managed channel IDs.
 - Capability-gated standalone-camera RTSP URL construction: `rtsp://<IP>/stream1` and `rtsp://<IP>/stream2`.
 - Capability-gated RTSP replay URL construction only.
-- Official replay URL: `rtsp://<IP>/replay/<channel>/1/avm?starttime=<starttime>&endtime=<endtime>`.
+- Current SDK replay URL: `rtsp://<IP>/replay/<channel>/1/avm?starttime=<starttime>&endtime=<endtime>`; V1.4 also documents stream `2`.
 - Explicit UTC `YYYYMMDDtHHMMSSz` replay-time strings; Phase 7 raw recording timestamps are not converted automatically.
-- Replay stream `1` only.
+- Replay stream `1` only in the current SDK helper. V1.4 documents stream `1` and `2`; stream `2` remains planned and device-unverified.
 - RTSP Digest authentication remains the responsibility of an external RTSP client; NVR HTTPS Bearer tokens are not used for RTSP.
-- Export, download, and video-file APIs remain unsupported until official endpoints are documented.
+- Export, download, and video-file APIs remain unsupported because V1.4 does not document them.
 
 ## Phase 9 Snapshot Scope Decision
 
-Snapshot is unsupported under the current official documentation:
+Snapshot is documented by V1.4 but remains unimplemented:
 
-- NVR OpenAPI V1.0 does not document a snapshot or capture endpoint.
+- V1.4 documents `GET /openapi/snapshot?channel=<channel>` with a JPEG response.
+- The historical NVR OpenAPI V1.0 baseline did not document a snapshot endpoint.
 - IPC OpenAPI V1.1 does not document a snapshot or capture method.
 - The NVR event-push multipart format is not a snapshot response.
-- The SDK does not add `SnapshotImage`, `client.snapshots`, or a snapshot capability without an official request and response contract.
+- The SDK does not add `SnapshotImage`, `client.snapshots`, or a snapshot capability yet; the response type and content metadata need a real-device check.
 - RTSP frame capture is not a documented snapshot API and remains out of scope.
 - ffmpeg, image processing, file saving, web UI reverse engineering, and private or undocumented URL usage remain out of scope.
 
-Snapshot may be reconsidered only when TP-Link publishes official NVR or IPC snapshot documentation with its method, path or method name, authentication, request schema, and response type.
+The next read-only phase may implement the documented NVR snapshot only after
+real-device verification of the JPEG response and authentication behavior.
 
 ## Excluded From MVP
 
@@ -194,8 +213,8 @@ Snapshot may be reconsidered only when TP-Link publishes official NVR or IPC sna
 
 ## Version Policy
 
-- Project API metadata starts at official OpenAPI document `V1.0`.
-- If TP-Link publishes a newer OpenAPI document, keep the old metadata until a compatibility review is complete.
+- Project API metadata records the historical SDK baseline `V1.0` and the latest reviewed contract `V1.4`.
+- If TP-Link publishes a newer OpenAPI document, keep both historical metadata and a compatibility review until the new contract is assessed.
 - SDK public API versions must not imply support for undocumented TP-Link endpoints.
 
 ## Related Documents
@@ -205,3 +224,5 @@ Snapshot may be reconsidered only when TP-Link publishes official NVR or IPC sna
 - [05-test-strategy.md](05-test-strategy.md)
 - [08-implementation-checklist.md](08-implementation-checklist.md)
 - [10-limitations.md](10-limitations.md)
+- [openapi/nvr-openapi-v1.4-reference.md](openapi/nvr-openapi-v1.4-reference.md)
+- [openapi/nvr-openapi-v1.0-to-v1.4-diff.md](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)

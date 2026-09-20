@@ -16,6 +16,30 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-09-20: VIGI NVR OpenAPI V1.4 Baseline Registered
+
+Status: Documentation completed; runtime implementation unchanged
+
+Summary:
+
+- Registered the local official `VIGI NVR Open API Document` V1.4 source with
+  its local path and SHA-256 without committing the PDF.
+- Added an exact V1.0-to-V1.4 compatibility/delta record with explicit
+  `UNCHANGED`, `CHANGED`, `NEW`, `REMOVED`, and `UNKNOWN / NOT ENOUGH EVIDENCE`
+  classifications.
+- Recorded V1.1 SHA-256 authentication changes, V1.2 recording control, V1.3
+  module/channel/snapshot/PTZ changes, and V1.4 RTSP-device, audio capability,
+  PTZ, and alarm-output changes.
+- Re-scoped snapshot from "not documented" to "documented by V1.4 but not
+  implemented or device-verified"; current SDK support claims remain unchanged.
+- Defined a read-only next implementation boundary and deferred mutating or
+  hardware-dependent APIs.
+
+Related documents:
+
+- [V1.4 reference record](openapi/nvr-openapi-v1.4-reference.md)
+- [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
+
 ### 2026-07-10: CI Quality Gates Hardened
 
 Status: Completed

@@ -11,6 +11,17 @@ This matrix tracks project verification status. Official TP-Link support status 
 - The supported products page says latest firmware should be installed.
 - TP-Link states that product availability varies by region and that the compatible device list may be updated.
 - TP-Link firmware release notes for `VIGI C340I(UN) V1.20 2.2.0 Build 250926` indicate added support for `VIGI OpenAPI`.
+- The latest reviewed NVR contract is the local official V1.4 PDF registered in [the V1.4 reference record](openapi/nvr-openapi-v1.4-reference.md).
+- V1.4 documentation does not upgrade a device's implementation or verification status. Each new or changed endpoint still needs model, hardware, firmware, and test-date evidence.
+
+## V1.4 Verification Boundary
+
+The existing NVR observations verify the repository's earlier read-only subset:
+token authentication, `GET /openapi/added_devices`, and recording search. They
+do not verify V1.4 module discovery, the V1.4 refresh-header behavior,
+snapshot JPEG responses, RTSP-device addition, audio capabilities, PTZ, alarm
+output, stream `2`, or any mutating endpoint. The [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
+is the authoritative list of pending checks.
 
 ## MVP Device
 
