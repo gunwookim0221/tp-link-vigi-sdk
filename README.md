@@ -81,6 +81,11 @@ Implemented read-only SDK support includes:
 - Current NVR snapshots as in-memory JPEG bytes with
   `client.snapshots.get_snapshot(channel_id)`.
 - `client.stream.build_replay_url(...)` for documented RTSP replay URLs.
+- V1.4 management APIs for recording control, device scan, device add/remove,
+  and RTSP-device registration.
+- V1.4 PTZ capability/control, preset/tour listing, target tracking, audio, and
+  alarm-output service groups through `client.ptz`, `client.audio`, and
+  `client.alarm_outputs`.
 
 The RTSP helpers only build URLs. They do not open RTSP, perform a Digest
 handshake, download video, or save video files. Live URLs support main stream
@@ -88,9 +93,10 @@ handshake, download video, or save video files. Live URLs support main stream
 `YYYYMMDDtHHMMSSz` times. HTTPS OpenAPI Bearer authentication is separate from
 RTSP Digest authentication and is not included in generated URLs.
 
-Module discovery and snapshots are unit/contract tested but have not yet been
-verified against a real NVR. Snapshot support returns the current channel
-image only; it does not save files or capture historical frames.
+Module discovery and snapshots are unit/contract tested and were verified in
+the real-NVR read-only pass recorded in the [V1.4 compatibility report](docs/openapi/nvr-openapi-v1.4-compatibility-2026-09-20.md).
+Snapshot support returns the current channel image only; it does not save files
+or capture historical frames.
 
 The following V1.4 management APIs are also implemented with mock/contract
 coverage, but have not been run against a real NVR:
@@ -103,12 +109,16 @@ coverage, but have not been run against a real NVR:
 These calls are explicit state-changing operations where applicable. They do
 not retry automatically, infer local device state, or select scan results.
 
-Phase 3B hardware-control APIs are implemented with mock/contract coverage but
-have not been exercised against a real NVR. They are exposed through
+Phase 3B hardware-control APIs are implemented with mock/contract coverage.
+Read-only capability and state checks were exercised against a real NVR as
+recorded in the [V1.4 compatibility report](docs/openapi/nvr-openapi-v1.4-compatibility-2026-09-20.md),
+but hardware mutations were not. They are exposed through
 `client.ptz`, `client.audio`, and `client.alarm_outputs` for the documented
 PTZ capability/movement/park/preset-tour reads/target-tracking, audio
 capability and sound controls, and alarm-output capability/configuration/manual
-control endpoints. PTZ direction remains an explicit numeric field because the
+control endpoints. The tested NVR's PTZ batch capability response was a
+documented device/documentation deviation with omitted fields; the SDK keeps
+strict validation. PTZ direction remains an explicit numeric field because the
 official document does not define a numeric direction mapping. The document
 does not define preset/tour mutation endpoints, so none are exposed.
 
@@ -119,7 +129,7 @@ Unsupported or deferred:
 - Export/download, RTSP playback, video saving, ffmpeg, and image processing.
 - CLI: deferred to a separate phase.
 - Standalone IPC OpenAPI control APIs.
-- Real-NVR or device verification of Phase 3B hardware behavior.
+- Hardware mutation verification against a real NVR or camera.
 
 ## Tests
 

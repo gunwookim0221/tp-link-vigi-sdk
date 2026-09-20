@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 This project follows the structure of Keep a Changelog.
 
+## [0.3.0] - 2026-09-20
+
+### Added
+
+- VIGI NVR OpenAPI V1.4 support, including module/capability discovery and
+  current snapshot retrieval.
+- Refresh-token compatibility correction for the documented Bearer flow.
+- V1.4 management APIs for recording control, device scan, device add/remove,
+  and RTSP-device addition.
+- PTZ capability/control APIs, read-only preset/tour listing, and target
+  tracking; audio capability/read/write APIs; and alarm-output capability and
+  control APIs.
+- Real-NVR read-only compatibility verification and a documented compatibility
+  report.
+
+### Changed
+
+- The tested NVR returned a PTZ batch-capability response with only channel ID
+  and `pan_tilt_supported`, which does not conform to the official V1.4 schema.
+  The SDK intentionally keeps strict contract validation and documents this as
+  a device/documentation deviation.
+
+### Limitations
+
+- Some API groups may be unsupported depending on NVR model and firmware.
+- Mutation APIs are contract-tested but were not exercised against production
+  hardware during verification.
+- Live and replay RTSP URL construction is verified; actual media connections
+  were not part of the final real-NVR verification.
+
 ## [0.2.0] - 2026-07-20
 
 ### Added
