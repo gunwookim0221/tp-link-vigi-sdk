@@ -15,6 +15,9 @@
 - NVR current snapshot is implemented as `GET /openapi/snapshot?channel=<channel>`
   returning in-memory JPEG bytes, but it is not real-device verified. IPC
   OpenAPI V1.1 still does not document a snapshot method.
+- Phase 3A recording control, device scan, add/remove-device, and RTSP-device
+  registration APIs are implemented and unit/contract tested, but no
+  state-changing Phase 3A call has been real-NVR verified.
 - The supplied examples are opt-in scripts, not a CLI, and require explicit shell environment configuration; `.env` is not auto-loaded.
 - Replay URL examples require caller-provided UTC time strings and do not convert `RecordSegment` timestamps.
 - The V1.4 RTSP contract documents stream `1` and `2`; the current SDK helper accepts stream `1` only, and stream `2` compatibility is unverified.
@@ -68,7 +71,7 @@ Currently unsupported:
 - ffmpeg integration, image processing, and snapshot file saving.
 - Private or undocumented snapshot URL usage.
 - CLI support; it remains deferred to a separate phase.
-- Mutating device settings in MVP.
+- Real-NVR verification of Phase 3A state-changing APIs.
 - Event receiver service implementation.
 - Full RTSP client implementation.
 - Camera-specific public SDK APIs.
@@ -80,11 +83,12 @@ Currently unsupported:
 
 The V1.4 PDF is a documentation baseline, not proof of support on the target
 NVR. Module discovery and current snapshot are implemented and unit/contract
-tested, but remain real-device unverified. RTSP-device addition, recording
-control, audio capabilities, PTZ, alarm output, and the other documented groups
-listed in the [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
+tested, but remain real-device unverified. Phase 3A recording control,
+device scan, add/remove-device, and RTSP-device registration are implemented
+but unverified; audio capabilities, PTZ, alarm output, and the other documented
+groups listed in the [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
 remain unsupported or deferred. Real-device verification remains required for
-the implemented read-only increment and all mutating or hardware-dependent
+the implemented read-only and management increments and all hardware-dependent
 contracts.
 
 ## Standalone Camera Limitations

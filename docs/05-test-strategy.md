@@ -41,6 +41,22 @@ Device inventory mock and unit tests should cover:
 - Authentication guard behavior before any network call when no Bearer token is available.
 - Secret redaction so Bearer tokens, passwords, nonce values, and Digest responses are not emitted in assertion messages or errors.
 
+Phase 3A management mock and unit tests should cover:
+
+- `GET /openapi/device_scan` with empty and multiple results, exact string
+  fields, documented protocol values, and preserved unknown protocol strings.
+- Exact JSON payloads for `POST /openapi/add_device`,
+  `POST /openapi/remove_device`, and `POST /openapi/add_device_rtsp`.
+- `RecordControlMode.AUTO` and `RecordControlMode.OFF` for
+  `POST /openapi/record_control`, with invalid values rejected.
+- Bearer authentication, numeric `error_code` success/error parsing, required
+  field validation, credential redaction, and no automatic retries for every
+  state-changing endpoint.
+- Authentication guards before any network call.
+
+Phase 3A tests use fake transports only. No state-changing endpoint is run
+against a real NVR by the default or contract-test suite.
+
 Recording search mock and unit tests should cover:
 
 - Bearer-authenticated `GET /openapi/record/days` request construction with `channel`, `start`, and `end` query parameters.

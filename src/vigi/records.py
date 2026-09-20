@@ -8,22 +8,24 @@ from vigi.exceptions import AuthenticationError, VigiApiError, VigiResponseError
 from vigi.models import (
     RecordDay,
     RecordDaysResponse,
+    ErrorCodeResponse,
     RecordSearchProcessResponse,
     RecordSearchResultsResponse,
     RecordSegment,
 )
 from vigi.session import Session
 from vigi.transport import Request, Response
-from vigi.types import AuthMode
+from vigi.types import AuthMode, RecordControlMode
 
 
 RECORD_DAYS_PATH = "/openapi/record/days"
 RECORD_FREE_PROCESS_PATH = "/openapi/record/search/free_process"
 RECORD_RESULTS_PATH = "/openapi/record/search/results"
+RECORD_CONTROL_PATH = "/openapi/record_control"
 
 
 class RecordService:
-    """Documented NVR read-only recording search APIs."""
+    """Documented NVR recording search and control APIs."""
 
     def __init__(self, session: Session | None = None) -> None:
         self.session = session
@@ -69,6 +71,22 @@ class RecordService:
         )
         session = cast(Session, self.session)
         return parse_record_results_response(session.transport.send(request))
+
+    def set_record_control(
+        self,
+        channel_id: int,
+        enable: RecordControlMode,
+    ) -> ErrorCodeResponse:
+        """Set documented automatic or disabled recording for a channel."""
+
+        headers = self._bearer_headers()
+        request = build_record_control_request(
+            headers,
+            channel_id=channel_id,
+            enable=enable,
+        )
+        session = cast(Session, self.session)
+        return parse_record_control_response(session.transport.send(request))
 
     def _bearer_headers(self) -> Mapping[str, str]:
         if self.session is None:
@@ -137,6 +155,21 @@ def build_record_results_request(
     return Request(method="GET", path=f"{RECORD_RESULTS_PATH}?{query}", headers=headers)
 
 
+def build_record_control_request(
+    headers: Mapping[str, str],
+    *,
+    channel_id: int,
+    enable: RecordControlMode,
+) -> Request:
+    """Build the documented recording-control request."""
+
+    _require_positive_int(channel_id, "channel_id")
+    if type(enable) is not RecordControlMode:
+        raise ValidationError("enable must be RecordControlMode.AUTO or OFF.")
+    payload = {"channel": channel_id, "enable": enable.value}
+    return _build_json_request(headers, RECORD_CONTROL_PATH, payload)
+
+
 def parse_record_days_response(response: Response) -> RecordDaysResponse:
     """Parse a documented recording days response."""
 
@@ -187,6 +220,13 @@ def parse_record_results_response(response: Response) -> RecordSearchResultsResp
     )
 
 
+def parse_record_control_response(response: Response) -> ErrorCodeResponse:
+    """Parse the documented recording-control response."""
+
+    _, error_code = _parse_payload(response, "Record control")
+    return ErrorCodeResponse(error_code=error_code)
+
+
 def _parse_payload(response: Response, label: str) -> tuple[dict[str, object], int]:
     if response.status_code < 200 or response.status_code >= 300:
         raise VigiApiError(f"{label} endpoint returned HTTP {response.status_code}.")
@@ -200,7 +240,7 @@ def _parse_payload(response: Response, label: str) -> tuple[dict[str, object], i
         raise VigiResponseError(f"{label} response must be a JSON object.")
 
     error_code = payload.get("error_code")
-    if not isinstance(error_code, int):
+    if not isinstance(error_code, int) or isinstance(error_code, bool):
         raise VigiResponseError(f"{label} response is missing numeric error_code.")
     if error_code != 0:
         raise VigiApiError(f"{label} endpoint returned error_code {error_code}.")
@@ -222,7 +262,7 @@ def _required_str(payload: dict[str, object], key: str, label: str) -> str:
 
 
 def _require_positive_int(value: int, field_name: str) -> None:
-    if not isinstance(value, int):
+    if not isinstance(value, int) or isinstance(value, bool):
         raise ValidationError(f"{field_name} must be an integer.")
     if value <= 0:
         raise ValidationError(f"{field_name} must be greater than 0.")
@@ -253,3 +293,16 @@ def _require_digits(value: str, field_name: str, length: int) -> None:
         raise ValidationError(f"{field_name} must be a string.")
     if len(value) != length or not value.isdigit():
         raise ValidationError(f"{field_name} must use the documented numeric format.")
+
+
+def _build_json_request(
+    headers: Mapping[str, str], path: str, payload: Mapping[str, object]
+) -> Request:
+    request_headers = dict(headers)
+    request_headers["Content-Type"] = "application/json"
+    return Request(
+        method="POST",
+        path=path,
+        headers=request_headers,
+        body=json.dumps(payload, separators=(",", ":")).encode("utf-8"),
+    )

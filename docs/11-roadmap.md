@@ -18,12 +18,18 @@ Completed:
 - Phase 13 V1.4 read-only compatibility implementation and contract tests for
   auth refresh, module discovery, and current snapshots. Real-NVR verification
   remains pending.
+- Phase 3A V1.4 management APIs: recording control, device scan, add/remove
+  device, and RTSP-device registration. Unit/contract complete; NVR
+  verification pending.
 - Phase 10B SDK Usability, Examples, and Developer Experience.
 
 Next:
 
 - Real-NVR verification of the Phase 13 read-only increment, recorded with
   model, hardware, firmware, date, endpoint, and result.
+- Opt-in verification of Phase 3A read/write endpoint behavior with a safe test
+  plan and complete device identity; no mutation is run by default.
+- Phase 3B hardware-control APIs remain deferred.
 - Phase 10 CLI, after a separate dependency and license review.
 - IPC auth/transport architecture work according to [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md), if standalone IPC SDK support is planned.
 
@@ -176,9 +182,11 @@ Implementation boundary (complete):
 
 Later boundary:
 
-- Keep recording control, add/remove devices, RTSP-device addition, PTZ
-  movement/control, audio writes, alarm/output writes, system control, and
-  other state-changing or hardware-dependent APIs behind separate explicit
+- Phase 3A recording control, device scan, add/remove devices, and RTSP-device
+  addition are implemented in a separate management increment; real-NVR
+  verification remains pending.
+- Keep PTZ movement/control, audio writes, alarm/output writes, system control,
+  and other state-changing or hardware-dependent APIs behind separate explicit
   planning and device verification.
 
 Exit criteria:
@@ -190,6 +198,28 @@ Exit criteria:
   planned, and device-unverified behavior.
 - Existing token, inventory, recording-search, and replay regressions remain
   covered without adding runtime changes outside the approved boundary.
+
+## Phase 3A: V1.4 NVR Management APIs
+
+Goal:
+
+- Implement the documented low-level NVR management operations without
+  introducing Phase 3B hardware-control behavior.
+
+Implemented boundary:
+
+- `RecordService.set_record_control(...)` for `auto` and `off`.
+- `DeviceService.scan_devices()` for documented discovery fields.
+- `DeviceService.add_device(...)` for `TP-LINK` and `ONVIF`.
+- `DeviceService.remove_device(...)` for an explicit channel.
+- `DeviceService.add_rtsp_device(...)` for the documented RTSP URL field.
+
+Status:
+
+- Unit/contract tests pass using fake transports.
+- Bearer headers, exact request fields, error-code parsing, credential
+  redaction, and no-retry behavior are covered.
+- No Phase 3A endpoint is real-NVR verified. No Phase 3B API is implemented.
 
 ## v0.1 Release Candidate
 

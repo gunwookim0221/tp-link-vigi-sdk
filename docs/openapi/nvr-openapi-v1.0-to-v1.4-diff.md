@@ -32,11 +32,11 @@ repository predates this V1.4 review unless explicitly stated otherwise.
 | Authentication/token flow | `CHANGED` | V1.1 changes the Digest response algorithm to SHA-256; V1.4 documents the token and refresh examples | Token acquisition and refresh exist; refresh Bearer behavior and SHA-256 compatibility are unit/contract tested, with real-NVR verification pending |
 | Digest algorithm | `CHANGED` | V1.1 explicitly corrects the response algorithm to SHA-256; V1.4 challenge example says `algorithm="SHA-256"` | SHA-256 helper exists; device re-verification is pending |
 | Module/capability discovery | `NEW` | V1.3 adds `GET /openapi/module_list` | Implemented as `CapabilityService.list_modules()`; unit/contract tested, real-NVR verification pending |
-| Channel management | `CHANGED` | V1.3 updates add, remove, scan, and adds snapshot; V1.4 adds RTSP-device addition | `GET /openapi/added_devices` and current snapshot are implemented; other channel APIs remain deferred |
+| Channel management | `CHANGED` | V1.3 updates add, remove, scan, and adds snapshot; V1.4 adds RTSP-device addition | `added_devices`, scan, add/remove, RTSP add, and current snapshot are implemented/unit tested; real-NVR verification pending |
 | Snapshot | `NEW` | V1.3 adds `GET /openapi/snapshot` with JPEG response | Implemented as in-memory `SnapshotImage.data`; unit/contract tested, real-NVR verification pending |
-| RTSP-device add flow | `NEW` | V1.4 adds `POST /openapi/add_device_rtsp` | Not implemented |
+| RTSP-device add flow | `NEW` | V1.4 adds `POST /openapi/add_device_rtsp` | Implemented as `DeviceService.add_rtsp_device()`; unit/contract tested, real-NVR verification pending |
 | Recording search | `UNCHANGED` | V1.4 documents the same three read-only search endpoints and fields | Implemented and real-device verified for the repository's existing scope |
-| Recording control | `NEW` | V1.2 adds `POST /openapi/record_control` | Not implemented |
+| Recording control | `NEW` | V1.2 adds `POST /openapi/record_control` | Implemented as `RecordService.set_record_control()`; unit/contract tested, real-NVR verification pending |
 | Video | `UNCHANGED` | No video change is listed in the V1.4 update history | Not implemented |
 | Audio sound controls | `UNCHANGED` | Existing input/output sound GET and POST interfaces remain documented | Not implemented |
 | Audio capability discovery | `NEW` | V1.4 adds channel and NVR audio capability GET interfaces | Not implemented |
@@ -44,7 +44,7 @@ repository predates this V1.4 review unless explicitly stated otherwise.
 | PoE | `UNCHANGED` | No PoE change is listed in the V1.4 update history | Not implemented |
 | Event server settings | `UNCHANGED` | GET/POST/delete server interfaces remain documented; the PDF has an example-path inconsistency | Not implemented |
 | Event message subtype catalog | `CHANGED` | V1.1 and V1.3 update history add event subtypes | No event receiver or event model is implemented |
-| Live RTSP | `UNCHANGED` | V1.4 retains the RTSP live URL and Digest-authenticated stream interface | No live URL or RTSP client implementation |
+| Live RTSP | `UNCHANGED` | V1.4 retains the RTSP live URL and Digest-authenticated stream interface | Live URL helper exists for streams `1` and `2`; no RTSP client implementation |
 | Replay RTSP | `CHANGED` | V1.4 documents stream `1` or `2`; the repository helper enforces stream `1` | Replay URL helper exists for stream `1` only |
 | Replay time semantics | `UNCHANGED` | V1.4 retains UTC `YYYYMMDDtHHMMSSz` query values | Explicit UTC strings are validated; record timestamps are not converted |
 | PTZ | `NEW` | V1.3 adds the PTZ interface family | Not implemented |
@@ -108,11 +108,11 @@ device rather than treated as newly established by this PDF alone.
 | Interface | Request and response contract | Current SDK / impact | State and verification |
 | --- | --- | --- | --- |
 | `GET /openapi/added_devices` | No parameters. Response `devices[]` fields: `id`, `name`, `alias`, `online`, `ip`, `mac`; top-level `error_code`. | Already implemented as `DeviceService.list_added_devices()` with `id` mapped to `channel_id` and string `online` values. | Read-only; existing real-device verification should be retained and repeated for V1.4 if needed. |
-| `POST /openapi/add_device` | JSON: `username`, `password`, `connect_prot` (`TP-LINK` or `ONVIF`), `ip`, `port`; response `error_code`. | Not implemented. Add-device credentials and protocol selection require a mutating service boundary. | Mutating; real NVR plus camera fixture required. Version V1.3. |
-| `POST /openapi/remove_device` | JSON: `channel`; response `error_code`. | Not implemented. | Mutating; real-device verification required. Version V1.3. |
-| `GET /openapi/device_scan` | No parameters. Response `devices[]` fields: `ip`, `name`, `connect_prot` (`TP-LINK`, `ONVIF`, or `RTSP`), `port`, `mac`, `model`; top-level `error_code`. | Not implemented. | Read-only but network/environment dependent; real-device verification required. Version V1.3. |
+| `POST /openapi/add_device` | JSON: `username`, `password`, `connect_prot` (`TP-LINK` or `ONVIF`), `ip`, `port`; response `error_code`. | Implemented as `DeviceService.add_device()` with strict `ConnectionProtocol` input and exact fields; credentials are kept in the non-repr request body. | Mutating; unit/contract tested, real NVR plus camera fixture verification pending. Version V1.3. |
+| `POST /openapi/remove_device` | JSON: `channel`; response `error_code`. | Implemented as explicit `DeviceService.remove_device(channel_id)`; no local state mutation or retry. | Mutating; unit/contract tested, real-device verification pending. Version V1.3. |
+| `GET /openapi/device_scan` | No parameters. Response `devices[]` fields: `ip`, `name`, `connect_prot` (`TP-LINK`, `ONVIF`, or `RTSP`), `port`, `mac`, `model`; top-level `error_code`. | Implemented as `DeviceService.scan_devices()`; documented string values are preserved without automatic add/normalization. | Read-only but network/environment dependent; unit/contract tested, real-device verification pending. Version V1.3. |
 | `GET /openapi/snapshot` | Query `channel`; response is a JPEG file. No JSON field schema or content-type details beyond the JPEG response are established. | Implemented as `SnapshotService.get_snapshot(channel_id)` returning raw `SnapshotImage.data` bytes in memory. No file API or historical-frame model is added. | Read-only; unit/contract tested, but real NVR/channel verification remains required. Version V1.3. |
-| `POST /openapi/add_device_rtsp` | JSON: `username`, `password`, `rtsp_url_main`; response `error_code`. The PDF explains the URL contains IP, RTSP port, and resource path. | Not implemented. | Mutating and credential-bearing; real NVR plus RTSP-device verification required. Version V1.4. |
+| `POST /openapi/add_device_rtsp` | JSON: `username`, `password`, `rtsp_url_main`; response `error_code`. The PDF explains the URL contains IP, RTSP port, and resource path. | Implemented as separate `DeviceService.add_rtsp_device()`; no stream probing or standard-device fallback. | Mutating and credential-bearing; unit/contract tested, real NVR plus RTSP-device verification pending. Version V1.4. |
 
 ### `NEW` - `POST /openapi/record_control` (V1.2)
 
@@ -120,10 +120,12 @@ device rather than treated as newly established by this PDF alone.
 - Request: JSON `channel` and `enable`, whose documented values are `auto` or
   `off`.
 - Response: numeric `error_code`.
-- Current SDK: recording search is implemented, but recording control is not.
-- Impact: a separate explicitly mutating method; do not conflate it with the
-  read-only search service.
-- Verification: real NVR required; this changes recording behavior.
+- Current SDK: `RecordService.set_record_control(channel_id, enable)` is an
+  explicit mutating method using only `RecordControlMode.AUTO` or `OFF`.
+- Impact: the method is separate from the read-only search service and sends no
+  undocumented fields or automatic retries.
+- Verification: unit/contract tested; real NVR required because this changes
+  recording behavior.
 
 ### `NEW` - audio capability discovery (V1.4)
 
@@ -269,8 +271,8 @@ SDK and requires real-device and protocol-level verification.
 
 ## Next implementation boundary
 
-The first read-only implementation increment is complete at the unit/contract
-level:
+The first read-only implementation increment and the separate Phase 3A
+management increment are complete at the unit/contract level:
 
 1. The auth layer now sends the documented refresh Bearer header and retains
    the current access token; SHA-256 and refresh regressions are covered.
@@ -282,11 +284,15 @@ level:
 4. Preserve regression coverage for token acquisition, refresh, `added_devices`,
    recording search, replay URL construction, and existing RTSP/replay
    validation.
+5. Phase 3A management APIs are implemented with exact documented fields:
+   recording control, device scan, standard device add/remove, and RTSP-device
+   addition. They use explicit methods, no automatic retries, and no inferred
+   local state mutation.
 
-Real-NVR verification of this increment remains the next boundary. Mutating,
-hardware-dependent, and broader V1.4 API families remain deferred.
+Real-NVR verification of both increments remains the next boundary. PTZ,
+audio, alarm, system, video-setting, disk, PoE, and other broader V1.4 API
+families remain deferred.
 
-Later, separately gated work may cover recording control, add/remove devices,
-RTSP-device addition, PTZ movement/control, audio writes, alarm/output writes,
-system control, and other state-changing or hardware-dependent APIs. No API in
-those later groups is implemented by this task.
+Later, separately gated work may cover PTZ movement/control, audio writes,
+alarm/output writes, system control, and other state-changing or
+hardware-dependent APIs. No Phase 3B API is implemented by this task.

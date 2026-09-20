@@ -340,6 +340,36 @@ changing mutating or hardware-dependent API scope in the baseline phase.
   required before recording a verification result.
 - No mutating V1.4 API is implemented as part of this phase.
 
+## Phase 3A: V1.4 NVR Management APIs
+
+### Goal
+
+Implement the documented recording-control and device-management endpoints
+without adding Phase 3B hardware-control behavior.
+
+### Tasks
+
+- [x] Implement `POST /openapi/record_control` with only `auto` and `off`.
+- [x] Implement read-only `GET /openapi/device_scan` with documented fields
+  and preserved protocol strings.
+- [x] Implement `POST /openapi/add_device` with only documented fields and
+  `TP-LINK`/`ONVIF` protocol values.
+- [x] Implement `POST /openapi/remove_device` with explicit channel input.
+- [x] Implement `POST /openapi/add_device_rtsp` with only documented fields.
+- [x] Add Bearer/authentication guards, exact JSON payload tests, error-code
+  parsing, credential-redaction tests, and no-retry coverage.
+- [ ] Verify the endpoints against a real NVR using a safe, explicit test plan
+  and record model, hardware, firmware, date, endpoint, and result.
+- [x] Keep PTZ, audio, alarm, system, video-setting, disk, PoE, and other
+  Phase 3B APIs deferred.
+
+### Exit Criteria
+
+- Phase 3A implementation and fake-transport contract tests pass.
+- State-changing methods are explicit and do not mutate inferred local state
+  or retry automatically.
+- Real-NVR verification remains pending; no Phase 3B API is implemented.
+
 ## Phase 10: CLI
 
 ### Goal

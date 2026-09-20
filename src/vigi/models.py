@@ -96,6 +96,49 @@ class AddedDevicesResponse:
 
 
 @dataclass(frozen=True, slots=True)
+class ScannedDevice:
+    """A device discovered by NVR ``GET /openapi/device_scan``."""
+
+    ip_address: str
+    name: str
+    connect_protocol: str
+    port: str
+    mac_address: str
+    model: str
+
+    def __post_init__(self) -> None:
+        for value, field_name in (
+            (self.ip_address, "ip_address"),
+            (self.name, "name"),
+            (self.connect_protocol, "connect_protocol"),
+            (self.port, "port"),
+            (self.mac_address, "mac_address"),
+            (self.model, "model"),
+        ):
+            if not isinstance(value, str) or not value:
+                raise ValidationError(f"{field_name} must be a non-empty string.")
+
+
+@dataclass(frozen=True, slots=True)
+class DeviceScanResponse:
+    """Parsed response for NVR ``GET /openapi/device_scan``."""
+
+    devices: tuple[ScannedDevice, ...]
+    error_code: int
+
+
+@dataclass(frozen=True, slots=True)
+class ErrorCodeResponse:
+    """Response containing the documented OpenAPI result code only."""
+
+    error_code: int
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.error_code, int) or isinstance(self.error_code, bool):
+            raise ValidationError("error_code must be an integer.")
+
+
+@dataclass(frozen=True, slots=True)
 class ModuleInfo:
     """A module/version entry returned by NVR ``GET /openapi/module_list``."""
 

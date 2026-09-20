@@ -105,6 +105,37 @@ The SDK keeps the bytes in memory. It does not save files, extract frames from
 RTSP, or provide historical-snapshot semantics. The endpoint is unit/contract
 tested but not yet verified against a real NVR.
 
+## Phase 3A NVR management APIs
+
+The SDK exposes the documented management calls explicitly. They require a
+Bearer-authenticated session and are unit/contract tested only; do not run them
+against a real NVR without a safe, deliberate test plan.
+
+```python
+from vigi import ConnectionProtocol, RecordControlMode
+
+scan = client.devices.scan_devices()
+result = client.records.set_record_control(1, RecordControlMode.OFF)
+result = client.devices.add_device(
+    "admin",
+    "<device-password>",
+    ConnectionProtocol.TP_LINK,
+    "192.0.2.10",
+    "443",
+)
+result = client.devices.remove_device(1)
+result = client.devices.add_rtsp_device(
+    "admin",
+    "<device-password>",
+    "rtsp://192.0.2.10:554/stream1",
+)
+```
+
+`scan_devices()` only reports discovery data; it never adds a result. The
+management calls do not automatically retry, select scanned devices, or
+update inferred local device state. Keep credentials out of logs and source
+files. These endpoints remain real-NVR unverified.
+
 ## Search recording metadata
 
 Set the month range and, if necessary, a specific day:

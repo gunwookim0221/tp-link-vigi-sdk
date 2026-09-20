@@ -10,6 +10,21 @@ class AuthMode(str, Enum):
     BEARER = "bearer"
 
 
+class ConnectionProtocol(str, Enum):
+    """Connection protocols documented by NVR device-management APIs."""
+
+    TP_LINK = "TP-LINK"
+    ONVIF = "ONVIF"
+    RTSP = "RTSP"
+
+
+class RecordControlMode(str, Enum):
+    """Documented NVR recording-control modes."""
+
+    AUTO = "auto"
+    OFF = "off"
+
+
 class CapabilityName(str, Enum):
     """Known capability names used to gate future SDK behavior."""
 

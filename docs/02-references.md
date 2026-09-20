@@ -48,9 +48,9 @@ The exact compatibility classification is in
 - Standard camera RTSP uses the default service port `554`; an external RTSP client supplies the separate camera account credentials.
 - V1.4 documents `GET /openapi/module_list`, `GET /openapi/snapshot`,
   `POST /openapi/record_control`, RTSP-device addition, audio capability,
-  PTZ, and alarm-output interfaces. The SDK implements only module discovery
-  and the current snapshot in the narrow V1.4 read-only increment; the other
-  interfaces remain outside current support.
+  PTZ, and alarm-output interfaces. The SDK implements module discovery,
+  current snapshot, and the Phase 3A management subset; the other interfaces
+  remain outside current support.
 - V1.4 documents a JPEG response for `GET /openapi/snapshot`; it does not
   establish SDK file-storage behavior or device-wide compatibility.
 - V1.4 documents RTSP stream selectors `1` and `2`; the current SDK replay URL

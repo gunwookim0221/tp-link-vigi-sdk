@@ -31,6 +31,7 @@ src/vigi/
   models.py
   devices.py
   records.py
+  snapshots.py
   stream.py
   ipc_auth.py
   ipc_control.py
@@ -77,11 +78,15 @@ Capabilities should answer:
 Example capability names:
 
 - `auth.token`
+- `capability.module_discovery`
 - `device.added_devices`
+- `snapshot.current`
 - `recording.search`
+- Phase 3A management operations are explicit service methods rather than
+  static model-name gates; the module-list contract does not establish that
+  every endpoint is available, so endpoint errors remain observable.
 - `stream.live_rtsp`
 - `stream.replay_rtsp`
-- `snapshot.todo`
 
 ## Future Camera Architecture
 

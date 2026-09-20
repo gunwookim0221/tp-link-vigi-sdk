@@ -92,6 +92,17 @@ Module discovery and snapshots are unit/contract tested but have not yet been
 verified against a real NVR. Snapshot support returns the current channel
 image only; it does not save files or capture historical frames.
 
+The following V1.4 management APIs are also implemented with mock/contract
+coverage, but have not been run against a real NVR:
+
+- `client.records.set_record_control(channel_id, RecordControlMode)`.
+- `client.devices.scan_devices()`.
+- `client.devices.add_device(...)` and `client.devices.remove_device(...)`.
+- `client.devices.add_rtsp_device(...)`.
+
+These calls are explicit state-changing operations where applicable. They do
+not retry automatically, infer local device state, or select scan results.
+
 Unsupported or deferred:
 
 - Direct standalone IPC/camera snapshot APIs; IPC OpenAPI V1.1 still has no

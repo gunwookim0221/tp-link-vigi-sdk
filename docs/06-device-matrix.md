@@ -20,8 +20,9 @@ The existing NVR observations verify the repository's earlier read-only subset:
 token authentication, `GET /openapi/added_devices`, and recording search. The
 new module-discovery, refresh-header, and snapshot behaviors have unit/contract
 coverage but are not yet verified on a real NVR. RTSP-device addition, audio
-capabilities, PTZ, alarm output, stream `2`, and all mutating endpoints also
-remain unverified or unsupported. The [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
+capabilities, PTZ, alarm output, stream `2`, and all Phase 3A mutating
+endpoints also remain unverified or unsupported. Device scan has unit/contract
+coverage but is network/environment dependent. The [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
 is the authoritative list of pending checks.
 
 ## MVP Device

@@ -73,12 +73,12 @@ For documentation-only tasks, the `Implement` step means applying the requested 
 ## Current OpenAPI Baseline
 
 The latest reviewed official NVR contract is V1.4. The SDK retains the
-verified V1.0-era runtime subset and now includes a narrow V1.4 read-only
-increment: module discovery and current JPEG snapshots. That increment is
-unit/contract tested but not yet real-NVR verified. Use the [V1.4 reference
-record](openapi/nvr-openapi-v1.4-reference.md) and [exact V1.0-to-V1.4
-delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md) to distinguish documented,
-implemented, planned, and device-unverified behavior.
+verified V1.0-era runtime subset and now includes a narrow V1.4 increment for
+read-only discovery/snapshots plus Phase 3A management calls. The new V1.4
+behavior is unit/contract tested but not yet real-NVR verified. Use the [V1.4
+reference record](openapi/nvr-openapi-v1.4-reference.md) and [exact
+V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md) to distinguish
+documented, implemented, planned, and device-unverified behavior.
 
 ## Related Documents
 

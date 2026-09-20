@@ -2,9 +2,10 @@ import json
 
 import pytest
 
-from vigi import AuthConfig, AuthMode, VigiClient
+from vigi import AuthConfig, AuthMode, RecordControlMode, VigiClient
 from vigi.exceptions import AuthenticationError, VigiApiError, VigiResponseError
 from vigi.models import (
+    ErrorCodeResponse,
     RecordDay,
     RecordDaysResponse,
     RecordSearchProcessResponse,
@@ -12,13 +13,16 @@ from vigi.models import (
     RecordSegment,
 )
 from vigi.records import (
+    RECORD_CONTROL_PATH,
     RECORD_DAYS_PATH,
     RECORD_FREE_PROCESS_PATH,
     RECORD_RESULTS_PATH,
+    build_record_control_request,
     build_record_days_request,
     build_record_free_process_request,
     build_record_results_request,
     parse_record_days_response,
+    parse_record_control_response,
     parse_record_free_process_response,
     parse_record_results_response,
 )
@@ -332,3 +336,83 @@ def test_record_service_uses_bearer_session_and_parsers() -> None:
         for request in transport.requests
     )
     assert "secret-token" not in repr(results)
+
+
+@pytest.mark.parametrize(
+    ("mode", "expected_value"),
+    [
+        (RecordControlMode.AUTO, "auto"),
+        (RecordControlMode.OFF, "off"),
+    ],
+)
+def test_record_control_request_creation(mode: RecordControlMode, expected_value: str) -> None:
+    request = build_record_control_request(
+        {"Authorization": "Bearer secret-token"},
+        channel_id=1,
+        enable=mode,
+    )
+
+    assert request.method == "POST"
+    assert request.path == RECORD_CONTROL_PATH
+    assert request.headers == {
+        "Authorization": "Bearer secret-token",
+        "Content-Type": "application/json",
+    }
+    assert json.loads(request.body or b"") == {"channel": 1, "enable": expected_value}
+    assert "secret-token" not in repr(request)
+
+
+@pytest.mark.parametrize(
+    ("channel_id", "enable"),
+    [(0, RecordControlMode.AUTO), (1, "auto"), (True, RecordControlMode.OFF)],
+)
+def test_record_control_request_rejects_invalid_values(channel_id: object, enable: object) -> None:
+    with pytest.raises(ValueError):
+        build_record_control_request(
+            {"Authorization": "Bearer secret-token"},
+            channel_id=channel_id,  # type: ignore[arg-type]
+            enable=enable,  # type: ignore[arg-type]
+        )
+
+
+def test_parse_record_control_response_success_and_errors() -> None:
+    assert parse_record_control_response(
+        Response(status_code=200, body=b'{"error_code": 0}')
+    ) == ErrorCodeResponse(error_code=0)
+
+    with pytest.raises(VigiApiError):
+        parse_record_control_response(Response(status_code=200, body=b'{"error_code": 1001}'))
+    with pytest.raises(VigiResponseError):
+        parse_record_control_response(Response(status_code=200, body=b'{"error_code": "0"}'))
+    with pytest.raises(VigiApiError):
+        parse_record_control_response(Response(status_code=500, body=b"{}"))
+
+
+def test_record_control_service_uses_bearer_without_retry() -> None:
+    transport = FakeTransport([Response(status_code=200, body=b'{"error_code": 0}')])
+    client = VigiClient(
+        AuthConfig(host="nvr.local", username="admin", password="password"),
+        transport=transport,
+    )
+    client.session.info = _bearer_session(transport).info
+
+    result = client.records.set_record_control(1, RecordControlMode.OFF)
+
+    assert result == ErrorCodeResponse(error_code=0)
+    assert len(transport.requests) == 1
+    assert transport.requests[0].path == RECORD_CONTROL_PATH
+    assert transport.requests[0].headers["Authorization"] == "Bearer secret-token"
+    assert json.loads(transport.requests[0].body or b"") == {"channel": 1, "enable": "off"}
+
+
+def test_record_control_requires_bearer_before_network_call() -> None:
+    transport = FakeTransport([])
+    client = VigiClient(
+        AuthConfig(host="nvr.local", username="admin", password="password"),
+        transport=transport,
+    )
+
+    with pytest.raises(AuthenticationError):
+        client.records.set_record_control(1, RecordControlMode.AUTO)
+
+    assert transport.requests == []

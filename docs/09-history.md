@@ -16,6 +16,22 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-09-20: Phase 3A V1.4 Management APIs Implemented
+
+Status: Implementation and unit/contract tests completed; real-NVR verification pending
+
+Summary:
+
+- Added recording control for the documented `auto` and `off` modes.
+- Added device scan, standard device add/remove, and RTSP-device registration
+  through the existing NVR service boundaries.
+- Preserved exact documented fields, Bearer authentication, credential
+  redaction, explicit state-changing methods, and no automatic retries.
+- Added no PTZ, audio, alarm, system, video-setting, disk, PoE, or other Phase
+  3B behavior.
+
+No Phase 3A endpoint was invoked against a real NVR.
+
 ### 2026-09-20: V1.4 Read-Only Compatibility Increment Implemented
 
 Status: Implementation and unit/contract tests completed; real-NVR verification pending
