@@ -16,27 +16,29 @@ This matrix tracks project verification status. Official TP-Link support status 
 
 ## V1.4 Verification Boundary
 
-The existing NVR observations verify the repository's earlier read-only subset:
-token authentication, `GET /openapi/added_devices`, and recording search. The
-new module-discovery, refresh-header, and snapshot behaviors have unit/contract
-coverage but are not yet verified on a real NVR. RTSP-device addition, Phase
-3B audio capabilities/controls, PTZ, alarm output, stream `2`, and all Phase
-3A mutating endpoints also remain unverified or unsupported. Device scan has
-unit/contract coverage but is network/environment dependent. The [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
-is the authoritative list of pending checks.
+The Phase 4 read-only result is recorded in the [V1.4 compatibility
+verification report](openapi/nvr-openapi-v1.4-compatibility-2026-09-20.md).
+Initial authentication, module discovery, snapshot, added-device inventory,
+recording search, and audio reads were verified against the configured NVR.
+Batch IPC alarm reads also passed. Refresh, per-channel PTZ capability, and
+NVR/IPC alarm-output reads returned API-error results; PTZ batch capability
+returned a partial response that did not satisfy the V1.4 response shape.
+RTSP URL construction remains SDK/contract-only because the repository has no
+RTSP open flow. All state-changing APIs remain unverified by design.
 
 ## Phase 3B Verification Status
 
 | Feature | Official V1.4 support | SDK status | Contract-test status | NVR/device status |
 | --- | --- | --- | --- | --- |
-| PTZ capability, movement, park, target tracking | Documented in section 4.11 | Implemented through `PtzService` | Fake-transport tests pass | Not verified |
-| PTZ preset/tour listing | Documented in section 4.11 | Implemented as read-only lists | Fake-transport tests pass | Not verified |
+| PTZ capability, movement, park, target tracking | Documented in section 4.11 | Implemented through `PtzService` | Fake-transport tests pass | Per-channel capability returned an API-error result; batch capability returned a partial response rejected by the strict parser; controls not tested |
+| PTZ preset/tour listing | Documented in section 4.11 | Implemented as read-only lists | Fake-transport tests pass | Not tested by Phase 4 PTZ-capability-only scope |
 | PTZ preset/tour mutation | No endpoint documented | Intentionally omitted | Not applicable | Unknown / not enough evidence |
-| Audio capability and sound controls | Documented in section 4.5 | Implemented through `AudioService` | Fake-transport tests pass | Not verified |
-| Alarm-output settings, capability, and manual control | Documented in section 4.14 | Implemented through `AlarmOutputService` | Fake-transport tests pass | Not verified |
+| Audio capability and sound controls | Documented in section 4.5 | Implemented through `AudioService` | Fake-transport tests pass | NVR/channel capability and input/output reads verified; writes not tested |
+| Alarm-output settings, capability, and manual control | Documented in section 4.14 | Implemented through `AlarmOutputService` | Fake-transport tests pass | Batch IPC read verified; NVR/IPC reads returned API-error results; writes not tested |
 
-No Phase 3B capability query or hardware mutation has been run against a real
-NVR or camera.
+Phase 4 ran the documented read-only capability queries listed above against
+the configured NVR; no Phase 3B hardware mutation was run against a real NVR or
+camera. See the compatibility report for the endpoint-level results.
 
 ## MVP Device
 
