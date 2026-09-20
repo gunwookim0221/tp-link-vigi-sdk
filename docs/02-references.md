@@ -48,7 +48,9 @@ The exact compatibility classification is in
 - Standard camera RTSP uses the default service port `554`; an external RTSP client supplies the separate camera account credentials.
 - V1.4 documents `GET /openapi/module_list`, `GET /openapi/snapshot`,
   `POST /openapi/record_control`, RTSP-device addition, audio capability,
-  PTZ, and alarm-output interfaces; these are not current SDK support claims.
+  PTZ, and alarm-output interfaces. The SDK implements only module discovery
+  and the current snapshot in the narrow V1.4 read-only increment; the other
+  interfaces remain outside current support.
 - V1.4 documents a JPEG response for `GET /openapi/snapshot`; it does not
   establish SDK file-storage behavior or device-wide compatibility.
 - V1.4 documents RTSP stream selectors `1` and `2`; the current SDK replay URL
@@ -79,7 +81,10 @@ Review date: `2026-07-10`.
 
 Review date: `2026-07-10`.
 
-- The historical `VIGI NVR Open API Document` V1.0 did not document a snapshot or capture endpoint. V1.4 now documents `GET /openapi/snapshot` with a JPEG response; the SDK has not implemented it.
+- The historical `VIGI NVR Open API Document` V1.0 did not document a snapshot
+  or capture endpoint. V1.4 now documents `GET /openapi/snapshot` with a JPEG
+  response; the SDK implements the current in-memory response, pending
+  real-NVR verification.
 - `VIGI IPC OpenAPI Document_V1.1` does not document a snapshot or capture method. There is no official basis for an IPC `stok`-based snapshot request or response shape.
 - The NVR OpenAPI FAQ documents `GET /openapi/token`, no-auth Digest challenge acquisition, SHA-256 Digest response calculation, Bearer token usage, and default OpenAPI port `20443`.
 - The VIGI OpenAPI supported product list page documents the support policy for listed and higher hardware versions and latest firmware, but `VIGI C340I` was not found in the fetched page text during this review.

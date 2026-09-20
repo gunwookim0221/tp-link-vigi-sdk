@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass, field
 import json
+from typing import Mapping
 from urllib.parse import quote, unquote
 
 from vigi.auth_provider import AuthProvider, AuthenticationContext, AuthenticationResult
@@ -28,6 +29,7 @@ class AuthService(AuthProvider):
 
     def __init__(self, config: AuthConfig) -> None:
         self.config = config
+        self._access_token: str | None = None
 
     def authenticate(
         self,
@@ -55,13 +57,16 @@ class AuthService(AuthProvider):
                 headers={"Authorization": authorization},
             )
         )
-        return parse_token_response(token_response)
+        result = parse_token_response(token_response)
+        self._access_token = result.session_info.access_token
+        return result
 
     def refresh(
         self,
         refresh_token: str,
         context: AuthenticationContext | None = None,
         transport: Transport | None = None,
+        access_token: str | None = None,
     ) -> AuthenticationResult:
         """Refresh an access token using the documented refresh-token query."""
 
@@ -69,8 +74,18 @@ class AuthService(AuthProvider):
             raise AuthenticationError("A transport is required for token refresh.")
 
         context = context or self._default_context()
-        request = build_refresh_token_request(context.token_path, refresh_token)
-        return parse_token_response(transport.send(request))
+        current_access_token = access_token or self._access_token
+        if not current_access_token:
+            raise AuthenticationError("An access token is required for token refresh.")
+        headers = {"Authorization": f"Bearer {current_access_token}"}
+        request = build_refresh_token_request(
+            context.token_path,
+            refresh_token,
+            headers=headers,
+        )
+        result = parse_token_response(transport.send(request))
+        self._access_token = result.session_info.access_token
+        return result
 
     def _default_context(self) -> AuthenticationContext:
         return AuthenticationContext(
@@ -88,12 +103,17 @@ def build_token_request(
     return Request(method="GET", path=token_path, headers=headers or {})
 
 
-def build_refresh_token_request(token_path: str, refresh_token: str) -> Request:
+def build_refresh_token_request(
+    token_path: str,
+    refresh_token: str,
+    headers: Mapping[str, str] | None = None,
+) -> Request:
     """Build a documented refresh-token request."""
 
     return Request(
         method="GET",
         path=f"{token_path}?grant_type=refresh_token&refresh_token={quote(refresh_token, safe='')}",
+        headers=headers or {},
     )
 
 

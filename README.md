@@ -56,8 +56,9 @@ client or importing `vigi` does not make a network request.
 ## Read-only workflows and examples
 
 The detailed [usage guide](docs/12-usage-guide.md) covers authentication,
-device inventory, recording-day and recording-result searches, explicit error
-handling, and RTSP live and replay URL construction.
+module discovery, device inventory, recording-day and recording-result
+searches, current snapshots, explicit error handling, and RTSP live/replay URL
+construction.
 
 - [List devices](examples/list_devices.py)
 - [Read-only recording workflow](examples/read_only_workflow.py)
@@ -72,10 +73,13 @@ connections.
 Implemented read-only SDK support includes:
 
 - Documented NVR authentication.
+- Documented NVR module/version discovery with `client.capabilities.list_modules()`.
 - NVR-managed device inventory with `client.devices.list_added_devices()`.
 - Recording-day, free-search-process, and recording-result queries.
 - `client.stream.build_live_url(...)` for documented RTSP live URLs.
 - `client.stream.build_ipc_live_url(...)` for documented standalone-camera RTSP live URLs.
+- Current NVR snapshots as in-memory JPEG bytes with
+  `client.snapshots.get_snapshot(channel_id)`.
 - `client.stream.build_replay_url(...)` for documented RTSP replay URLs.
 
 The RTSP helpers only build URLs. They do not open RTSP, perform a Digest
@@ -84,11 +88,14 @@ handshake, download video, or save video files. Live URLs support main stream
 `YYYYMMDDtHHMMSSz` times. HTTPS OpenAPI Bearer authentication is separate from
 RTSP Digest authentication and is not included in generated URLs.
 
+Module discovery and snapshots are unit/contract tested but have not yet been
+verified against a real NVR. Snapshot support returns the current channel
+image only; it does not save files or capture historical frames.
+
 Unsupported or deferred:
 
-- Snapshot: documented by NVR OpenAPI V1.4 as `GET /openapi/snapshot`, but not
-  implemented or real-device verified; IPC OpenAPI V1.1 still has no snapshot
-  method.
+- Direct standalone IPC/camera snapshot APIs; IPC OpenAPI V1.1 still has no
+  documented snapshot method.
 - Export/download, RTSP playback, video saving, ffmpeg, and image processing.
 - CLI: deferred to a separate phase.
 - Standalone IPC OpenAPI control APIs.

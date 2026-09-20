@@ -43,6 +43,17 @@ def test_refresh_token_request_creation() -> None:
     assert request.path == "/openapi/token?grant_type=refresh_token&refresh_token=refresh%2Ftoken"
 
 
+def test_refresh_token_request_can_use_documented_bearer_header() -> None:
+    request = build_refresh_token_request(
+        "/openapi/token",
+        "refresh/token",
+        headers={"Authorization": "Bearer access-token"},
+    )
+
+    assert request.headers == {"Authorization": "Bearer access-token"}
+    assert "access-token" not in repr(request)
+
+
 def test_digest_challenge_and_authorization_header() -> None:
     challenge = parse_digest_challenge(
         Response(
@@ -109,3 +120,23 @@ def test_authentication_error_status_and_missing_challenge() -> None:
 
     with pytest.raises(AuthenticationError):
         parse_digest_challenge(Response(status_code=200, headers={}))
+
+
+def test_unsupported_digest_algorithm_is_rejected() -> None:
+    challenge = parse_digest_challenge(
+        Response(
+            status_code=401,
+            headers={
+                "WWW-Authenticate": ('Digest realm="TP-LINK NVR", nonce="abc123", algorithm="MD5"')
+            },
+        )
+    )
+
+    with pytest.raises(AuthenticationError, match="Unsupported digest algorithm"):
+        build_digest_authorization(
+            username="admin",
+            password="password",
+            method="GET",
+            uri="/openapi/token",
+            challenge=challenge,
+        )

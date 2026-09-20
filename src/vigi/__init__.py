@@ -2,7 +2,7 @@
 
 from vigi.auth import AuthConfig, AuthService
 from vigi.auth_provider import AuthProvider, AuthenticationContext, AuthenticationResult
-from vigi.capabilities import Capability
+from vigi.capabilities import Capability, CapabilityService
 from vigi.client import VigiClient
 from vigi.devices import DeviceService
 from vigi.exceptions import (
@@ -31,10 +31,14 @@ from vigi.models import (
     RecordSearchResultsResponse,
     RecordSegment,
     RtspStreamInfo,
+    ModuleInfo,
+    ModuleListResponse,
+    SnapshotImage,
     TimeRange,
 )
 from vigi.records import RecordService
 from vigi.session import Session, SessionInfo
+from vigi.snapshots import SnapshotService
 from vigi.stream import StreamService
 from vigi.transport import Request, Response, Timeout, Transport, TransportConfig
 from vigi.types import (
@@ -57,6 +61,7 @@ __all__ = [
     "AddedDevicesResponse",
     "calculate_digest_response",
     "Capability",
+    "CapabilityService",
     "CapabilityName",
     "CapabilityError",
     "ChannelInfo",
@@ -75,11 +80,15 @@ __all__ = [
     "RecordSearchResultsResponse",
     "RecordSegment",
     "RecordService",
+    "ModuleInfo",
+    "ModuleListResponse",
     "Request",
     "Response",
     "RtspStreamInfo",
     "Session",
     "SessionInfo",
+    "SnapshotImage",
+    "SnapshotService",
     "sha256_hex",
     "StreamError",
     "StreamService",

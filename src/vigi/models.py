@@ -96,6 +96,38 @@ class AddedDevicesResponse:
 
 
 @dataclass(frozen=True, slots=True)
+class ModuleInfo:
+    """A module/version entry returned by NVR ``GET /openapi/module_list``."""
+
+    name: str
+    version: int
+
+    def __post_init__(self) -> None:
+        _require_non_empty(self.name, "name")
+        if not isinstance(self.version, int) or isinstance(self.version, bool):
+            raise ValidationError("version must be an integer.")
+
+
+@dataclass(frozen=True, slots=True)
+class ModuleListResponse:
+    """Parsed response for NVR ``GET /openapi/module_list``."""
+
+    modules: tuple[ModuleInfo, ...]
+    error_code: int
+
+
+@dataclass(frozen=True, slots=True)
+class SnapshotImage:
+    """JPEG bytes returned by NVR ``GET /openapi/snapshot``."""
+
+    data: bytes
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.data, bytes) or not self.data:
+            raise ValidationError("snapshot data must be non-empty bytes.")
+
+
+@dataclass(frozen=True, slots=True)
 class RecordDay:
     """A day with recording returned by ``GET /openapi/record/days``."""
 

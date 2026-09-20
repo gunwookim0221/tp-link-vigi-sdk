@@ -107,7 +107,10 @@ Rules for adding standalone camera support:
 - Do not infer direct camera endpoints from NVR behavior.
 - Do not add direct camera login, snapshot, stream, or settings support without official public documentation and real-device verification.
 - Follow [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md) before implementing IPC authentication or transport behavior.
-- Add another ADR before changing the public client architecture, introducing an RTSP client dependency, adding a documented snapshot endpoint to the public API, or changing the NVR-first MVP scope.
+- Add another ADR before changing the public client architecture, introducing
+  an RTSP client dependency, adding further camera or mutating API families,
+  or changing the NVR-first MVP scope. The documented NVR current-snapshot
+  endpoint is covered by the V1.4 read-only increment.
 
 ## Fact
 

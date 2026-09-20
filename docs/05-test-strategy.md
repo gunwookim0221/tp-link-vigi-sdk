@@ -86,9 +86,10 @@ skipped and no NVR or IPC device is contacted.
 
 ## Phase 9 Snapshot Review
 
-No snapshot mock, unit, or integration tests are added in the current SDK
-because V1.4 documents the NVR contract but runtime support and the real JPEG
-response have not been verified; IPC V1.1 still has no snapshot method.
+Module discovery and snapshot now have mock/unit coverage for the documented
+request and response contracts. Snapshot tests validate in-memory JPEG bytes;
+real-NVR integration remains opt-in and pending. IPC V1.1 still has no
+documented snapshot method.
 
 Snapshot work must be mock-first and cover the documented method, path,
 authentication, request schema, and JPEG response. Image bytes and content type

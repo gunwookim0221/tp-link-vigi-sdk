@@ -299,13 +299,15 @@ Determine whether snapshot is supported by official public documentation and doc
 - [x] Register and review NVR OpenAPI V1.4 snapshot documentation.
 - [x] Review IPC OpenAPI V1.1 for snapshot or capture support.
 - [x] Confirm V1.4 documents `GET /openapi/snapshot` with a JPEG response while IPC V1.1 has no snapshot method.
-- [x] Keep snapshot implementation out of SDK scope.
-- [x] Do not add `SnapshotImage`, `client.snapshots`, a snapshot capability, file saving, image processing, RTSP frame capture, or ffmpeg integration.
+- [x] Keep snapshot implementation out of the historical pre-V1.4 SDK scope.
+- [x] Keep file saving, image processing, RTSP frame capture, and ffmpeg
+  integration out of scope.
 - [x] Document real-device verification criteria before implementation.
 
 ### Exit Criteria
 
-- Snapshot is documented by NVR V1.4 but remains unimplemented and unverified; implementation requires a documented-contract mock plan and real-NVR JPEG verification.
+- Snapshot is documented by NVR V1.4; the later V1.4 increment implements its
+  documented in-memory contract, with real-NVR JPEG verification still pending.
 
 ## Phase 13: V1.4 Read-Only Compatibility Baseline
 
@@ -316,24 +318,26 @@ changing mutating or hardware-dependent API scope in the baseline phase.
 
 ### Tasks
 
-- [ ] Verify V1.1+ NVR Digest SHA-256 semantics and the V1.4 token-refresh
-  Bearer-header example on a real NVR.
-- [ ] Preserve token, refresh, `added_devices`, recording-search, and replay
+- [x] Add unit/contract coverage for V1.1+ SHA-256 semantics and the V1.4
+  token-refresh Bearer-header example; real-NVR verification remains pending.
+- [x] Preserve token, refresh, `added_devices`, recording-search, and replay
   URL regression coverage.
-- [ ] Add read-only `GET /openapi/module_list` support from documented fields
-  only, if the verified compatibility boundary is accepted.
-- [ ] Verify the documented `GET /openapi/snapshot` JPEG response before any
-  runtime implementation; keep the first implementation in memory only.
+- [x] Add read-only `GET /openapi/module_list` support from documented fields
+  only, preserving unknown module names; real-NVR verification remains pending.
+- [x] Implement the documented `GET /openapi/snapshot` JPEG response in
+  memory only; real-NVR verification remains pending.
 - [ ] Record model, hardware version, firmware version, date, endpoint, and
   result for each real-device check.
-- [ ] Keep recording control, device add/remove, RTSP-device addition, PTZ
+- [x] Keep recording control, device add/remove, RTSP-device addition, PTZ
   movement, audio writes, alarm/output writes, and other state-changing APIs
   deferred.
 
 ### Exit Criteria
 
-- V1.4 read-only compatibility is separated from current implemented support.
-- Real-device checks are opt-in and documented with complete device identity.
+- V1.4 read-only implementation and contract tests are complete for auth
+  refresh compatibility, module discovery, and current snapshots.
+- Real-device checks remain opt-in and pending, with complete device identity
+  required before recording a verification result.
 - No mutating V1.4 API is implemented as part of this phase.
 
 ## Phase 10: CLI
@@ -367,7 +371,9 @@ without adding SDK behavior, public APIs, or runtime dependencies.
 - [x] Add opt-in examples for listing devices, the read-only recording workflow, and replay URL construction.
 - [x] Keep `.env` loading explicit and add replay-time placeholders only.
 - [x] Add syntax and import-safety smoke coverage for examples.
-- [x] Document that NVR V1.4 snapshot is documented but not implemented or device-verified, and that RTSP URL generation does not open or download streams.
+- [x] Document that NVR V1.4 snapshot is implemented and contract-tested but
+  not device-verified, and that RTSP URL generation does not open or download
+  streams.
 - [x] Keep CLI work deferred to Phase 10.
 - [x] Add no public API, SDK behavior, or dependency.
 

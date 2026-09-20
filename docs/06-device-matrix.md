@@ -17,10 +17,11 @@ This matrix tracks project verification status. Official TP-Link support status 
 ## V1.4 Verification Boundary
 
 The existing NVR observations verify the repository's earlier read-only subset:
-token authentication, `GET /openapi/added_devices`, and recording search. They
-do not verify V1.4 module discovery, the V1.4 refresh-header behavior,
-snapshot JPEG responses, RTSP-device addition, audio capabilities, PTZ, alarm
-output, stream `2`, or any mutating endpoint. The [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
+token authentication, `GET /openapi/added_devices`, and recording search. The
+new module-discovery, refresh-header, and snapshot behaviors have unit/contract
+coverage but are not yet verified on a real NVR. RTSP-device addition, audio
+capabilities, PTZ, alarm output, stream `2`, and all mutating endpoints also
+remain unverified or unsupported. The [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
 is the authoritative list of pending checks.
 
 ## MVP Device
@@ -102,7 +103,9 @@ Current conclusion:
 - Remote NVR OpenAPI read-only recording search against the documented Phase 7 endpoints is verified through the SDK integration scaffold.
 - `client.records.list_days(...)`, `client.records.get_free_process()`, and `client.records.list_results(...)` are verified against the real NVR for the documented response shapes.
 - `RecordDaysResponse`, `RecordSearchProcessResponse`, and `RecordSearchResultsResponse` are verified by real-device integration for Phase 7 scope.
-- Replay, export, download, snapshot, RTSP, ffmpeg, and video extraction remain out of scope for this verification.
+- Replay, export, download, RTSP, ffmpeg, and video extraction remain out of
+  scope for this verification. The V1.4 current snapshot is implemented but
+  still awaits a real-device verification record.
 - Phase 7 is complete. Phase 8 later delivered the RTSP replay URL helper; export/download remains out of scope.
 
 ## C340I Real-Device Observation

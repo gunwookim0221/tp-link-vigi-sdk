@@ -29,11 +29,11 @@ repository predates this V1.4 review unless explicitly stated otherwise.
 
 | API area | V1.0 -> V1.4 | V1.4 evidence | Current SDK status |
 | --- | --- | --- | --- |
-| Authentication/token flow | `CHANGED` | V1.1 changes the Digest response algorithm to SHA-256; V1.4 documents the token and refresh examples | Token acquisition and refresh exist; V1.4 refresh-header and SHA-256 compatibility still need verification |
+| Authentication/token flow | `CHANGED` | V1.1 changes the Digest response algorithm to SHA-256; V1.4 documents the token and refresh examples | Token acquisition and refresh exist; refresh Bearer behavior and SHA-256 compatibility are unit/contract tested, with real-NVR verification pending |
 | Digest algorithm | `CHANGED` | V1.1 explicitly corrects the response algorithm to SHA-256; V1.4 challenge example says `algorithm="SHA-256"` | SHA-256 helper exists; device re-verification is pending |
-| Module/capability discovery | `NEW` | V1.3 adds `GET /openapi/module_list` | Not implemented |
-| Channel management | `CHANGED` | V1.3 updates add, remove, scan, and adds snapshot; V1.4 adds RTSP-device addition | Only `GET /openapi/added_devices` is implemented |
-| Snapshot | `NEW` | V1.3 adds `GET /openapi/snapshot` with JPEG response | Not implemented; prior V1.0 limitation is superseded |
+| Module/capability discovery | `NEW` | V1.3 adds `GET /openapi/module_list` | Implemented as `CapabilityService.list_modules()`; unit/contract tested, real-NVR verification pending |
+| Channel management | `CHANGED` | V1.3 updates add, remove, scan, and adds snapshot; V1.4 adds RTSP-device addition | `GET /openapi/added_devices` and current snapshot are implemented; other channel APIs remain deferred |
+| Snapshot | `NEW` | V1.3 adds `GET /openapi/snapshot` with JPEG response | Implemented as in-memory `SnapshotImage.data`; unit/contract tested, real-NVR verification pending |
 | RTSP-device add flow | `NEW` | V1.4 adds `POST /openapi/add_device_rtsp` | Not implemented |
 | Recording search | `UNCHANGED` | V1.4 documents the same three read-only search endpoints and fields | Implemented and real-device verified for the repository's existing scope |
 | Recording control | `NEW` | V1.2 adds `POST /openapi/record_control` | Not implemented |
@@ -70,8 +70,8 @@ for the documented control calls, subject to real-device verification.
 | Key request fields | Digest `username`, `nonce`, `realm`, and `response`; refresh query fields `grant_type=refresh_token` and `refresh_token`. The PDF does not define an alternate token endpoint. |
 | Key response fields | `token_type` (`bearer`), `expires_in` seconds, `access_token`, and `refresh_token`. The PDF says percent-encoded token JSON values must be decoded before putting the access token in a header. |
 | Version evidence | V1.1 changes the response algorithm to SHA-256. The token path and token response are documented in the V1.4 revision. |
-| Current SDK support | `AuthService` implements the two-step NVR token flow, parses/de-encodes tokens, and stores Bearer state. `build_refresh_token_request()` currently builds the refresh query without a Bearer header. |
-| Likely SDK impact | Verify the exact V1.4 refresh-header requirement and SHA-256 behavior before changing the auth layer. Preserve token parsing, refresh state, and redaction regressions. |
+| Current SDK support | `AuthService` implements the two-step NVR token flow, parses/de-encodes tokens, stores the current access token, and sends the documented Bearer header for refresh when a token is supplied or retained. |
+| Likely SDK impact | The minimal refresh-header correction and SHA-256 compatibility coverage are implemented. Preserve token parsing, refresh state, and redaction regressions while awaiting real-NVR verification. |
 | State effect | Session-establishing/authentication operation; it does not change NVR configuration. |
 | Real-device verification | Required against a V1.4-capable NVR, including initial challenge, refresh with the documented header, percent-encoded tokens, expiry, and error behavior. |
 
@@ -95,12 +95,13 @@ device rather than treated as newly established by this PDF alone.
   plus numeric `error_code`. The example names channel management, video, time,
   audio, disk, PoE, event, recording, system, PTZ, alarm device, active
   defense, and alarm output.
-- Current SDK: not supported; static capability metadata is not device
-  discovery.
-- Impact: add a read-only discovery model and capability mapping without
-  treating an advertised module as proof that every method works.
+- Current SDK: `CapabilityService.list_modules()` is supported with typed
+  module/version entries; unknown module names are preserved as strings and
+  static capability metadata is not substituted for device discovery.
+- Impact: the read-only discovery model is implemented without treating an
+  advertised module as proof that every method works.
 - Verification: real NVR required to compare module names/versions and endpoint
-  reachability.
+  reachability; this remains pending.
 
 ### `CHANGED` - channel management (V1.3) and `NEW` RTSP addition (V1.4)
 
@@ -110,7 +111,7 @@ device rather than treated as newly established by this PDF alone.
 | `POST /openapi/add_device` | JSON: `username`, `password`, `connect_prot` (`TP-LINK` or `ONVIF`), `ip`, `port`; response `error_code`. | Not implemented. Add-device credentials and protocol selection require a mutating service boundary. | Mutating; real NVR plus camera fixture required. Version V1.3. |
 | `POST /openapi/remove_device` | JSON: `channel`; response `error_code`. | Not implemented. | Mutating; real-device verification required. Version V1.3. |
 | `GET /openapi/device_scan` | No parameters. Response `devices[]` fields: `ip`, `name`, `connect_prot` (`TP-LINK`, `ONVIF`, or `RTSP`), `port`, `mac`, `model`; top-level `error_code`. | Not implemented. | Read-only but network/environment dependent; real-device verification required. Version V1.3. |
-| `GET /openapi/snapshot` | Query `channel`; response is a JPEG file. No JSON field schema or content-type details beyond the JPEG response are established. | Not implemented. Replace the old "no documented snapshot" statement with "documented but not implemented"; do not invent a model or file API. | Read-only; real NVR/channel verification required. Version V1.3. |
+| `GET /openapi/snapshot` | Query `channel`; response is a JPEG file. No JSON field schema or content-type details beyond the JPEG response are established. | Implemented as `SnapshotService.get_snapshot(channel_id)` returning raw `SnapshotImage.data` bytes in memory. No file API or historical-frame model is added. | Read-only; unit/contract tested, but real NVR/channel verification remains required. Version V1.3. |
 | `POST /openapi/add_device_rtsp` | JSON: `username`, `password`, `rtsp_url_main`; response `error_code`. The PDF explains the URL contains IP, RTSP port, and resource path. | Not implemented. | Mutating and credential-bearing; real NVR plus RTSP-device verification required. Version V1.4. |
 
 ### `NEW` - `POST /openapi/record_control` (V1.2)
@@ -268,17 +269,22 @@ SDK and requires real-device and protocol-level verification.
 
 ## Next implementation boundary
 
-The next phase should be read-only and low risk:
+The first read-only implementation increment is complete at the unit/contract
+level:
 
-1. Verify V1.1+ authentication compatibility on a real NVR, especially the
-   SHA-256 Digest response and the V1.4 refresh example's Bearer header.
-2. Add module/capability discovery only from the documented module-list
-   contract, with unknown modules tolerated and no implied endpoint support.
-3. Add snapshot only after confirming the documented JPEG response on a real
-   NVR; keep the response in memory and do not invent file or image models.
+1. The auth layer now sends the documented refresh Bearer header and retains
+   the current access token; SHA-256 and refresh regressions are covered.
+2. Module/capability discovery is implemented only from the documented
+   module-list contract, with unknown modules tolerated and no implied endpoint
+   support.
+3. Snapshot is implemented only as an in-memory JPEG response; no file or
+   historical-image model is added.
 4. Preserve regression coverage for token acquisition, refresh, `added_devices`,
    recording search, replay URL construction, and existing RTSP/replay
    validation.
+
+Real-NVR verification of this increment remains the next boundary. Mutating,
+hardware-dependent, and broader V1.4 API families remain deferred.
 
 Later, separately gated work may cover recording control, add/remove devices,
 RTSP-device addition, PTZ movement/control, audio writes, alarm/output writes,

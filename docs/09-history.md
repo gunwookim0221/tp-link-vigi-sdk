@@ -16,6 +16,25 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-09-20: V1.4 Read-Only Compatibility Increment Implemented
+
+Status: Implementation and unit/contract tests completed; real-NVR verification pending
+
+Summary:
+
+- Corrected the documented refresh flow to send a Bearer header using the
+  supplied or retained access token and preserved SHA-256 authentication
+  coverage.
+- Added `CapabilityService.list_modules()` for documented module/version
+  discovery, preserving unknown module names.
+- Added `SnapshotService.get_snapshot(channel_id)` returning current JPEG bytes
+  in memory without file-saving or RTSP frame-capture behavior.
+- Preserved existing authentication, device, recording, replay, and public
+  import behavior; no mutating or hardware-control APIs were added.
+
+The increment is not a real-NVR verification result. See the [V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
+and [limitations](10-limitations.md).
+
 ### 2026-09-20: VIGI NVR OpenAPI V1.4 Baseline Registered
 
 Status: Documentation completed; runtime implementation unchanged

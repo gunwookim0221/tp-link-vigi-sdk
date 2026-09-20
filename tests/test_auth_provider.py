@@ -1,7 +1,10 @@
 import json
 
+import pytest
+
 from vigi import AuthConfig, AuthService, AuthMode, VigiClient
 from vigi.auth_provider import AuthenticationContext, AuthenticationResult, AuthProvider
+from vigi.exceptions import AuthenticationError
 from vigi.session import SessionInfo
 from vigi.transport import Request, Response, Transport, TransportConfig
 
@@ -87,3 +90,83 @@ def test_client_login_calls_auth_provider() -> None:
     assert len(provider.calls) == 1
     assert client.session.info.authenticated is True
     assert client.session.info.access_token == "token"
+
+
+def test_auth_service_refresh_uses_optional_bearer_header() -> None:
+    transport = FakeTransport(
+        [
+            Response(
+                status_code=200,
+                body=json.dumps(
+                    {
+                        "token_type": "bearer",
+                        "expires_in": 1800,
+                        "access_token": "new-access-token",
+                        "refresh_token": "new-refresh-token",
+                    }
+                ).encode("utf-8"),
+            )
+        ]
+    )
+    auth = AuthService(AuthConfig(host="nvr.local", username="admin", password="secret"))
+
+    result = auth.refresh(
+        "refresh-token",
+        transport=transport,
+        access_token="current-access-token",
+    )
+
+    assert result.session_info.access_token == "new-access-token"
+    assert transport.requests[0].headers == {"Authorization": "Bearer current-access-token"}
+    assert "current-access-token" not in repr(transport.requests[0])
+
+
+def test_auth_service_refresh_uses_retained_access_token() -> None:
+    transport = FakeTransport(
+        [
+            Response(
+                status_code=200,
+                headers={
+                    "WWW-Authenticate": (
+                        'Digest realm="TP-LINK NVR", nonce="abc123", algorithm="SHA-256"'
+                    )
+                },
+            ),
+            Response(
+                status_code=200,
+                body=json.dumps(
+                    {
+                        "token_type": "bearer",
+                        "expires_in": 1800,
+                        "access_token": "retained-access-token",
+                        "refresh_token": "refresh-token",
+                    }
+                ).encode("utf-8"),
+            ),
+            Response(
+                status_code=200,
+                body=json.dumps(
+                    {
+                        "token_type": "bearer",
+                        "expires_in": 1800,
+                        "access_token": "new-access-token",
+                        "refresh_token": "new-refresh-token",
+                    }
+                ).encode("utf-8"),
+            ),
+        ]
+    )
+    auth = AuthService(AuthConfig(host="nvr.local", username="admin", password="secret"))
+
+    auth.authenticate(transport=transport)
+    result = auth.refresh("refresh-token", transport=transport)
+
+    assert result.session_info.access_token == "new-access-token"
+    assert transport.requests[2].headers == {"Authorization": "Bearer retained-access-token"}
+
+
+def test_auth_service_refresh_requires_a_current_access_token() -> None:
+    auth = AuthService(AuthConfig(host="nvr.local", username="admin", password="secret"))
+
+    with pytest.raises(AuthenticationError, match="access token"):
+        auth.refresh("refresh-token", transport=FakeTransport([]))

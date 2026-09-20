@@ -14,7 +14,9 @@ class CapabilityName(str, Enum):
     """Known capability names used to gate future SDK behavior."""
 
     AUTH_TOKEN = "auth.token"
+    MODULE_DISCOVERY = "capability.module_discovery"
     DEVICE_ADDED_DEVICES = "device.added_devices"
+    SNAPSHOT = "snapshot.current"
     RECORDING_SEARCH = "recording.search"
     STREAM_LIVE_RTSP = "stream.live_rtsp"
     STREAM_REPLAY_RTSP = "stream.replay_rtsp"

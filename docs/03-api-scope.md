@@ -10,9 +10,10 @@
 ## Version Baseline And Support Labels
 
 The repository's implementation baseline is the V1.0-era subset already
-implemented and verified. The latest reviewed official contract is V1.4, but
-V1.4 documentation is not an implementation claim. See the [V1.4 reference](openapi/nvr-openapi-v1.4-reference.md)
-and [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md).
+implemented and verified, plus a narrow V1.4 read-only increment. The latest
+reviewed official contract is V1.4. See the [V1.4 reference](openapi/nvr-openapi-v1.4-reference.md)
+and [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md) for the
+separate implementation and real-device-verification statuses.
 
 | Label | Meaning in this project |
 | --- | --- |
@@ -26,8 +27,8 @@ and [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md).
 | Group | Official endpoints | MVP status |
 | --- | --- | --- |
 | Authentication | `GET /openapi/token` | Phase 4 NVR flow only |
-| Module discovery | `GET /openapi/module_list` | V1.4 documented; planned read-only compatibility work |
-| Channel Management | `GET /openapi/added_devices`, `POST /openapi/add_device`, `POST /openapi/remove_device`, `GET /openapi/device_scan`, `GET /openapi/snapshot`, `POST /openapi/add_device_rtsp` | Only `added_devices` implemented; remaining V1.3/V1.4 work is planned |
+| Module discovery | `GET /openapi/module_list` | Implemented and unit/contract tested; real-NVR verification pending |
+| Channel Management | `GET /openapi/added_devices`, `POST /openapi/add_device`, `POST /openapi/remove_device`, `GET /openapi/device_scan`, `GET /openapi/snapshot`, `POST /openapi/add_device_rtsp` | `added_devices` and current snapshot implemented; remaining V1.3/V1.4 work is planned; snapshot verification pending |
 | Video | `GET /openapi/resolution`, `GET /openapi/valid_resolutions`, `POST /openapi/resolution`, `GET /openapi/bitrate`, `GET /openapi/bitrate_capability`, `POST /openapi/bitrate` | Later SDK phase |
 | Time | `GET /openapi/timing_mode`, `PUT /openapi/timing_mode`, `GET /openapi/ntp`, `PUT /openapi/ntp` | Later SDK phase |
 | Audio | Existing input/output sound GET/POST plus V1.4 `GET /openapi/audio/channel_capability`, `GET /openapi/audio/capability` | V1.4 documented; no audio runtime support |
@@ -46,7 +47,9 @@ The MVP should support:
 
 - `GET /openapi/token`
 - `GET /openapi/token?grant_type=refresh_token&refresh_token=...`
+- `GET /openapi/module_list`
 - `GET /openapi/added_devices`
+- `GET /openapi/snapshot?channel=<channel>` (current JPEG bytes in memory)
 - Capability discovery from static project metadata and optional device probes.
 
 The MVP authentication endpoints above are NVR OpenAPI endpoints. They must not be applied to standalone IPC cameras unless an official IPC document explicitly documents the same endpoint for IPC control authentication.
@@ -175,18 +178,38 @@ Phase 8:
 
 ## Phase 9 Snapshot Scope Decision
 
-Snapshot is documented by V1.4 but remains unimplemented:
+The historical scope decision remains valid for the pre-V1.4 baseline, while
+the V1.4 read-only increment now implements the documented NVR endpoint:
 
 - V1.4 documents `GET /openapi/snapshot?channel=<channel>` with a JPEG response.
 - The historical NVR OpenAPI V1.0 baseline did not document a snapshot endpoint.
 - IPC OpenAPI V1.1 does not document a snapshot or capture method.
 - The NVR event-push multipart format is not a snapshot response.
-- The SDK does not add `SnapshotImage`, `client.snapshots`, or a snapshot capability yet; the response type and content metadata need a real-device check.
+- The SDK adds `SnapshotImage` and `client.snapshots.get_snapshot(channel_id)`;
+  the response is retained as raw JPEG bytes in memory and remains
+  real-device unverified.
 - RTSP frame capture is not a documented snapshot API and remains out of scope.
 - ffmpeg, image processing, file saving, web UI reverse engineering, and private or undocumented URL usage remain out of scope.
 
-The next read-only phase may implement the documented NVR snapshot only after
-real-device verification of the JPEG response and authentication behavior.
+Historical snapshot review did not authorize IPC or RTSP frame capture. The
+current NVR implementation is intentionally limited to the documented current
+JPEG response and does not save files or expose historical-frame semantics.
+
+## Phase 13 V1.4 Read-Only Implementation Status
+
+The first V1.4 compatibility increment is complete at the implementation and
+unit/contract-test level:
+
+- Auth refresh sends the documented Bearer header when an access token is
+  supplied or retained, and SHA-256 challenge compatibility is covered.
+- `client.capabilities.list_modules()` implements `GET /openapi/module_list`
+  and preserves unknown module names and versions.
+- `client.snapshots.get_snapshot(channel_id)` implements the documented
+  current JPEG response as in-memory bytes.
+
+No V1.4 endpoint in this increment is claimed as real-NVR verified. Mutating,
+hardware-dependent, historical-snapshot, file-saving, and RTSP-capture APIs
+remain outside this increment.
 
 ## Excluded From MVP
 

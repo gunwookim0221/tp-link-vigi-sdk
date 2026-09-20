@@ -5,10 +5,12 @@ from typing import cast
 
 from vigi.auth_provider import AuthProvider
 from vigi.auth import AuthConfig, AuthService
+from vigi.capabilities import CapabilityService
 from vigi.devices import DeviceService
 from vigi.http_transport import HttpTransport
 from vigi.records import RecordService
 from vigi.session import Session, SessionInfo
+from vigi.snapshots import SnapshotService
 from vigi.stream import StreamService
 from vigi.transport import Transport, TransportConfig
 from vigi.types import CapabilityName
@@ -23,8 +25,10 @@ class VigiClient:
     auth_provider: AuthProvider | None = None
     auth: AuthService = field(init=False)
     session: Session = field(init=False)
+    capabilities: CapabilityService = field(init=False)
     devices: DeviceService = field(init=False)
     records: RecordService = field(init=False)
+    snapshots: SnapshotService = field(init=False)
     stream: StreamService = field(init=False)
 
     def __post_init__(self) -> None:
@@ -39,8 +43,10 @@ class VigiClient:
         if self.auth_provider is None:
             self.auth_provider = self.auth
         self.session = Session(transport=self.transport, info=SessionInfo())
+        self.capabilities = CapabilityService(self.session)
         self.devices = DeviceService(self.session)
         self.records = RecordService(self.session)
+        self.snapshots = SnapshotService(self.session)
         self.stream = StreamService(
             {
                 CapabilityName.STREAM_LIVE_RTSP,

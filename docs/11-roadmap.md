@@ -15,13 +15,15 @@ Completed:
 - Phase 7 NVR Recording Search.
 - Phase 8 RTSP Replay URL Helper.
 - Phase 9 Snapshot Support Review.
+- Phase 13 V1.4 read-only compatibility implementation and contract tests for
+  auth refresh, module discovery, and current snapshots. Real-NVR verification
+  remains pending.
 - Phase 10B SDK Usability, Examples, and Developer Experience.
 
 Next:
 
-- Phase 13 V1.4 read-only compatibility baseline: authentication verification,
-  module discovery, snapshot review/implementation boundary, and regression
-  preservation.
+- Real-NVR verification of the Phase 13 read-only increment, recorded with
+  model, hardware, firmware, date, endpoint, and result.
 - Phase 10 CLI, after a separate dependency and license review.
 - IPC auth/transport architecture work according to [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md), if standalone IPC SDK support is planned.
 
@@ -141,12 +143,15 @@ Scope:
 - Capability-gated RTSP replay URL helper.
 - Explicit UTC replay-time strings; the current helper uses stream `1`, while V1.4 documents stream `1` and `2`.
 - No RTSP connection, Digest handshake, export/download, or video extraction.
-- Snapshot support review based only on official documentation; V1.4 now documents a snapshot endpoint, but SDK implementation and device verification remain pending.
+- Snapshot support review based only on official documentation; the later V1.4
+  increment implements the documented current JPEG response, while device
+  verification remains pending.
 
 Exit criteria:
 
 - RTSP replay URL helper tests pass.
-- Snapshot is documented by NVR V1.4 but remains unimplemented; IPC V1.1 still has no documented snapshot method.
+- Snapshot is implemented for the documented NVR current-JPEG contract but is
+  not real-device verified; IPC V1.1 still has no documented snapshot method.
 
 ## Phase 13: V1.4 Read-Only Compatibility Baseline
 
@@ -155,16 +160,16 @@ Goal:
 - Verify and incrementally implement low-risk V1.4 NVR compatibility without
   overstating current SDK support.
 
-First boundary:
+Implementation boundary (complete):
 
 - Verify V1.1+ Digest authentication, especially SHA-256 semantics, token
   refresh headers, percent-encoded token handling, expiry, and redaction.
 - Add documented `GET /openapi/module_list` discovery with tolerant handling of
   unknown module names and no assumption that module presence proves endpoint
-  support.
-- Verify and, if the JPEG contract is stable on the target NVR, implement
-  `GET /openapi/snapshot` as a read-only in-memory response. Do not add file
-  saving or undocumented image behavior.
+  support. Implemented and contract-tested; real-NVR verification is pending.
+- Implement `GET /openapi/snapshot` as a read-only in-memory response. Do not
+  add file saving or undocumented image behavior. Implemented and
+  contract-tested; real-NVR verification is pending.
 - Preserve regression coverage for token acquisition, refresh,
   `added_devices`, recording search, replay URL construction, and existing
   RTSP/replay validation.
@@ -178,8 +183,9 @@ Later boundary:
 
 Exit criteria:
 
-- The V1.4 read-only verification record names the NVR model, hardware,
-  firmware, test date, endpoint, and result.
+- The V1.4 read-only implementation and contract-test record is complete;
+  real-device verification still requires a record naming the NVR model,
+  hardware, firmware, test date, endpoint, and result.
 - Current SDK support claims distinguish implemented behavior from documented,
   planned, and device-unverified behavior.
 - Existing token, inventory, recording-search, and replay regressions remain
@@ -237,7 +243,8 @@ This phase is not part of the current MVP and does not imply current standalone 
 7. Phase 10: CLI.
 8. Phase 11: Integration Test Harness Hardening. Status: CI quality gates completed; real-device harness work remains.
 9. Phase 12: Release.
-10. Phase 13: V1.4 Read-Only Compatibility Baseline.
+10. Phase 13: V1.4 Read-Only Compatibility Baseline. Status: implementation and
+    contract tests complete; real-NVR verification pending.
 
 ## Long-Term Plan
 

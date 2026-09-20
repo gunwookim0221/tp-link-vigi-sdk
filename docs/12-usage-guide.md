@@ -3,8 +3,9 @@
 ## Scope
 
 This guide covers the current documented, read-only NVR SDK workflow:
-authentication, device inventory, recording searches, and RTSP live and replay
-URL generation. It does not describe undocumented device behavior.
+authentication, module discovery, device inventory, current snapshots,
+recording searches, and RTSP live/replay URL generation. It does not describe
+undocumented device behavior.
 
 ## Installation
 
@@ -62,6 +63,20 @@ client.login()
 Client construction is local. `client.login()` is the first operation above
 that contacts the NVR.
 
+## Discover NVR modules
+
+The V1.3+ module-list endpoint reports module names and numeric versions:
+
+```python
+modules = client.capabilities.list_modules()
+for module in modules.modules:
+    print(module.name, module.version)
+```
+
+Unknown module names are preserved as returned by the NVR. Module presence is
+discovery metadata, not proof that every endpoint in that module is available.
+This service is unit/contract tested but not yet real-NVR verified.
+
 ## List NVR-managed devices and choose a channel
 
 ```python
@@ -75,6 +90,20 @@ else:
 
 Use a returned `channel_id` as the `channel_id` argument for recording calls.
 An empty device list is a valid response and is not an error by itself.
+
+## Get a current snapshot
+
+The documented NVR snapshot endpoint returns the current JPEG image for a
+channel:
+
+```python
+snapshot = client.snapshots.get_snapshot(channel_id)
+print(f"received {len(snapshot.data)} JPEG bytes")
+```
+
+The SDK keeps the bytes in memory. It does not save files, extract frames from
+RTSP, or provide historical-snapshot semantics. The endpoint is unit/contract
+tested but not yet verified against a real NVR.
 
 ## Search recording metadata
 
@@ -213,8 +242,8 @@ python -m pytest
 
 ## Unsupported features
 
-NVR OpenAPI V1.4 documents `GET /openapi/snapshot`, but the SDK does not yet
-implement or verify it against a real NVR. IPC OpenAPI V1.1 still does not
-document a snapshot method.
+The NVR current snapshot and module-discovery APIs are implemented and tested
+against their documented contracts, but are not yet verified against a real
+NVR. IPC OpenAPI V1.1 still does not document a snapshot method.
 Export/download, RTSP open and playback, video saving, ffmpeg, image
 processing, and CLI support are also outside the current SDK scope.
