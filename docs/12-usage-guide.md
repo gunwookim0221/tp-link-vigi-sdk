@@ -136,6 +136,43 @@ management calls do not automatically retry, select scanned devices, or
 update inferred local device state. Keep credentials out of logs and source
 files. These endpoints remain real-NVR unverified.
 
+## Phase 3B hardware-control and capability APIs
+
+The SDK exposes the documented PTZ, audio, and alarm-output groups through
+explicit services. These methods require a Bearer-authenticated session and
+are contract-tested with fake transports only. Do not run them against a real
+NVR without a deliberate, hardware-safe plan.
+
+```python
+from vigi import (
+    AlarmAction,
+    AlarmDelayTime,
+    AlarmEnabled,
+    AlarmType,
+    AudioToggle,
+    PtzParkActionMode,
+    PtzTargetTrackMode,
+)
+
+ptz_capability = client.ptz.get_capability(channel_id=1)
+batch_capability = client.ptz.get_batch_capability()
+presets = client.ptz.list_presets(channel_id=1)
+tours = client.ptz.list_tours(channel_id=1)
+tracking = client.ptz.get_target_tracking(channel_id=1)
+
+audio_capability = client.audio.get_channel_capability(channel_id=1)
+output_sound = client.audio.get_output_sound(channel_id=1)
+
+alarm_capability = client.alarm_outputs.get_batch_ipc_alarm()
+```
+
+Explicit state-changing calls include `client.ptz.move(...)`, PTZ park and
+target-tracking setters, audio input/output setters, and alarm-output setting
+or manual start/stop methods. They do not retry automatically or infer device
+support. The official document does not define numeric PTZ direction meanings
+or preset/tour mutation endpoints, so the SDK does not add either behavior.
+All Phase 3B behavior remains real-NVR and device unverified.
+
 ## Search recording metadata
 
 Set the month range and, if necessary, a specific day:

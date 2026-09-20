@@ -38,8 +38,8 @@ repository predates this V1.4 review unless explicitly stated otherwise.
 | Recording search | `UNCHANGED` | V1.4 documents the same three read-only search endpoints and fields | Implemented and real-device verified for the repository's existing scope |
 | Recording control | `NEW` | V1.2 adds `POST /openapi/record_control` | Implemented as `RecordService.set_record_control()`; unit/contract tested, real-NVR verification pending |
 | Video | `UNCHANGED` | No video change is listed in the V1.4 update history | Not implemented |
-| Audio sound controls | `UNCHANGED` | Existing input/output sound GET and POST interfaces remain documented | Not implemented |
-| Audio capability discovery | `NEW` | V1.4 adds channel and NVR audio capability GET interfaces | Not implemented |
+| Audio sound controls | `UNCHANGED` | Existing input/output sound GET and POST interfaces remain documented | Implemented as `AudioService` capability/read/write methods; unit/contract tested, real-NVR verification pending |
+| Audio capability discovery | `NEW` | V1.4 adds channel and NVR audio capability GET interfaces | Implemented as typed channel/NVR capability methods; unit/contract tested, real-NVR verification pending |
 | Disk | `UNCHANGED` | No disk change is listed in the V1.4 update history | Not implemented |
 | PoE | `UNCHANGED` | No PoE change is listed in the V1.4 update history | Not implemented |
 | Event server settings | `UNCHANGED` | GET/POST/delete server interfaces remain documented; the PDF has an example-path inconsistency | Not implemented |
@@ -47,10 +47,10 @@ repository predates this V1.4 review unless explicitly stated otherwise.
 | Live RTSP | `UNCHANGED` | V1.4 retains the RTSP live URL and Digest-authenticated stream interface | Live URL helper exists for streams `1` and `2`; no RTSP client implementation |
 | Replay RTSP | `CHANGED` | V1.4 documents stream `1` or `2`; the repository helper enforces stream `1` | Replay URL helper exists for stream `1` only |
 | Replay time semantics | `UNCHANGED` | V1.4 retains UTC `YYYYMMDDtHHMMSSz` query values | Explicit UTC strings are validated; record timestamps are not converted |
-| PTZ | `NEW` | V1.3 adds the PTZ interface family | Not implemented |
-| PTZ capability surface | `CHANGED` | V1.4 updates per-channel capability and adds the batch capability interface | Not implemented |
+| PTZ | `NEW` | V1.3 adds the PTZ interface family | Capability, movement/park, preset/tour reads, and target tracking implemented; unit/contract tested, real-NVR verification pending |
+| PTZ capability surface | `CHANGED` | V1.4 updates per-channel capability and adds the batch capability interface | Implemented with channel-preserving typed responses; unit/contract tested, real-NVR verification pending |
 | Disarming and active defense | `UNKNOWN / NOT ENOUGH EVIDENCE` | V1.4 contains sections `4.12` and `4.13`, but its update history does not establish when they were introduced | Not implemented |
-| Alarm output | `NEW` | V1.4 update history says to add the alarm-output interface and update alarm fields; section numbering is inconsistent | Not implemented |
+| Alarm output | `NEW` | V1.4 update history says to add the alarm-output interface and update alarm fields; section numbering is inconsistent | NVR/IPC settings, batch IPC capability, and manual controls implemented; unit/contract tested, real-NVR verification pending |
 | System control | `UNCHANGED` | `POST /openapi/systemctl` remains documented | Intentionally excluded from current SDK write scope |
 | Removed APIs | `UNKNOWN / NOT ENOUGH EVIDENCE` | The V1.4 PDF does not provide a removal list | No removal claim is made |
 
@@ -131,12 +131,14 @@ device rather than treated as newly established by this PDF alone.
 
 | Interface | Contract | Current SDK / state |
 | --- | --- | --- |
-| `GET /openapi/audio/channel_capability` | Query `channel`; response `speaker_enable`, `microphone_enable` numeric `0` or `1`, plus `error_code`. | Not implemented. Read-only capability model; real camera/channel verification required. |
-| `GET /openapi/audio/capability` | No parameters; response NVR-level `speaker_enable`, `microphone_enable` numeric `0` or `1`, plus `error_code`. | Not implemented. Read-only capability model; real NVR verification required. |
+| `GET /openapi/audio/channel_capability` | Query `channel`; response `speaker_enable`, `microphone_enable` numeric `0` or `1`, plus `error_code`. | Implemented as channel-preserving typed capability; unit/contract tested, real device verification pending. |
+| `GET /openapi/audio/capability` | No parameters; response NVR-level `speaker_enable`, `microphone_enable` numeric `0` or `1`, plus `error_code`. | Implemented as typed NVR capability; unit/contract tested, real-NVR verification pending. |
 
 The existing audio input/output sound GET and POST interfaces remain documented
-without a V1.4 update-history change. The GETs are read-only; the POSTs are
-mutating. None are implemented by the current SDK.
+without a V1.4 update-history change. `AudioService` implements the GET and
+POST contracts with explicit channel, mute, volume, system-volume, and noise-
+cancelling fields. The POST methods are mutating and have no automatic retry;
+real-NVR verification remains pending.
 
 ### `CHANGED` - event protocol subtype catalog (V1.1 and V1.3)
 
@@ -166,18 +168,19 @@ V1.4 document says `Version 1` for these interfaces.
 
 | Interface | Key request fields | Key response fields | SDK status and operation |
 | --- | --- | --- | --- |
-| `GET /openapi/ptz/capability` | Query `channel`. | Per-channel `pan_tilt_supported`, `zoom_supported`, `preset_supported`, `preset_number_max`, `tour_number_max`, `pattern_number_max`, `aperture_supported`, `focus_supported`, `calibrate_supported`, `diagonal_motion_supported`; V1.4 example also includes tour/pattern flags and x/y/z/move/tour-stay ranges; `error_code`. | Not implemented. Read-only capability. V1.3 PTZ interface, changed in V1.4 with pan/tilt capability. |
-| `POST /openapi/ptz/move` | JSON `channel`, numeric `direction`, string `speed`. | `error_code`. | Not implemented. Mutating movement; V1.3; real device required. |
-| `GET /openapi/ptz/park` | Query `channel`. | `action_mode`, `park_time`, `action_id`, `enabled`, `error_code`. | Not implemented. Read-only; V1.3; real device required. |
-| `POST /openapi/ptz/park` | JSON `channel`, `action_mode` (`preset` or `tour`), `park_time`, `action_id`, `enabled` (`0` or `1`). | `error_code`. | Not implemented. Mutating; V1.3; real device required. |
-| `GET /openapi/ptz/preset` | Query `channel`. | `preset[]` with `preset_id`, `read_only`, `name`; `error_code`. | Not implemented. Read-only; V1.3; real device required. |
-| `GET /openapi/ptz/tour` | Query `channel`. | `tour[]` with `tour_id`, `preset_count`, `name`, `preset_id[]`, `time[]`, `speed[]`; `error_code`. | Not implemented. Read-only; V1.3; real device required. |
-| `GET /openapi/ptz/target_track` | Query `channel`. | `enabled`, `people_enabled` (`on` or `off`), `error_code`. | Not implemented. Read-only; V1.3; real device required. |
-| `POST /openapi/ptz/target_track` | JSON `channel`, `enabled`, `people_enabled` (`on` or `off`). | `error_code`. | Not implemented. Mutating; V1.3; real device required. |
-| `GET /openapi/ptz/batch_capability` | No parameters. | `capability[]` keyed by `id`; fields include pan/tilt, zoom, preset, tour, pattern, aperture, focus, calibration, diagonal-motion flags, numeric maxima/ranges, and tour-stay limits; `error_code`. | Not implemented. Read-only capability; V1.4; real NVR verification required. |
+| `GET /openapi/ptz/capability` | Query `channel`. | Per-channel `pan_tilt_supported`, `zoom_supported`, `preset_supported`, `preset_number_max`, `tour_number_max`, `pattern_number_max`, `aperture_supported`, `focus_supported`, `calibrate_supported`, `diagonal_motion_supported`; V1.4 example also includes tour/pattern flags and x/y/z/move/tour-stay ranges; `error_code`. | Implemented as channel-preserving typed capability response; unit/contract tested, real-NVR verification pending. |
+| `POST /openapi/ptz/move` | JSON `channel`, numeric `direction`, string `speed`. | `error_code`. | Implemented as an explicit no-retry mutation; direction is passed as an opaque integer because the PDF gives no numeric mapping. |
+| `GET /openapi/ptz/park` | Query `channel`. | `action_mode`, `park_time`, `action_id`, `enabled`, `error_code`. | Implemented and unit/contract tested; real-NVR verification pending. |
+| `POST /openapi/ptz/park` | JSON `channel`, `action_mode` (`preset` or `tour`), `park_time`, `action_id`, `enabled` (`0` or `1`). | `error_code`. | Implemented as an explicit no-retry mutation; real-NVR verification pending. |
+| `GET /openapi/ptz/preset` | Query `channel`. | `preset[]` with `preset_id`, `read_only`, `name`; `error_code`. | Implemented as `PtzService.list_presets()`; no undocumented preset mutation endpoints are exposed. |
+| `GET /openapi/ptz/tour` | Query `channel`. | `tour[]` with `tour_id`, `preset_count`, `name`, `preset_id[]`, `time[]`, `speed[]`; `error_code`. | Implemented as `PtzService.list_tours()`; omitted fields for empty tours are preserved. |
+| `GET /openapi/ptz/target_track` | Query `channel`. | `enabled`, `people_enabled` (`on` or `off`), `error_code`. | Implemented and unit/contract tested; real-NVR verification pending. |
+| `POST /openapi/ptz/target_track` | JSON `channel`, `enabled`, `people_enabled` (`on` or `off`). | `error_code`. | Implemented as an explicit no-retry mutation; real-NVR verification pending. |
+| `GET /openapi/ptz/batch_capability` | No parameters. | `capability[]` keyed by `id`; fields include pan/tilt, zoom, preset, tour, pattern, aperture, focus, calibration, diagonal-motion flags, numeric maxima/ranges, and tour-stay limits; `error_code`. | Implemented with channel-specific typed entries; unit/contract tested, real-NVR verification pending. |
 
 The PDF does not establish a safe generic PTZ direction enum beyond the numeric
-`direction` field, so an implementation must not invent one.
+`direction` field. The SDK therefore accepts and sends an explicit integer but
+does not claim any direction mapping or add choreography behavior.
 
 ### `NEW` with ambiguity - alarm output (V1.4)
 
@@ -188,13 +191,13 @@ The following is therefore mapped to V1.4 with the numbering ambiguity retained.
 
 | Interface | Key request/response fields | Current SDK / operation |
 | --- | --- | --- |
-| `GET /openapi/alarm_output/nvr_alarm` | No request fields. Response `alarm_output_info[]` with `device_id`, `delay_time` (`5`, `10`, `30`, `60`, `120`, `300`, `600` seconds), `enabled` (`on`/`off`), `alarm_name`, and V1.4 `alarm_type` (`NO`/`NC`); `error_code`. | Not implemented. Read-only; real NVR verification required. |
-| `POST /openapi/alarm_output/nvr_alarm` | JSON `device_id`, `alarm_name`, `delay_time`, `enabled`, `alarm_type`; response `error_code`. | Not implemented. Mutating output configuration; real NVR required. |
-| `GET /openapi/alarm_output/ipc_alarm` | Query `channel`; response `alarm_name`, `delay_time`, `enabled`, `error_code`. | Not implemented. Read-only; real channel required. |
-| `POST /openapi/alarm_output/ipc_alarm` | JSON `channel`, `alarm_name`, `delay_time`, `enabled`; response `error_code`. | Not implemented. Mutating; real device required. |
-| `POST /openapi/alarm_output/nvr_manual_alarm` | JSON `device_id`, `action` (`start` or `stop`); response `timer`, `error_code`. | Not implemented. Mutating/physical output; real NVR required. |
-| `POST /openapi/alarm_output/ipc_manual_alarm` | JSON `channel`, `action` (`start` or `stop`); response `timer`, `error_code`. | Not implemented. Mutating/physical output; real device required. |
-| `GET /openapi/alarm_output/batch_get_ipc_alarm` | No request fields. Response `alarm_output[]` with `channel`, `alarm_name`, `delay_time`, `enabled`, `manual_alarm_out_supported`; `error_code`. | Not implemented. Read-only capability/configuration; real NVR required. |
+| `GET /openapi/alarm_output/nvr_alarm` | No request fields. Response `alarm_output_info[]` with `device_id`, `delay_time` (`5`, `10`, `30`, `60`, `120`, `300`, `600` seconds), `enabled` (`on`/`off`), `alarm_name`, and V1.4 `alarm_type` (`NO`/`NC`); `error_code`. | Implemented as typed NVR output settings; unit/contract tested, real-NVR verification pending. |
+| `POST /openapi/alarm_output/nvr_alarm` | JSON `device_id`, `alarm_name`, `delay_time`, `enabled`, `alarm_type`; response `error_code`. | Implemented as an explicit no-retry mutation; real-NVR verification pending. |
+| `GET /openapi/alarm_output/ipc_alarm` | Query `channel`; response `alarm_name`, `delay_time`, `enabled`, `error_code`. | Implemented as typed channel settings; real-device verification pending. |
+| `POST /openapi/alarm_output/ipc_alarm` | JSON `channel`, `alarm_name`, `delay_time`, `enabled`; response `error_code`. | Implemented as an explicit no-retry mutation; real-device verification pending. |
+| `POST /openapi/alarm_output/nvr_manual_alarm` | JSON `device_id`, `action` (`start` or `stop`); response `timer`, `error_code`. | Implemented as an explicit no-retry physical-output mutation; real-NVR verification pending. |
+| `POST /openapi/alarm_output/ipc_manual_alarm` | JSON `channel`, `action` (`start` or `stop`); response `timer`, `error_code`. | Implemented as an explicit no-retry physical-output mutation; real-device verification pending. |
+| `GET /openapi/alarm_output/batch_get_ipc_alarm` | No request fields. Response `alarm_output[]` with `channel`, `alarm_name`, `delay_time`, `enabled`, `manual_alarm_out_supported`; `error_code`. | Implemented as typed channel capability/configuration; unit/contract tested, real-NVR verification pending. |
 
 ### `UNKNOWN / NOT ENOUGH EVIDENCE` - disarming and active defense
 
@@ -221,7 +224,9 @@ They remain documented contracts, not SDK support claims:
   `/openapi/bitrate_capability`. GETs are read-only; POSTs mutate channel
   settings. The SDK implements none of them.
 - **Audio sound (`UNCHANGED`)**: GET/POST input and output sound interfaces.
-  GETs are read-only; POSTs mutate audio settings. The SDK implements none.
+  GETs are read-only; POSTs mutate audio settings. `AudioService` implements
+  the documented fields, on/off values, and `0`-to-`100` volume range; real-NVR
+  verification remains pending.
 - **Disk (`UNCHANGED`)**: GET `/openapi/disks`, GET
   `/openapi/esata_disks`, POST/GET SMART-process interfaces. Disk reads are
   read-only; SMART process start/stop and SMART tests are mutating or
@@ -289,10 +294,10 @@ management increment are complete at the unit/contract level:
    addition. They use explicit methods, no automatic retries, and no inferred
    local state mutation.
 
-Real-NVR verification of both increments remains the next boundary. PTZ,
-audio, alarm, system, video-setting, disk, PoE, and other broader V1.4 API
-families remain deferred.
+Real-NVR verification of the read-only, Phase 3A, and Phase 3B increments
+remains the next boundary. System, video-setting, disk, PoE, disarming, active
+defense, and other broader V1.4 API families remain deferred.
 
-Later, separately gated work may cover PTZ movement/control, audio writes,
-alarm/output writes, system control, and other state-changing or
-hardware-dependent APIs. No Phase 3B API is implemented by this task.
+The PDF does not document preset/tour mutation endpoints or numeric PTZ
+direction meanings. The SDK intentionally does not add those speculative
+operations or semantics.

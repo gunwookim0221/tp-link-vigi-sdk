@@ -16,6 +16,25 @@ Important design decisions are managed as ADRs under [docs/adr/](adr/). Do not u
 
 ## Entries
 
+### 2026-09-20: Phase 3B V1.4 Hardware Controls Implemented
+
+Status: Implementation and unit/contract tests completed; real-NVR and device verification pending
+
+Summary:
+
+- Added documented PTZ capability, movement, park, preset/tour listing, and
+  target-tracking APIs through `PtzService`.
+- Added documented NVR/channel audio capability and input/output sound APIs
+  through `AudioService`.
+- Added documented NVR/IPC alarm-output settings, batch IPC capability, and
+  manual start/stop APIs through `AlarmOutputService`.
+- Preserved Bearer authentication, exact request/response fields, explicit
+  state-changing calls, no automatic retries, and fake-transport coverage.
+- Did not invent numeric PTZ direction meanings or preset/tour mutation
+  endpoints absent from the official PDF.
+
+No Phase 3B endpoint was invoked against a real NVR or camera.
+
 ### 2026-09-20: Phase 3A V1.4 Management APIs Implemented
 
 Status: Implementation and unit/contract tests completed; real-NVR verification pending

@@ -328,9 +328,8 @@ changing mutating or hardware-dependent API scope in the baseline phase.
   memory only; real-NVR verification remains pending.
 - [ ] Record model, hardware version, firmware version, date, endpoint, and
   result for each real-device check.
-- [x] Keep recording control, device add/remove, RTSP-device addition, PTZ
-  movement, audio writes, alarm/output writes, and other state-changing APIs
-  deferred.
+- [x] Keep PTZ, audio, alarm, system, video-setting, disk, PoE, and other
+  Phase 3B APIs deferred from the read-only baseline.
 
 ### Exit Criteria
 
@@ -361,14 +360,54 @@ without adding Phase 3B hardware-control behavior.
 - [ ] Verify the endpoints against a real NVR using a safe, explicit test plan
   and record model, hardware, firmware, date, endpoint, and result.
 - [x] Keep PTZ, audio, alarm, system, video-setting, disk, PoE, and other
-  Phase 3B APIs deferred.
+  Phase 3B APIs out of the Phase 3A commit.
 
 ### Exit Criteria
 
 - Phase 3A implementation and fake-transport contract tests pass.
 - State-changing methods are explicit and do not mutate inferred local state
   or retry automatically.
-- Real-NVR verification remains pending; no Phase 3B API is implemented.
+- Real-NVR verification remains pending; Phase 3B was not part of this Phase
+  3A increment.
+
+## Phase 3B: V1.4 Hardware-Dependent Controls
+
+### Goal
+
+Implement only the documented PTZ, audio, and alarm-output capability/control
+contracts, without speculative device automation or real hardware mutations.
+
+### Tasks
+
+- [x] Implement per-channel and batch PTZ capability discovery.
+- [x] Implement PTZ movement and park read/write contracts without retries.
+- [x] Implement documented preset/tour listing and preserve omitted empty-tour
+  fields; do not invent preset/tour mutation endpoints.
+- [x] Implement target-tracking read/write with documented `on`/`off` values.
+- [x] Implement NVR/channel audio capability and input/output sound read/write.
+- [x] Implement NVR/IPC alarm-output settings, batch IPC capability, and manual
+  start/stop controls.
+- [x] Add exact request/response tests, range validation, auth guards,
+  error-code handling, no-retry coverage, and redaction checks.
+- [ ] Verify hardware behavior against a real NVR/device with a safe opt-in
+  plan and complete model, hardware, firmware, date, endpoint, and result
+  records.
+- [x] Keep system, disk, PoE, video, time, event, disarming, active defense,
+  standalone IPC, and other unrelated V1.4 groups deferred.
+
+### Contract boundaries
+
+- The official PDF does not define numeric PTZ direction meanings; the SDK
+  accepts an explicit integer and does not add a direction enum.
+- The official PDF documents only preset/tour listing endpoints; no mutation
+  methods are exposed.
+
+### Exit Criteria
+
+- Phase 3B implementation and fake-transport contract tests pass.
+- Hardware mutations are explicit, do not retry automatically, and are never
+  invoked by the default test suite.
+- Real-NVR and device verification remain pending and unclaimed.
 
 ## Phase 10: CLI
 

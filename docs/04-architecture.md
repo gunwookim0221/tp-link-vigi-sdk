@@ -29,6 +29,9 @@ src/vigi/
   capabilities.py
   exceptions.py
   models.py
+  ptz.py
+  audio.py
+  alarm.py
   devices.py
   records.py
   snapshots.py
@@ -85,6 +88,10 @@ Example capability names:
 - Phase 3A management operations are explicit service methods rather than
   static model-name gates; the module-list contract does not establish that
   every endpoint is available, so endpoint errors remain observable.
+- Phase 3B capability and hardware-control operations follow the same explicit
+  service pattern through `PtzService`, `AudioService`, and
+  `AlarmOutputService`. PTZ capability responses retain channel identity, and
+  no model-name support is inferred.
 - `stream.live_rtsp`
 - `stream.replay_rtsp`
 

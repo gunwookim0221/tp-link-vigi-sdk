@@ -57,6 +57,22 @@ Phase 3A management mock and unit tests should cover:
 Phase 3A tests use fake transports only. No state-changing endpoint is run
 against a real NVR by the default or contract-test suite.
 
+Phase 3B hardware-control and capability tests should cover:
+
+- PTZ per-channel and batch capability fields, movement/park request schemas,
+  documented preset/tour list schemas, target-tracking state, and numeric
+  direction pass-through without inventing a direction enum.
+- Audio NVR/channel capabilities, input/output sound reads and writes, exact
+  `0`-to-`100` volume validation, and documented on/off values.
+- NVR/IPC alarm-output settings, batch IPC capability fields, and manual
+  alarm start/stop response timers.
+- HTTP and `error_code` failures, authentication guards, exact payloads,
+  no-retry behavior for all mutations, and no real hardware side effects.
+
+Phase 3B tests use fake transports only. No PTZ movement, preset/tour change,
+tracking change, audio write, or alarm-output control is run against a real
+NVR by the default or contract-test suite.
+
 Recording search mock and unit tests should cover:
 
 - Bearer-authenticated `GET /openapi/record/days` request construction with `channel`, `start`, and `end` query parameters.

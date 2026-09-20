@@ -7,6 +7,8 @@ def test_public_modules_import() -> None:
         "vigi.client",
         "vigi.auth",
         "vigi.auth_provider",
+        "vigi.alarm",
+        "vigi.audio",
         "vigi.capabilities",
         "vigi.crypto",
         "vigi.devices",
@@ -16,6 +18,7 @@ def test_public_modules_import() -> None:
         "vigi.stream",
         "vigi.exceptions",
         "vigi.models",
+        "vigi.ptz",
         "vigi.transport",
         "vigi.types",
     ]

@@ -19,11 +19,24 @@ This matrix tracks project verification status. Official TP-Link support status 
 The existing NVR observations verify the repository's earlier read-only subset:
 token authentication, `GET /openapi/added_devices`, and recording search. The
 new module-discovery, refresh-header, and snapshot behaviors have unit/contract
-coverage but are not yet verified on a real NVR. RTSP-device addition, audio
-capabilities, PTZ, alarm output, stream `2`, and all Phase 3A mutating
-endpoints also remain unverified or unsupported. Device scan has unit/contract
-coverage but is network/environment dependent. The [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
+coverage but are not yet verified on a real NVR. RTSP-device addition, Phase
+3B audio capabilities/controls, PTZ, alarm output, stream `2`, and all Phase
+3A mutating endpoints also remain unverified or unsupported. Device scan has
+unit/contract coverage but is network/environment dependent. The [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
 is the authoritative list of pending checks.
+
+## Phase 3B Verification Status
+
+| Feature | Official V1.4 support | SDK status | Contract-test status | NVR/device status |
+| --- | --- | --- | --- | --- |
+| PTZ capability, movement, park, target tracking | Documented in section 4.11 | Implemented through `PtzService` | Fake-transport tests pass | Not verified |
+| PTZ preset/tour listing | Documented in section 4.11 | Implemented as read-only lists | Fake-transport tests pass | Not verified |
+| PTZ preset/tour mutation | No endpoint documented | Intentionally omitted | Not applicable | Unknown / not enough evidence |
+| Audio capability and sound controls | Documented in section 4.5 | Implemented through `AudioService` | Fake-transport tests pass | Not verified |
+| Alarm-output settings, capability, and manual control | Documented in section 4.14 | Implemented through `AlarmOutputService` | Fake-transport tests pass | Not verified |
+
+No Phase 3B capability query or hardware mutation has been run against a real
+NVR or camera.
 
 ## MVP Device
 

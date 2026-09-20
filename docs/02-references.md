@@ -47,10 +47,10 @@ The exact compatibility classification is in
 - The official VIGI Camera RTSP guide lists C340I and documents standard third-party camera RTSP URLs: `/stream1` for the main stream and `/stream2` for the substream.
 - Standard camera RTSP uses the default service port `554`; an external RTSP client supplies the separate camera account credentials.
 - V1.4 documents `GET /openapi/module_list`, `GET /openapi/snapshot`,
-  `POST /openapi/record_control`, RTSP-device addition, audio capability,
-  PTZ, and alarm-output interfaces. The SDK implements module discovery,
-  current snapshot, and the Phase 3A management subset; the other interfaces
-  remain outside current support.
+  `POST /openapi/record_control`, RTSP-device addition, audio capability and
+  sound, PTZ, and alarm-output interfaces. The SDK implements module
+  discovery, current snapshot, the Phase 3A management subset, and the Phase
+  3B PTZ/audio/alarm-output subset; real-NVR verification remains pending.
 - V1.4 documents a JPEG response for `GET /openapi/snapshot`; it does not
   establish SDK file-storage behavior or device-wide compatibility.
 - V1.4 documents RTSP stream selectors `1` and `2`; the current SDK replay URL

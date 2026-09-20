@@ -103,6 +103,15 @@ coverage, but have not been run against a real NVR:
 These calls are explicit state-changing operations where applicable. They do
 not retry automatically, infer local device state, or select scan results.
 
+Phase 3B hardware-control APIs are implemented with mock/contract coverage but
+have not been exercised against a real NVR. They are exposed through
+`client.ptz`, `client.audio`, and `client.alarm_outputs` for the documented
+PTZ capability/movement/park/preset-tour reads/target-tracking, audio
+capability and sound controls, and alarm-output capability/configuration/manual
+control endpoints. PTZ direction remains an explicit numeric field because the
+official document does not define a numeric direction mapping. The document
+does not define preset/tour mutation endpoints, so none are exposed.
+
 Unsupported or deferred:
 
 - Direct standalone IPC/camera snapshot APIs; IPC OpenAPI V1.1 still has no
@@ -110,6 +119,7 @@ Unsupported or deferred:
 - Export/download, RTSP playback, video saving, ffmpeg, and image processing.
 - CLI: deferred to a separate phase.
 - Standalone IPC OpenAPI control APIs.
+- Real-NVR or device verification of Phase 3B hardware behavior.
 
 ## Tests
 

@@ -31,14 +31,14 @@ separate implementation and real-device-verification statuses.
 | Channel Management | `GET /openapi/added_devices`, `POST /openapi/add_device`, `POST /openapi/remove_device`, `GET /openapi/device_scan`, `GET /openapi/snapshot`, `POST /openapi/add_device_rtsp` | `added_devices`, scan, add/remove, RTSP add, and current snapshot implemented/unit tested; real-NVR verification pending |
 | Video | `GET /openapi/resolution`, `GET /openapi/valid_resolutions`, `POST /openapi/resolution`, `GET /openapi/bitrate`, `GET /openapi/bitrate_capability`, `POST /openapi/bitrate` | Later SDK phase |
 | Time | `GET /openapi/timing_mode`, `PUT /openapi/timing_mode`, `GET /openapi/ntp`, `PUT /openapi/ntp` | Later SDK phase |
-| Audio | Existing input/output sound GET/POST plus V1.4 `GET /openapi/audio/channel_capability`, `GET /openapi/audio/capability` | V1.4 documented; no audio runtime support |
+| Audio | Existing input/output sound GET/POST plus V1.4 `GET /openapi/audio/channel_capability`, `GET /openapi/audio/capability` | Capability and input/output sound APIs implemented/unit tested; real-NVR verification pending |
 | Disk | `GET /openapi/disks`, `GET /openapi/esata_disks`, `POST /openapi/smartctl_process`, `GET /openapi/smartctl_process/capability`, `POST /openapi/smartctl_process/test`, `GET /openapi/smartctl_process/schedule`, `GET /openapi/smartctl_process/attribute` | Later SDK phase |
 | PoE | `GET /openapi/poe/info`, `POST /openapi/poe/info`, `GET /openapi/poe/link_mode`, `POST /openapi/poe/link_mode`, `GET /openapi/poe/status`, `GET /openapi/poe/link_status` | Later SDK phase |
 | Event | `GET /openapi/event_server`, `POST /openapi/event_server`, `POST /openapi/event_server/delete_server` | Later SDK phase |
 | Recording | `GET /openapi/record/days`, `GET /openapi/record/search/free_process`, `GET /openapi/record/search/results`, V1.2 `POST /openapi/record_control` | Search verified; recording control implemented/unit tested but mutating and NVR-unverified |
 | System | `POST /openapi/systemctl` | Excluded from MVP write path |
-| PTZ | V1.3 PTZ interfaces and V1.4 batch capability | V1.4 documented; planned and hardware-dependent |
-| Alarm output | V1.4 alarm-output interfaces | V1.4 documented; planned and mutating/hardware-dependent |
+| PTZ | V1.3 PTZ interfaces and V1.4 batch capability | Capability, movement/park, preset/tour reads, and target tracking implemented/unit tested; real-NVR verification pending |
+| Alarm output | V1.4 alarm-output interfaces | Capability, configuration, and manual control implemented/unit tested; real-NVR verification pending |
 | Stream | RTSP live URL and replay URL; V1.4 documents stream `1` and `2` | Live URL helpers support streams `1` and `2`; replay URL helper supports stream `1`; live/open RTSP remains unsupported |
 
 ## MVP Supported API
@@ -189,6 +189,20 @@ Phase 3A:
 - All Phase 3A calls use Bearer authentication and exact documented JSON
   fields. They are unit/contract tested but not real-NVR verified.
 
+Phase 3B:
+
+- `client.ptz` implements per-channel and batch capability discovery,
+  movement, park read/write, preset/tour listing, and target-tracking
+  read/write using the documented PTZ contracts.
+- `client.audio` implements NVR/channel capability discovery and input/output
+  sound read/write APIs with documented on/off values and volume bounds.
+- `client.alarm_outputs` implements NVR/IPC output settings, batch IPC output
+  capability/configuration, and manual start/stop control.
+- The PDF does not define preset/tour mutation endpoints or numeric PTZ
+  direction meanings. Those operations are not invented; movement accepts the
+  documented numeric field as-is. All Phase 3B APIs are unit/contract tested
+  only and remain real-NVR and device unverified.
+
 ## Phase 9 Snapshot Scope Decision
 
 The historical scope decision remains valid for the pre-V1.4 baseline, while
@@ -224,13 +238,14 @@ No V1.4 endpoint in this increment is claimed as real-NVR verified. Mutating,
 hardware-dependent, historical-snapshot, file-saving, and RTSP-capture APIs
 remain outside this increment.
 
-Phase 3A is the separate documented management increment. It does not add
-PTZ, audio, alarm, system, video-setting, disk, PoE, or other Phase 3B APIs.
+Phase 3A is the separate documented management increment. Phase 3B now covers
+only the documented PTZ, audio, and alarm-output contracts; system,
+video-setting, disk, PoE, disarming, active defense, and other V1.4 groups
+remain outside this implementation.
 
 ## Excluded From MVP
 
 - Mutating video settings.
-- Mutating audio settings.
 - Mutating PoE settings.
 - Event server write/delete operations.
 - `POST /openapi/systemctl` reboot behavior.

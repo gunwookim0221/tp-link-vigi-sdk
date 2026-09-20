@@ -18,6 +18,11 @@
 - Phase 3A recording control, device scan, add/remove-device, and RTSP-device
   registration APIs are implemented and unit/contract tested, but no
   state-changing Phase 3A call has been real-NVR verified.
+- Phase 3B PTZ, audio, and alarm-output capability/control APIs are implemented
+  and unit/contract tested with fake transports, but none has been real-NVR or
+  device verified. PTZ direction numeric values are not defined by the PDF and
+  are passed through as caller-supplied integers. Preset/tour mutation APIs
+  are not exposed because the PDF documents only their list endpoints.
 - The supplied examples are opt-in scripts, not a CLI, and require explicit shell environment configuration; `.env` is not auto-loaded.
 - Replay URL examples require caller-provided UTC time strings and do not convert `RecordSegment` timestamps.
 - The V1.4 RTSP contract documents stream `1` and `2`; the current SDK helper accepts stream `1` only, and stream `2` compatibility is unverified.
@@ -71,7 +76,7 @@ Currently unsupported:
 - ffmpeg integration, image processing, and snapshot file saving.
 - Private or undocumented snapshot URL usage.
 - CLI support; it remains deferred to a separate phase.
-- Real-NVR verification of Phase 3A state-changing APIs.
+- Real-NVR verification of Phase 3A and Phase 3B state-changing APIs.
 - Event receiver service implementation.
 - Full RTSP client implementation.
 - Camera-specific public SDK APIs.
@@ -82,14 +87,12 @@ Currently unsupported:
 ## V1.4 Compatibility Limitations
 
 The V1.4 PDF is a documentation baseline, not proof of support on the target
-NVR. Module discovery and current snapshot are implemented and unit/contract
-tested, but remain real-device unverified. Phase 3A recording control,
-device scan, add/remove-device, and RTSP-device registration are implemented
-but unverified; audio capabilities, PTZ, alarm output, and the other documented
-groups listed in the [V1.0-to-V1.4 delta](openapi/nvr-openapi-v1.0-to-v1.4-diff.md)
-remain unsupported or deferred. Real-device verification remains required for
-the implemented read-only and management increments and all hardware-dependent
-contracts.
+NVR. Module discovery, current snapshot, Phase 3A management, and Phase 3B
+hardware-control/capability APIs are implemented and unit/contract tested, but
+remain real-device unverified. Real-device verification remains required for
+all hardware-dependent contracts and state-changing methods. Preset/tour
+mutation, disarming, active defense, and unrelated V1.4 groups remain outside
+the implemented boundary.
 
 ## Standalone Camera Limitations
 

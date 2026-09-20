@@ -13,8 +13,9 @@
 | Repository status | Metadata only; the vendor PDF is not committed |
 
 The earlier project baseline was the official `V1.0` document. This `V1.4`
-document is now the latest reviewed contract for future planning; it does not
-change the SDK's current implementation or public support claims.
+document is the latest reviewed contract for the implemented read-only, Phase
+3A, and Phase 3B increments. Implementation status and real-device verification
+remain separate claims in the delta, scope, and limitations documents.
 
 ## Update-history summary
 

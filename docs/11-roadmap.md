@@ -21,6 +21,10 @@ Completed:
 - Phase 3A V1.4 management APIs: recording control, device scan, add/remove
   device, and RTSP-device registration. Unit/contract complete; NVR
   verification pending.
+- Phase 3B V1.4 hardware controls: PTZ capability/movement/park,
+  preset/tour reads, target tracking, audio capability/sound controls, and
+  alarm-output capability/control. Unit/contract complete; NVR/device
+  verification pending.
 - Phase 10B SDK Usability, Examples, and Developer Experience.
 
 Next:
@@ -29,7 +33,6 @@ Next:
   model, hardware, firmware, date, endpoint, and result.
 - Opt-in verification of Phase 3A read/write endpoint behavior with a safe test
   plan and complete device identity; no mutation is run by default.
-- Phase 3B hardware-control APIs remain deferred.
 - Phase 10 CLI, after a separate dependency and license review.
 - IPC auth/transport architecture work according to [ADR-0006](adr/ADR-0006-separate-nvr-and-ipc-auth-transports.md), if standalone IPC SDK support is planned.
 
@@ -185,7 +188,10 @@ Later boundary:
 - Phase 3A recording control, device scan, add/remove devices, and RTSP-device
   addition are implemented in a separate management increment; real-NVR
   verification remains pending.
-- Keep PTZ movement/control, audio writes, alarm/output writes, system control,
+- Phase 3B PTZ, audio, and alarm-output capability/control APIs are implemented
+  in a separate hardware-dependent increment; real-NVR/device verification
+  remains pending.
+- Keep system control, video settings, disk, PoE, disarming, active defense,
   and other state-changing or hardware-dependent APIs behind separate explicit
   planning and device verification.
 
@@ -219,7 +225,38 @@ Status:
 - Unit/contract tests pass using fake transports.
 - Bearer headers, exact request fields, error-code parsing, credential
   redaction, and no-retry behavior are covered.
-- No Phase 3A endpoint is real-NVR verified. No Phase 3B API is implemented.
+- No Phase 3A endpoint is real-NVR verified. No Phase 3B endpoint is
+  real-NVR/device verified.
+
+## Phase 3B: V1.4 NVR Hardware-Dependent Controls
+
+Goal:
+
+- Implement documented PTZ, audio, and alarm-output contracts without
+  inferring device support or introducing hardware automation.
+
+Implemented boundary:
+
+- `PtzService` provides channel/batch capabilities, movement, park read/write,
+  preset/tour listing, and target-tracking read/write.
+- `AudioService` provides NVR/channel capabilities and input/output sound
+  read/write methods.
+- `AlarmOutputService` provides NVR/IPC settings, batch IPC output capability,
+  and manual start/stop methods.
+
+Contract boundaries:
+
+- PTZ direction is an explicit numeric field because the PDF does not define
+  numeric direction meanings; no direction enum or choreography is added.
+- Preset/tour mutation endpoints are not documented in the PDF and are not
+  exposed.
+
+Status:
+
+- Unit/contract tests use fake transports and cover exact fields, error
+  handling, auth guards, and no-retry mutation behavior.
+- No hardware mutation or capability query was run against a real NVR for this
+  increment. Device verification remains pending.
 
 ## v0.1 Release Candidate
 
@@ -275,6 +312,10 @@ This phase is not part of the current MVP and does not imply current standalone 
 9. Phase 12: Release.
 10. Phase 13: V1.4 Read-Only Compatibility Baseline. Status: implementation and
     contract tests complete; real-NVR verification pending.
+11. Phase 3A: V1.4 NVR Management APIs. Status: implementation and contract
+    tests complete; real-NVR verification pending.
+12. Phase 3B: V1.4 NVR Hardware-Dependent Controls. Status: implementation and
+    contract tests complete; real-NVR/device verification pending.
 
 ## Long-Term Plan
 

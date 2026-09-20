@@ -25,6 +25,60 @@ class RecordControlMode(str, Enum):
     OFF = "off"
 
 
+class PtzParkActionMode(str, Enum):
+    """Documented PTZ park destinations."""
+
+    PRESET = "preset"
+    TOUR = "tour"
+
+
+class PtzTargetTrackMode(str, Enum):
+    """Documented PTZ target-tracking modes."""
+
+    ON = "on"
+    OFF = "off"
+
+
+class AudioToggle(str, Enum):
+    """Documented audio on/off values."""
+
+    ON = "on"
+    OFF = "off"
+
+
+class AlarmEnabled(str, Enum):
+    """Documented alarm-output enabled values."""
+
+    ON = "on"
+    OFF = "off"
+
+
+class AlarmType(str, Enum):
+    """Documented alarm-output electrical types."""
+
+    NORMALLY_OPEN = "NO"
+    NORMALLY_CLOSED = "NC"
+
+
+class AlarmAction(str, Enum):
+    """Documented manual alarm-output actions."""
+
+    START = "start"
+    STOP = "stop"
+
+
+class AlarmDelayTime(str, Enum):
+    """Documented alarm-output delay durations in seconds."""
+
+    FIVE = "5"
+    TEN = "10"
+    THIRTY = "30"
+    SIXTY = "60"
+    ONE_HUNDRED_TWENTY = "120"
+    THREE_HUNDRED = "300"
+    SIX_HUNDRED = "600"
+
+
 class CapabilityName(str, Enum):
     """Known capability names used to gate future SDK behavior."""
 

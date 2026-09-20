@@ -3,11 +3,14 @@
 from dataclasses import dataclass, field
 from typing import cast
 
+from vigi.alarm import AlarmOutputService
 from vigi.auth_provider import AuthProvider
 from vigi.auth import AuthConfig, AuthService
+from vigi.audio import AudioService
 from vigi.capabilities import CapabilityService
 from vigi.devices import DeviceService
 from vigi.http_transport import HttpTransport
+from vigi.ptz import PtzService
 from vigi.records import RecordService
 from vigi.session import Session, SessionInfo
 from vigi.snapshots import SnapshotService
@@ -30,6 +33,9 @@ class VigiClient:
     records: RecordService = field(init=False)
     snapshots: SnapshotService = field(init=False)
     stream: StreamService = field(init=False)
+    ptz: PtzService = field(init=False)
+    audio: AudioService = field(init=False)
+    alarm_outputs: AlarmOutputService = field(init=False)
 
     def __post_init__(self) -> None:
         self.auth = AuthService(self.auth_config)
@@ -47,6 +53,9 @@ class VigiClient:
         self.devices = DeviceService(self.session)
         self.records = RecordService(self.session)
         self.snapshots = SnapshotService(self.session)
+        self.ptz = PtzService(self.session)
+        self.audio = AudioService(self.session)
+        self.alarm_outputs = AlarmOutputService(self.session)
         self.stream = StreamService(
             {
                 CapabilityName.STREAM_LIVE_RTSP,
